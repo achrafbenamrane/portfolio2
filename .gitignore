@@ -49,3 +49,6 @@ next-env.d.ts
 # from a CDN rather than a package, and a build that depends on someone else's
 # URL staying up is a build that eventually fails.
 /public/mediapipe/wasm/
+
+.vercel
+.env*

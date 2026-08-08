@@ -39,3 +39,13 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Vendored MediaPipe WASM (~22 MB). Not committed because `postinstall` copies
+# it out of node_modules — that is both smaller and safer, since the binaries
+# must match the installed @mediapipe/tasks-vision version exactly and copying
+# from the package guarantees they do. It needs no network at build time.
+#
+# public/models/hand_landmarker.task IS committed on purpose: it is fetched
+# from a CDN rather than a package, and a build that depends on someone else's
+# URL staying up is a build that eventually fails.
+/public/mediapipe/wasm/

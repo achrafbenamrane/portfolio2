@@ -1,26 +1,97 @@
 @import "tailwindcss";
+@import "../styles/desktop.css";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* ── Editorial Terminal · design tokens ─────────────────────────── */
+
+/*
+ * Glacial palette on a white ground. One hue family (~240) at very low chroma
+ * does all the structural work, so the only genuinely saturated things on the
+ * page are the accent and the warm origami — which is why the paper reads as
+ * warm at all. It has nothing to compete with.
+ *
+ * Lightness values are chosen against measured contrast, not by eye:
+ * ink 15:1 on canvas, dim 6.6:1, accent 5.8:1.
+ */
+
+@theme {
+  --color-canvas: oklch(0.99 0.003 240); /* #FAFCFE white, faintly cold */
+  --color-surface-1: oklch(0.965 0.006 240); /* #F0F4F7 raised   */
+  --color-surface-2: oklch(0.925 0.01 240); /* #E0E7EC recessed */
+  --color-line: oklch(0.84 0.014 240); /* #C3CCD3 hairline */
+  --color-ink: oklch(0.26 0.028 242); /* #182631 slate ink */
+  --color-dim: oklch(0.47 0.024 242); /* #4F5D67 muted     */
+  --color-accent: oklch(0.5 0.105 245); /* #24689B glacier blue */
+  --color-warn: oklch(0.55 0.115 55); /* #A45D25 warm, ties to the paper */
+
+  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
+
+  --text-meta: 0.6875rem;
+  --text-meta--line-height: 1.1;
+  --text-meta--letter-spacing: 0.09em;
+
+  --ease-out-quint: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+@layer base {
+  html {
+    color-scheme: light;
+  }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+  body {
+    background: var(--color-canvas);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Designed focus state — never the browser default. */
+  :focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
+  ::selection {
+    background: var(--color-accent);
+    color: var(--color-canvas);
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@utility meta {
+  font-family: var(--font-mono);
+  font-size: var(--text-meta);
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  line-height: 1.1;
+}
+
+/*
+ * Paper tooth — the light-mode counterpart of film grain.
+ *
+ * Soft-light does almost nothing against white; multiply is what puts texture
+ * on a light ground, and it has to stay very low or it reads as a dirty screen
+ * rather than stock.
+ */
+@utility grain {
+  position: relative;
+
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.035;
+    mix-blend-mode: multiply;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
 }

@@ -1,36 +1,68 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# portfolio2
 
-## Getting Started
+Portfolio for **Benamrane Mohamed Achraf** — Full-Stack Developer, UI/UX &
+Graphic Designer, and Network & Information Security Engineer, Annaba, Algeria.
 
-First, run the development server:
+Two things here are not ordinary portfolio furniture:
+
+- **A hand-tracked hero.** A webcam feed drives an on-device hand model; opening
+  and closing your hand folds a photograph of me into a paper ball and back.
+- **A 3D desktop.** A procedurally modelled monitor whose screen is real DOM.
+  Point with your index finger, pinch to click, and open the folders inside it.
+
+Both run entirely on-device. No video ever leaves the machine.
+
+## Running it
 
 ```bash
+npm install     # postinstall vendors the MediaPipe WASM into public/
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Hand control needs a secure context — `localhost` counts, production needs
+HTTPS.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Layout
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```
+src/
+  app/                  routes: /, /work, /experience, /certifications, /contact
+  components/
+    hero/               the portrait → origami morph
+    imac/               the 3D monitor, its desktop, dock and folder windows
+  content/              ALL copy and data — the only file you edit to change text
+  lib/vision/           hand sensor: curl metric, One Euro filter, pointer
+  styles/               the desktop's own stylesheet
+scripts/
+  sync-mediapipe.mjs    vendors the WASM runtime (runs on postinstall)
+  prepare-hero-assets.py  cuts the hero images out of their backgrounds
+  prepare-icons.py      builds the favicons from the portrait
+assets-source/          original, uncut source photographs
+```
 
-## Learn More
+## Regenerating assets
 
-To learn more about Next.js, take a look at the following resources:
+The images in `public/` are build output, not hand-edited. After replacing
+anything in `assets-source/`:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+python scripts/prepare-hero-assets.py   # portrait + origami cut-outs
+python scripts/prepare-icons.py         # favicon / apple-icon
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Notable implementation details
 
-## Deploy on Vercel
+- **Hand openness is measured from finger curl angles, not fingertip
+  distance** — the obvious metric is not scale-invariant, so the value drifts as
+  you lean toward the camera.
+- **Calibration is adaptive.** Raw curl depends on the hand, the camera and the
+  distance, so fixed thresholds are wrong for every visitor but one.
+- **60 Hz values never touch React state.** The sensor is a mutable store read
+  inside `requestAnimationFrame`; React only subscribes to status changes.
+- **The paper fold is a sequence of half-plane creases**, so the sheet stays
+  connected and inextensible like real paper instead of scattering.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Stack
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Next.js 16 · React 19 · TypeScript · Tailwind v4 · Three.js + React Three Fiber
+· MediaPipe Tasks Vision

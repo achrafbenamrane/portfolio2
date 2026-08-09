@@ -11,6 +11,15 @@ export const site = {
   initials: "BA",
 
   /**
+   * Canonical origin, used for metadataBase, the sitemap and OG image URLs.
+   * Vercel injects the production domain at build time, so a custom domain
+   * added later is picked up without editing anything here.
+   */
+  url: process.env.VERCEL_PROJECT_PRODUCTION_URL
+    ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+    : "https://portfolio2-woad-tau.vercel.app",
+
+  /**
    * The hero name is set as a two-tier lockup: given names light and tracked
    * over the surname in black. Split here rather than in the component so the
    * emphasis can be moved without touching layout.

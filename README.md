@@ -82,11 +82,21 @@ To record them:
 
 ```bash
 npm run voice:lines      # writes public/voice/script.json + lists what's missing
+# record ONE take reading every line, pausing ~2s between them
+npm run voice:split      # splits it into public/voice/<id>.mp3
+npm run voice:lines      # refresh the manifest the site reads at runtime
 ```
 
-Then produce one `public/voice/<id>.mp3` per line — either recorded directly or
-generated from a cloned voice — and re-run the command to refresh the manifest
-the site reads at runtime.
+`voice:split` transcribes each segment (Groq Whisper) and matches it to the
+script by similarity, rather than mapping segments to lines in order. A real
+take is never clean — lines get fluffed and repeated, a breath splits a
+sentence — and order-mapping breaks on all of that *silently*, leaving the
+assistant confidently saying the wrong sentence. Matching by content means
+retakes sort themselves out, and anything unmatched is reported rather than
+shipped.
+
+The silence threshold is 1.1 s, not lower: at 0.55 s a test take split single
+lines at their own commas, producing 27 segments where 20 were expected.
 
 Two rules the script enforces or depends on:
 

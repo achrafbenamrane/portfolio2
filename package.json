@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "eslint",
     "postinstall": "node scripts/sync-mediapipe.mjs",
-    "voice:lines": "node scripts/voice-lines.mjs"
+    "voice:lines": "node scripts/voice-lines.mjs",
+    "voice:split": "python scripts/split-voice-take.py"
   },
   "dependencies": {
     "@ai-sdk/groq": "^4.0.26",

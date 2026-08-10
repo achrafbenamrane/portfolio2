@@ -2,48 +2,48 @@
   "lines": [
     {
       "id": "who",
-      "speech": "I am Achraf Benamrane — a full-stack developer, a UI/UX and graphic designer, and a network and information security engineer, based in Annaba, Algeria.",
-      "hash": "1b2fecbb"
+      "speech": "Hi, I am Achraf Benamrane. I am a full stack developer, a designer, and a network security engineer. I live in Annaba, Algeria.",
+      "hash": "214ad8a8"
     },
     {
       "id": "roles",
-      "speech": "I work across three things: full-stack development, network and information security, and UI/UX and graphic design.",
-      "hash": "0374196c"
+      "speech": "I work in three areas. Web and mobile development. Network and information security. And user interface design.",
+      "hash": "720cdceb"
     },
     {
       "id": "where",
-      "speech": "I'm based in Annaba, Algeria.",
-      "hash": "cea299a8"
+      "speech": "I live in Annaba, in Algeria.",
+      "hash": "ee1e8694"
     },
     {
       "id": "available",
-      "speech": "Yes — I'm available for work right now. The fastest way to reach me is email.",
-      "hash": "188262d9"
+      "speech": "Yes, I am available for work now. The best way to reach me is by email.",
+      "hash": "4dc332c9"
     },
     {
       "id": "works",
-      "speech": "Here are my projects — web, mobile, security and design work.",
-      "hash": "de559575"
+      "speech": "Here are my projects. Web, mobile, security, and design work.",
+      "hash": "55ed9543"
     },
     {
       "id": "experiences",
-      "speech": "Opening my experience — where I have worked and what I did there.",
-      "hash": "88cc04d0"
+      "speech": "This is my experience. Where I worked, and what I did there.",
+      "hash": "fda7749c"
     },
     {
       "id": "certifications",
-      "speech": "These are my certifications and credentials.",
-      "hash": "077e9499"
+      "speech": "These are my diplomas and certificates.",
+      "hash": "4d46430f"
     },
     {
       "id": "contacts",
-      "speech": "Here's how to reach me. Email is best, but my phone and socials are all here.",
-      "hash": "bb3eb0bb"
+      "speech": "Here is how to reach me. Email is best. My phone and my social links are also here.",
+      "hash": "995649ac"
     },
     {
       "id": "quran",
-      "speech": "Opening the Quran player. Pick a reciter and a surah.",
-      "hash": "870209b1"
+      "speech": "Opening the Quran player. Choose a reader and a surah.",
+      "hash": "368e4494"
     },
     {
       "id": "cv",
@@ -62,8 +62,8 @@
     },
     {
       "id": "settings",
-      "speech": "Opening settings. You can turn hand control on and off there.",
-      "hash": "66b56ec2"
+      "speech": "Opening settings. You can turn hand control on and off here.",
+      "hash": "17f5287f"
     },
     {
       "id": "close",
@@ -72,23 +72,23 @@
     },
     {
       "id": "help",
-      "speech": "Ask me to open my work, my experience, my certifications or my contacts. You can also ask who I am, where I'm based, or whether I'm available.",
-      "hash": "d0f9d406"
+      "speech": "You can ask me to open my work, my experience, my certificates, or my contacts. You can also ask who I am, or if I am free for work.",
+      "hash": "c9cbe009"
     },
     {
       "id": "fallback",
-      "speech": "I didn't catch that. Try asking to see my work, my experience, or how to get in touch.",
-      "hash": "45611d43"
+      "speech": "Sorry, I did not understand. Try asking about my work, or how to contact me.",
+      "hash": "f06593b6"
     },
     {
       "id": "unavailable",
-      "speech": "I can't answer open questions right now — but I can show you my work, my experience, my certifications, or how to reach me.",
-      "hash": "396086f1"
+      "speech": "Sorry, I cannot answer that now. But I can show you my work, my experience, or my contacts.",
+      "hash": "cdc63845"
     },
     {
       "id": "greeting",
-      "speech": "Hey — I'm Achraf. Ask me about my work, or tell me what to open.",
-      "hash": "ba664bec"
+      "speech": "Hi, I am Achraf. Ask me about my work. Or tell me what to open.",
+      "hash": "5a6d88fb"
     }
   ]
 }

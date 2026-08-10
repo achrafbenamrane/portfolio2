@@ -46,27 +46,27 @@ export const INTENTS: readonly Intent[] = [
     id: "who",
     triggers: [["who", "introduce", "yourself", "bio"]],
     phrases: ["who are you", "about yourself"],
-    speech: `I am Achraf Benamrane — a full-stack developer, a UI/UX and graphic designer, and a network and information security engineer, based in Annaba, Algeria.`,
+    speech: `Hi, I am Achraf Benamrane. I am a full stack developer, a designer, and a network security engineer. I live in Annaba, Algeria.`,
     action: { kind: "none" },
   },
   {
     id: "roles",
     triggers: [["role", "roles", "job", "speciality", "specialty", "skill", "skills", "profession"]],
     phrases: ["what do you do", "what you do"],
-    speech: `I work across three things: full-stack development, network and information security, and UI/UX and graphic design.`,
+    speech: `I work in three areas. Web and mobile development. Network and information security. And user interface design.`,
     action: { kind: "none" },
   },
   {
     id: "where",
     triggers: [["where", "located", "location", "live", "based"]],
-    speech: `I'm based in Annaba, Algeria.`,
+    speech: `I live in Annaba, in Algeria.`,
     action: { kind: "none" },
   },
   {
     id: "available",
     triggers: [["available", "availability", "hiring", "freelance"]],
     weight: 2,
-    speech: `Yes — I'm available for work right now. The fastest way to reach me is email.`,
+    speech: `Yes, I am available for work now. The best way to reach me is by email.`,
     action: { kind: "none" },
   },
 
@@ -74,26 +74,26 @@ export const INTENTS: readonly Intent[] = [
   {
     id: "works",
     triggers: [["work", "works", "project", "projects", "built", "build", "portfolio"]],
-    speech: `Here are my projects — web, mobile, security and design work.`,
+    speech: `Here are my projects. Web, mobile, security, and design work.`,
     action: { kind: "folder", id: "works" },
   },
   {
     id: "experiences",
     triggers: [["experience", "experiences", "career", "history", "worked", "background"]],
     weight: 2,
-    speech: `Opening my experience — where I have worked and what I did there.`,
+    speech: `This is my experience. Where I worked, and what I did there.`,
     action: { kind: "folder", id: "experiences" },
   },
   {
     id: "certifications",
     triggers: [["certification", "certifications", "certificate", "certified", "diploma", "degree", "credential", "credentials", "qualification"]],
-    speech: `These are my certifications and credentials.`,
+    speech: `These are my diplomas and certificates.`,
     action: { kind: "folder", id: "certifications" },
   },
   {
     id: "contacts",
     triggers: [["contact", "reach", "email", "mail", "touch", "message", "hire", "phone"]],
-    speech: `Here's how to reach me. Email is best, but my phone and socials are all here.`,
+    speech: `Here is how to reach me. Email is best. My phone and my social links are also here.`,
     action: { kind: "folder", id: "contacts" },
   },
 
@@ -102,7 +102,7 @@ export const INTENTS: readonly Intent[] = [
     id: "quran",
     triggers: [["quran", "koran", "recitation", "surah"]],
     weight: 3,
-    speech: `Opening the Quran player. Pick a reciter and a surah.`,
+    speech: `Opening the Quran player. Choose a reader and a surah.`,
     action: { kind: "app", id: "quran" },
   },
   {
@@ -130,7 +130,7 @@ export const INTENTS: readonly Intent[] = [
     id: "settings",
     triggers: [["settings", "setting", "preferences", "camera", "microphone"]],
     weight: 2,
-    speech: `Opening settings. You can turn hand control on and off there.`,
+    speech: `Opening settings. You can turn hand control on and off here.`,
     action: { kind: "app", id: "settings" },
   },
 
@@ -146,7 +146,7 @@ export const INTENTS: readonly Intent[] = [
     id: "help",
     triggers: [["help", "commands", "command"]],
     phrases: ["what can you do", "what can i ask", "what can you say", "what can i say"],
-    speech: `Ask me to open my work, my experience, my certifications or my contacts. You can also ask who I am, where I'm based, or whether I'm available.`,
+    speech: `You can ask me to open my work, my experience, my certificates, or my contacts. You can also ask who I am, or if I am free for work.`,
     action: { kind: "none" },
   },
 ];
@@ -154,7 +154,7 @@ export const INTENTS: readonly Intent[] = [
 /** Spoken when nothing scores high enough. Also pre-rendered. */
 export const FALLBACK = {
   id: "fallback",
-  speech: `I didn't catch that. Try asking to see my work, my experience, or how to get in touch.`,
+  speech: `Sorry, I did not understand. Try asking about my work, or how to contact me.`,
 } as const;
 
 /**
@@ -165,13 +165,13 @@ export const FALLBACK = {
  */
 export const UNAVAILABLE = {
   id: "unavailable",
-  speech: `I can't answer open questions right now — but I can show you my work, my experience, my certifications, or how to reach me.`,
+  speech: `Sorry, I cannot answer that now. But I can show you my work, my experience, or my contacts.`,
 } as const;
 
 /** Spoken the first time the assistant opens. */
 export const GREETING = {
   id: "greeting",
-  speech: `Hey — I'm Achraf. Ask me about my work, or tell me what to open.`,
+  speech: `Hi, I am Achraf. Ask me about my work. Or tell me what to open.`,
 } as const;
 
 /** Everything that needs an audio clip, for the generator script. */

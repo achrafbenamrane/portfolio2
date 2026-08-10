@@ -7,7 +7,8 @@
     "build": "node scripts/sync-mediapipe.mjs && next build",
     "start": "next start",
     "lint": "eslint",
-    "postinstall": "node scripts/sync-mediapipe.mjs"
+    "postinstall": "node scripts/sync-mediapipe.mjs",
+    "voice:lines": "node scripts/voice-lines.mjs"
   },
   "dependencies": {
     "@mediapipe/tasks-vision": "^1.0.1",

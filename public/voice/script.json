@@ -1,0 +1,89 @@
+{
+  "lines": [
+    {
+      "id": "who",
+      "speech": "I am Achraf Benamrane — a full-stack developer, a UI/UX and graphic designer, and a network and information security engineer, based in Annaba, Algeria.",
+      "hash": "1b2fecbb"
+    },
+    {
+      "id": "roles",
+      "speech": "I work across three things: full-stack development, network and information security, and UI/UX and graphic design.",
+      "hash": "0374196c"
+    },
+    {
+      "id": "where",
+      "speech": "I'm based in Annaba, Algeria.",
+      "hash": "cea299a8"
+    },
+    {
+      "id": "available",
+      "speech": "Yes — I'm available for work right now. The fastest way to reach me is email.",
+      "hash": "188262d9"
+    },
+    {
+      "id": "works",
+      "speech": "Here are my projects — web, mobile, security and design work.",
+      "hash": "de559575"
+    },
+    {
+      "id": "experiences",
+      "speech": "Opening my experience — where I have worked and what I did there.",
+      "hash": "88cc04d0"
+    },
+    {
+      "id": "certifications",
+      "speech": "These are my certifications and credentials.",
+      "hash": "077e9499"
+    },
+    {
+      "id": "contacts",
+      "speech": "Here's how to reach me. Email is best, but my phone and socials are all here.",
+      "hash": "bb3eb0bb"
+    },
+    {
+      "id": "quran",
+      "speech": "Opening the Quran player. Pick a reciter and a surah.",
+      "hash": "870209b1"
+    },
+    {
+      "id": "cv",
+      "speech": "Downloading my CV now.",
+      "hash": "ebea9bad"
+    },
+    {
+      "id": "github",
+      "speech": "Opening my GitHub.",
+      "hash": "85da264e"
+    },
+    {
+      "id": "linkedin",
+      "speech": "Opening my LinkedIn.",
+      "hash": "5c589a8e"
+    },
+    {
+      "id": "settings",
+      "speech": "Opening settings. You can turn hand control on and off there.",
+      "hash": "66b56ec2"
+    },
+    {
+      "id": "close",
+      "speech": "Closing that.",
+      "hash": "b8c1e604"
+    },
+    {
+      "id": "help",
+      "speech": "Ask me to open my work, my experience, my certifications or my contacts. You can also ask who I am, where I'm based, or whether I'm available.",
+      "hash": "d0f9d406"
+    },
+    {
+      "id": "fallback",
+      "speech": "I didn't catch that. Try asking to see my work, my experience, or how to get in touch.",
+      "hash": "45611d43"
+    },
+    {
+      "id": "greeting",
+      "speech": "Hey — I'm Achraf. Ask me about my work, or tell me what to open.",
+      "hash": "ba664bec"
+    }
+  ]
+}

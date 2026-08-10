@@ -66,3 +66,35 @@ python scripts/prepare-icons.py         # favicon / apple-icon
 
 Next.js 16 · React 19 · TypeScript · Tailwind v4 · Three.js + React Three Fiber
 · MediaPipe Tasks Vision
+
+## Recording the assistant's voice
+
+The desktop has a voice assistant. It listens with the browser's speech
+recognition, matches what it heard against a fixed intent table
+(`src/content/voice.ts`), and speaks the reply back.
+
+Replies are **pre-rendered audio**, not live synthesis — no API key, no
+per-reply cost, no latency, and it works offline. Until the clips exist the
+browser's own robotic voice stands in, so the feature is usable but obviously
+unfinished rather than silently broken.
+
+To record them:
+
+```bash
+npm run voice:lines      # writes public/voice/script.json + lists what's missing
+```
+
+Then produce one `public/voice/<id>.mp3` per line — either recorded directly or
+generated from a cloned voice — and re-run the command to refresh the manifest
+the site reads at runtime.
+
+Two rules the script enforces or depends on:
+
+- **No line may interpolate a value.** A clip that says "19 projects" becomes
+  wrong the day a twentieth ships. `npm run voice:lines` fails if it finds one.
+- **Re-record a line when its wording changes.** `script.json` carries a hash
+  of each line's text so drift is visible rather than silent.
+
+Speech recognition is Chrome, Edge and Safari only — Firefox does not ship it.
+Unlike the hand tracking, it is **not** on-device: the browser streams audio to
+its own service to transcribe. The UI says so.

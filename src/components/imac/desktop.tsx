@@ -14,6 +14,7 @@ import {
   projects,
   site,
 } from "@/content/site";
+import type { VoiceAction } from "@/content/voice";
 import type { HeroSignal } from "@/lib/vision/hero-signal";
 import { ContactApp, QuranApp, SettingsApp } from "./apps";
 import {
@@ -23,6 +24,7 @@ import {
 } from "./desktop-pointer";
 import Dock, { type DockApp } from "./dock";
 import FolderWindow, { type FolderSpec } from "./folder-windows";
+import SiriApp from "./siri-app";
 import { DESKTOP_CSS } from "./geometry";
 
 const getServerVersion = () => 0;
@@ -63,7 +65,7 @@ const FOLDERS: readonly FolderSpec[] = [
   },
 ];
 
-type AppId = "quran" | "settings" | "phone" | null;
+type AppId = "quran" | "settings" | "phone" | "siri" | null;
 
 interface Opening {
   folder: FolderSpec;
@@ -133,6 +135,30 @@ export default function Desktop({
 
   const closeFolder = useCallback(() => setOpened(null), []);
 
+  // Voice drives the same state as the mouse and the finger — it opens the
+  // real windows rather than a parallel voice-only view.
+  const runVoiceAction = useCallback((action: VoiceAction) => {
+    switch (action.kind) {
+      case "folder": {
+        const folder = FOLDERS.find((entry) => entry.id === action.id);
+        if (folder) setOpened(folder);
+        break;
+      }
+      case "app":
+        setApp(action.id);
+        break;
+      case "link":
+        window.open(action.href, "_blank", "noopener");
+        break;
+      case "close":
+        setOpened(null);
+        setApp(null);
+        break;
+      case "none":
+        break;
+    }
+  }, []);
+
   const enableCamera = useCallback(() => {
     const video = document.querySelector<HTMLVideoElement>(
       "[data-hero-video]",
@@ -175,6 +201,13 @@ export default function Desktop({
       tint: "linear-gradient(160deg,#2FBFA0,#0E7C63)",
       icon: <MusicGlyph />,
       onOpen: () => setApp("quran"),
+    },
+    {
+      id: "siri",
+      label: "Assistant",
+      tint: "linear-gradient(160deg,#8E7BEF,#4B32C3)",
+      icon: <MicGlyph />,
+      onOpen: () => setApp("siri"),
     },
     {
       id: "settings",
@@ -268,6 +301,9 @@ export default function Desktop({
           <div className="app-layer">
             {app === "quran" && <QuranApp onClose={() => setApp(null)} />}
             {app === "phone" && <ContactApp onClose={() => setApp(null)} />}
+            {app === "siri" && (
+              <SiriApp onClose={() => setApp(null)} onAction={runVoiceAction} />
+            )}
             {app === "settings" && (
               <SettingsApp
                 onClose={() => setApp(null)}
@@ -347,6 +383,15 @@ function MusicGlyph() {
   return (
     <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden>
       <path d="M20 3.5 9 6v9.6a3.4 3.4 0 1 0 2 3.1V9.2l7-1.6v5.4a3.4 3.4 0 1 0 2 3.1V3.5Z" />
+    </svg>
+  );
+}
+
+function MicGlyph() {
+  return (
+    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden>
+      <path d="M12 14a3 3 0 0 0 3-3V5a3 3 0 0 0-6 0v6a3 3 0 0 0 3 3Z" />
+      <path d="M17.5 11a.9.9 0 0 0-1.8 0 3.7 3.7 0 0 1-7.4 0 .9.9 0 0 0-1.8 0 5.5 5.5 0 0 0 4.6 5.4V19H9.6a.9.9 0 0 0 0 1.8h4.8a.9.9 0 0 0 0-1.8h-1.5v-2.6a5.5 5.5 0 0 0 4.6-5.4Z" />
     </svg>
   );
 }

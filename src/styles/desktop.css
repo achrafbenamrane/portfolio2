@@ -897,3 +897,158 @@
 button.fw-contact-value:hover {
   background: rgba(255, 255, 255, 0.14);
 }
+
+/* ── voice assistant ─────────────────────────────────────────────────
+ * Siri's shape, not Siri's chrome: one orb carrying the whole state
+ * machine, because a status word plus a spinner reads as a form and the
+ * point is that it feels like something listening.
+ */
+
+.siri {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 4px 0 2px;
+}
+
+.orb {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 84px;
+  height: 84px;
+  flex: none;
+}
+
+.orb-core {
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 32% 28%, #cfd6ff 0%, #8e7bef 42%, #4b32c3 100%);
+  box-shadow: 0 0 22px rgba(142, 123, 239, 0.65);
+  transition: transform 220ms cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+.orb-ring {
+  position: absolute;
+  inset: 8px;
+  border-radius: 50%;
+  border: 2px solid rgba(142, 123, 239, 0.55);
+  opacity: 0;
+}
+
+/* idle: a slow breath, so it reads as awake rather than frozen */
+.orb.is-idle .orb-core {
+  animation: orb-breathe 3.2s ease-in-out infinite;
+}
+
+/* listening: rings push outward at speech cadence */
+.orb.is-listening .orb-core {
+  transform: scale(1.12);
+}
+
+.orb.is-listening .orb-ring {
+  animation: orb-pulse 1.5s ease-out infinite;
+}
+
+.orb.is-listening .orb-ring-2 {
+  animation-delay: 0.75s;
+}
+
+/* thinking: a tight, quicker throb — busy, not receptive */
+.orb.is-thinking .orb-core {
+  animation: orb-breathe 0.7s ease-in-out infinite;
+}
+
+/* speaking: the core itself modulates, like a mouth moving */
+.orb.is-speaking .orb-core {
+  animation: orb-speak 0.62s ease-in-out infinite;
+}
+
+.orb.is-error .orb-core {
+  background: radial-gradient(circle at 32% 28%, #ffd0cc 0%, #ef7b7b 42%, #c3322b 100%);
+  box-shadow: 0 0 22px rgba(239, 123, 123, 0.6);
+}
+
+@keyframes orb-breathe {
+  0%, 100% { transform: scale(1); }
+  50%      { transform: scale(1.07); }
+}
+
+@keyframes orb-speak {
+  0%, 100% { transform: scale(1.05) scaleY(1); }
+  50%      { transform: scale(1.14) scaleY(0.92); }
+}
+
+@keyframes orb-pulse {
+  0%   { opacity: 0.75; transform: scale(0.72); }
+  100% { opacity: 0;    transform: scale(1.32); }
+}
+
+.siri-transcript {
+  min-height: 16px;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.55);
+  text-align: center;
+}
+
+.siri-reply {
+  min-height: 42px;
+  font-size: 13px;
+  line-height: 1.5;
+  text-align: center;
+  color: #f5f8fa;
+}
+
+.siri-mic {
+  padding: 8px 20px;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 999px;
+  background: rgba(142, 123, 239, 0.22);
+  color: #fff;
+  font-size: 12px;
+  cursor: pointer;
+  transition: background-color 160ms ease;
+}
+
+.siri-mic:hover:not(:disabled),
+.siri-mic.aimed {
+  background: rgba(142, 123, 239, 0.42);
+}
+
+.siri-mic.is-live {
+  background: rgba(142, 123, 239, 0.5);
+  cursor: default;
+}
+
+.siri-hints {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 5px;
+}
+
+.siri-hints li {
+  padding: 3px 8px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.07);
+  font-size: 10px;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.siri-note {
+  padding-top: 2px;
+  font-size: 9px;
+  line-height: 1.45;
+  text-align: center;
+  color: rgba(255, 255, 255, 0.38);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .orb-core,
+  .orb-ring {
+    animation: none !important;
+  }
+}

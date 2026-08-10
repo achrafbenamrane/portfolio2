@@ -1,4 +1,5 @@
-import { generateText } from "ai";
+import { groq } from "@ai-sdk/groq";
+import { generateText, type LanguageModel } from "ai";
 
 import { SYSTEM_INSTRUCTIONS } from "@/lib/voice/knowledge";
 
@@ -12,8 +13,24 @@ import { SYSTEM_INSTRUCTIONS } from "@/lib/voice/knowledge";
  * novel questions.
  */
 
-/** Haiku: this is short grounded Q&A, not reasoning. Fast and cheap fits. */
-const MODEL = "anthropic/claude-haiku-4.5";
+/**
+ * Groq when a key is present, otherwise Vercel's AI Gateway.
+ *
+ * Groq is the default because its free tier serves this outright, where the
+ * Gateway refuses every request until a card is on file. Keeping both means
+ * the endpoint follows whichever is provisioned rather than hard-failing on
+ * the one that is not — and switching later is an env var, not a deploy.
+ *
+ * GROQ_MODEL overrides the default: Groq retires model ids periodically, and
+ * that should be a dashboard change, not a code change. Current catalogue:
+ * https://console.groq.com/docs/models
+ */
+function resolveModel(): LanguageModel {
+  if (process.env.GROQ_API_KEY) {
+    return groq(process.env.GROQ_MODEL ?? "llama-3.3-70b-versatile");
+  }
+  return "anthropic/claude-haiku-4.5";
+}
 
 /** Spoken answers are short; this is a hard stop, not a target. */
 const MAX_OUTPUT_TOKENS = 200;
@@ -101,7 +118,7 @@ export async function POST(request: Request) {
 
   try {
     const { text } = await generateText({
-      model: MODEL,
+      model: resolveModel(),
       instructions: SYSTEM_INSTRUCTIONS,
       prompt: trimmed,
       maxOutputTokens: MAX_OUTPUT_TOKENS,

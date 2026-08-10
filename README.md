@@ -118,8 +118,17 @@ The endpoint is public, so it ships with guards rather than hardening added
 later: same-origin check, per-IP rate limit (8/min, 40/hour), a 300-character
 input cap, a 200-token output cap, and an answer cache for repeated questions.
 
-**Setup:** AI Gateway needs a payment method on the Vercel account before it
-will serve any request — it refuses with `customer_verification_required` until
-one is added, which is what unlocks the free credits. No env var is needed on
-Vercel; deployments authenticate via OIDC. Locally, `vercel env pull` supplies
-the token.
+**Provider:** Groq when `GROQ_API_KEY` is set, otherwise Vercel's AI Gateway.
+Groq is the default because its free tier serves this outright, where the
+Gateway refuses every request until a payment method is on file
+(`customer_verification_required`). `GROQ_MODEL` overrides the model, since
+Groq retires ids periodically and that should be a dashboard change rather than
+a code change.
+
+```bash
+vercel env add GROQ_API_KEY     # paste the key at the prompt, select all envs
+vercel deploy --prod            # env changes need a fresh deployment
+vercel env pull                 # to run it locally
+```
+
+Get a free key at https://console.groq.com/keys.

@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import {
   useCallback,
   useEffect,
@@ -205,8 +206,8 @@ export default function Desktop({
     {
       id: "siri",
       label: "Assistant",
-      tint: "linear-gradient(160deg,#8E7BEF,#4B32C3)",
-      icon: <MicGlyph />,
+      tint: "linear-gradient(160deg,#2E6FA8,#12304A)",
+      icon: <RobotGlyph />,
       onOpen: () => setApp("siri"),
     },
     {
@@ -387,12 +388,18 @@ function MusicGlyph() {
   );
 }
 
-function MicGlyph() {
+/** The assistant's own face, so the dock identifies it rather than describing
+ *  it. Overflows its tile slightly on purpose — the head reads at 36 px only
+ *  if it is not also padded. */
+function RobotGlyph() {
   return (
-    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden>
-      <path d="M12 14a3 3 0 0 0 3-3V5a3 3 0 0 0-6 0v6a3 3 0 0 0 3 3Z" />
-      <path d="M17.5 11a.9.9 0 0 0-1.8 0 3.7 3.7 0 0 1-7.4 0 .9.9 0 0 0-1.8 0 5.5 5.5 0 0 0 4.6 5.4V19H9.6a.9.9 0 0 0 0 1.8h4.8a.9.9 0 0 0 0-1.8h-1.5v-2.6a5.5 5.5 0 0 0 4.6-5.4Z" />
-    </svg>
+    <Image
+      src="/robot-head.webp"
+      alt=""
+      width={96}
+      height={96}
+      className="dock-face"
+    />
   );
 }
 

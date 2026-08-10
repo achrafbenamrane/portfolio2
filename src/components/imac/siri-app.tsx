@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useCallback, useEffect, useRef, useState } from "react";
 
 import {
@@ -165,7 +166,7 @@ export default function SiriApp({
   return (
     <AppWindow title="Assistant" onClose={onClose} width={430}>
       <div className="siri">
-        <Orb phase={phase} />
+        <Avatar phase={phase} />
 
         <p className="siri-transcript">
           {transcript ? `“${transcript}”` : " "}
@@ -201,13 +202,28 @@ export default function SiriApp({
   );
 }
 
-/** Siri's orb: idle breathes, listening pulses, speaking ripples. */
-function Orb({ phase }: { phase: Phase }) {
+/**
+ * The assistant's face: a cut-out of Achraf as an android.
+ *
+ * Floated rather than masked into a circle — the alpha already excludes the
+ * corners, so a circle would only crop the cheeks and make it read as a
+ * profile picture instead of a character. State lives in the glow and rings
+ * BEHIND the head, so the face itself never distorts.
+ */
+function Avatar({ phase }: { phase: Phase }) {
   return (
-    <div className={`orb is-${phase}`}>
-      <span className="orb-core" />
-      <span className="orb-ring" />
-      <span className="orb-ring orb-ring-2" />
+    <div className={`avatar is-${phase}`}>
+      <span className="avatar-glow" />
+      <span className="avatar-ring" />
+      <span className="avatar-ring avatar-ring-2" />
+      <Image
+        src="/robot-head.webp"
+        alt=""
+        width={224}
+        height={224}
+        className="avatar-face"
+        priority
+      />
     </div>
   );
 }

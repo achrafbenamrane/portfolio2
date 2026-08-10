@@ -1,3 +1,22 @@
 {
-  "lines": []
+  "lines": [
+    "who",
+    "roles",
+    "where",
+    "available",
+    "works",
+    "experiences",
+    "certifications",
+    "contacts",
+    "quran",
+    "cv",
+    "github",
+    "linkedin",
+    "settings",
+    "close",
+    "help",
+    "fallback",
+    "unavailable",
+    "greeting"
+  ]
 }

@@ -2,7 +2,12 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 
-import { FALLBACK, GREETING, type VoiceAction } from "@/content/voice";
+import {
+  FALLBACK,
+  GREETING,
+  UNAVAILABLE,
+  type VoiceAction,
+} from "@/content/voice";
 import { matchIntent } from "@/lib/voice/match";
 import {
   isSupported,
@@ -24,12 +29,12 @@ const ERROR_COPY: Record<RecognizerError, string> = {
   failed: "Something went wrong with the microphone.",
 };
 
-/** A few examples, so nobody has to guess what it understands. */
+/** Two commands and two open questions, so it is obvious it does both. */
 const SUGGESTIONS = [
   "Show me your work",
+  "What did you build with Next.js?",
+  "Tell me about your security background",
   "Are you available?",
-  "How do I contact you?",
-  "Open the Quran",
 ];
 
 export default function SiriApp({
@@ -69,21 +74,63 @@ export default function SiriApp({
   const respond = useCallback(
     async (heard: string) => {
       setPhase("thinking");
+
+      // Deterministic first, always. Commands and the common questions resolve
+      // instantly, in Achraf's recorded voice, for nothing — only genuinely
+      // novel questions reach the model, which is what keeps a public endpoint
+      // affordable.
       const match = matchIntent(heard);
-      const line = match
-        ? { id: match.intent.id, speech: match.intent.speech }
-        : FALLBACK;
+      if (match) {
+        setReply(match.intent.speech);
+        setPhase("speaking");
+        // The action fires with the reply rather than after it, so the window
+        // is already opening while the sentence is still being said — which is
+        // what makes it feel like an assistant instead of a form.
+        onAction(match.intent.action);
+        await speak(match.intent.id, match.intent.speech);
+        setPhase("idle");
+        return;
+      }
 
-      setReply(line.speech);
-      setPhase("speaking");
+      // Nothing matched, so this is headed for the model. Noise and single
+      // stray words stop here instead: there is nothing to answer, and a
+      // request per cough is a request per cough billed. This check sits AFTER
+      // the intent pass on purpose — "close" and "help" are one word each and
+      // are perfectly valid commands.
+      if (heard.trim().split(/\s+/).filter(Boolean).length < 2) {
+        setReply(FALLBACK.speech);
+        setPhase("speaking");
+        await speak(FALLBACK.id, FALLBACK.speech);
+        setPhase("idle");
+        return;
+      }
 
-      // The action fires with the reply rather than after it, so the window is
-      // already opening while the sentence is still being said — which is what
-      // makes it feel like an assistant instead of a form.
-      if (match) onAction(match.intent.action);
+      try {
+        const response = await fetch("/api/ask", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ question: heard }),
+        });
 
-      await speak(line.id, line.speech);
-      setPhase("idle");
+        if (!response.ok) throw new Error(String(response.status));
+        const { answer } = (await response.json()) as { answer?: string };
+        if (!answer) throw new Error("empty");
+
+        setReply(answer);
+        setPhase("speaking");
+        // Generated text has no recorded clip by definition, so this is the
+        // browser voice. Passing an id that is never in the manifest keeps
+        // that explicit rather than accidental.
+        await speak("__generated__", answer);
+        setPhase("idle");
+      } catch {
+        // Understood but unanswerable — say that, rather than blaming the
+        // listener for a question that arrived perfectly well.
+        setReply(UNAVAILABLE.speech);
+        setPhase("speaking");
+        await speak(UNAVAILABLE.id, UNAVAILABLE.speech);
+        setPhase("idle");
+      }
     },
     [onAction],
   );

@@ -157,6 +157,17 @@ export const FALLBACK = {
   speech: `I didn't catch that. Try asking to see my work, my experience, or how to get in touch.`,
 } as const;
 
+/**
+ * Spoken when the question was understood but the answering service is down or
+ * not yet configured. Distinct from FALLBACK on purpose: telling someone you
+ * did not catch them when you did is a lie, and it sends them off re-phrasing
+ * a question that was never the problem.
+ */
+export const UNAVAILABLE = {
+  id: "unavailable",
+  speech: `I can't answer open questions right now — but I can show you my work, my experience, my certifications, or how to reach me.`,
+} as const;
+
 /** Spoken the first time the assistant opens. */
 export const GREETING = {
   id: "greeting",
@@ -167,5 +178,6 @@ export const GREETING = {
 export const ALL_LINES = [
   GREETING,
   FALLBACK,
+  UNAVAILABLE,
   ...INTENTS.map((intent) => ({ id: intent.id, speech: intent.speech })),
 ] as const;

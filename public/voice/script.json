@@ -81,6 +81,11 @@
       "hash": "45611d43"
     },
     {
+      "id": "unavailable",
+      "speech": "I can't answer open questions right now — but I can show you my work, my experience, my certifications, or how to reach me.",
+      "hash": "396086f1"
+    },
+    {
       "id": "greeting",
       "speech": "Hey — I'm Achraf. Ask me about my work, or tell me what to open.",
       "hash": "ba664bec"

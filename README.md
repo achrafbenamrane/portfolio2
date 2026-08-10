@@ -98,3 +98,28 @@ Two rules the script enforces or depends on:
 Speech recognition is Chrome, Edge and Safari only — Firefox does not ship it.
 Unlike the hand tracking, it is **not** on-device: the browser streams audio to
 its own service to transcribe. The UI says so.
+
+### Open-ended questions
+
+Beyond the fixed commands, the assistant answers free-form questions about
+Achraf and the site via `POST /api/ask` (Claude Haiku through the Vercel AI
+Gateway).
+
+The deterministic intent table runs **first**, on the client. Commands and the
+common questions never reach the model at all, so the endpoint is only paid for
+genuinely novel questions.
+
+Grounding is the whole of `src/content/site.ts`, serialised into the
+instructions — no vector store, no embeddings, no retrieval. The corpus is a
+few thousand tokens, so it fits outright, and that removes a class of failure:
+the assistant cannot answer from a stale index because there is no index.
+
+The endpoint is public, so it ships with guards rather than hardening added
+later: same-origin check, per-IP rate limit (8/min, 40/hour), a 300-character
+input cap, a 200-token output cap, and an answer cache for repeated questions.
+
+**Setup:** AI Gateway needs a payment method on the Vercel account before it
+will serve any request — it refuses with `customer_verification_required` until
+one is added, which is what unlocks the free credits. No env var is needed on
+Vercel; deployments authenticate via OIDC. Locally, `vercel env pull` supplies
+the token.

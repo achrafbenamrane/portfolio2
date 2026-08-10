@@ -78,25 +78,26 @@ per-reply cost, no latency, and it works offline. Until the clips exist the
 browser's own robotic voice stands in, so the feature is usable but obviously
 unfinished rather than silently broken.
 
-To record them:
+To record them, read `docs/voice-script.md` aloud in one take — it is a
+normal paragraph, and every line the assistant says is a sentence inside it.
 
 ```bash
-npm run voice:lines      # writes public/voice/script.json + lists what's missing
-# record ONE take reading every line, pausing ~2s between them
-npm run voice:split      # splits it into public/voice/<id>.mp3
+npm run voice:lines      # writes public/voice/script.json
+# read docs/voice-script.md into one recording
+npm run voice:split      # cuts it into public/voice/<id>.mp3
 npm run voice:lines      # refresh the manifest the site reads at runtime
 ```
 
-`voice:split` transcribes each segment (Groq Whisper) and matches it to the
-script by similarity, rather than mapping segments to lines in order. A real
-take is never clean — lines get fluffed and repeated, a breath splits a
-sentence — and order-mapping breaks on all of that *silently*, leaving the
-assistant confidently saying the wrong sentence. Matching by content means
-retakes sort themselves out, and anything unmatched is reported rather than
-shipped.
+`voice:split` transcribes the whole take once with WORD-LEVEL timestamps and
+locates each written line as a run of words, then cuts the audio there.
 
-The silence threshold is 1.1 s, not lower: at 0.55 s a test take split single
-lines at their own commas, producing 27 segments where 20 were expected.
+Cutting on silence was the obvious approach and is worse in every way: it
+forces unnatural pauses between lines, it splits sentences at their own commas
+(measured — a 0.55 s threshold produced 27 segments where 20 were expected),
+and when it mis-segments it does so *silently*, leaving the assistant saying a
+sentence it was never given. Locating words cuts where the words actually are,
+and anything not found is reported rather than shipped — a missing clip falls
+back to the browser voice, a wrong one has the assistant say something untrue.
 
 Two rules the script enforces or depends on:
 

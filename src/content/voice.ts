@@ -46,7 +46,7 @@ export const INTENTS: readonly Intent[] = [
     id: "who",
     triggers: [["who", "introduce", "yourself", "bio"]],
     phrases: ["who are you", "about yourself"],
-    speech: `Hi, I am Achraf Benamrane. I am a full stack developer, a designer, and a network security engineer. I live in Annaba, Algeria.`,
+    speech: `Hi, I am Achraf Benamrane. I am a full stack developer, a designer, and a network security engineer, based in Annaba, Algeria.`,
     action: { kind: "none" },
   },
   {

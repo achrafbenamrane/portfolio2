@@ -1,19 +1,21 @@
 """
-Turns one continuous recording into the assistant's 18 voice clips.
+Cuts the assistant's 18 voice clips out of one continuous reading.
 
     python scripts/split-voice-take.py [path-to-recording]
 
 With no argument it takes the newest audio file in Documents/Sound Recordings.
 
-Why it transcribes rather than just counting gaps: a real take is never clean.
-Lines get fluffed and repeated, a cough lands in a pause, a sentence gets split
-by a breath. Splitting on silence and mapping segments to lines in order breaks
-on all three, and breaks *silently* — you end up with the assistant confidently
-saying the wrong sentence.
+You read the passage in docs/voice-script.md straight through, at a normal
+pace. Nothing to count, nothing to time — every line the assistant says is a
+sentence inside it.
 
-So each segment is transcribed (Groq Whisper, free) and matched to the script
-by text similarity. Retakes sort themselves out, because the better-matching
-take wins. Anything that matches nothing is reported instead of shipped.
+How it finds them: the whole take is transcribed once with WORD-LEVEL
+timestamps, and each scripted line is located as a run of words in that
+transcript. Cutting on silence was the obvious approach and it is worse in
+every way — it forces unnatural pauses, it splits sentences at their own
+commas, and when it mis-segments it does so silently, leaving the assistant
+saying a sentence it was never given. Locating words means the audio is cut
+where the words actually are.
 
 Requires ffmpeg and GROQ_API_KEY (already in .env.local).
 """
@@ -25,7 +27,6 @@ import os
 import re
 import subprocess
 import sys
-import time
 from difflib import SequenceMatcher
 from pathlib import Path
 
@@ -35,30 +36,20 @@ ROOT = Path(__file__).resolve().parent.parent
 VOICE = ROOT / "public" / "voice"
 SCRIPT = VOICE / "script.json"
 
-#: Anything quieter than this for this long counts as a gap between lines.
-#:
-#: 1.1 s, not the 0.55 s this started at. Testing against a synthetic take
-#: showed 0.55 s splitting single lines in half at their own commas and full
-#: stops — "Yes, I'm available right now. The fastest way to reach me is
-#: email" became two segments. The reader is asked for a 2 s gap between
-#: lines, so 1.1 s sits clear of both intra-sentence pauses and that gap.
-SILENCE_DB = -35
-SILENCE_SEC = 1.1
-
-#: Keep a little air either side so words are not clipped at the consonant.
-PAD_SEC = 0.18
-
-#: Below this, a segment is assumed to be noise rather than a line.
-MIN_SEGMENT_SEC = 0.5
-MIN_SIMILARITY = 0.55
-
 TRANSCRIBE_URL = "https://api.groq.com/openai/v1/audio/transcriptions"
 TRANSCRIBE_MODEL = "whisper-large-v3-turbo"
 
-#: Groq's free tier rate-limits Whisper, and a 20-segment take hits it. Pacing
-#: the calls costs a minute and avoids losing segments to 429s.
-TRANSCRIBE_GAP_SEC = 3.0
-TRANSCRIBE_RETRIES = 4
+#: Keep a little air either side so words are not clipped at the consonant.
+PAD_SEC = 0.12
+
+#: Below this the match is treated as absent and reported, not shipped. A
+#: wrong clip is worse than a missing one: a missing clip falls back to the
+#: browser voice, a wrong one has the assistant say something untrue.
+MIN_SIMILARITY = 0.62
+
+#: How far the spoken run may differ in length from the written line, in words.
+#: Whisper drops or splits the odd word, so an exact length match is too strict.
+WINDOW_SLACK = 4
 
 
 def main(argv: list[str]) -> int:
@@ -71,55 +62,52 @@ def main(argv: list[str]) -> int:
     if take is None or not take.exists():
         print("no recording found — pass the path explicitly", file=sys.stderr)
         return 1
-    print(f"take: {take.name}")
 
     key = groq_key()
     if not key:
         print("GROQ_API_KEY not set (try `vercel env pull`)", file=sys.stderr)
         return 1
 
-    work = ROOT / ".voice-work"
-    work.mkdir(exist_ok=True)
-
-    spans = detect_spans(take)
-    print(f"found {len(spans)} spoken segments (script has {len(lines)} lines)")
-    if not spans:
+    print(f"take: {take.name}  ({duration(take):.0f}s)")
+    print("transcribing…")
+    words = transcribe_words(take, key)
+    if not words:
         return 1
+    print(f"  {len(words)} words recognised\n")
 
-    # Transcribe every segment, then let similarity decide what is what.
-    best: dict[str, tuple[float, Path, str]] = {}
-    for index, (start, end) in enumerate(spans):
-        clip = work / f"seg{index:03d}.wav"
-        extract(take, start, end, clip)
-        heard = transcribe(clip, key)
-        if not heard:
+    # Longest lines first: they are the most distinctive, so they claim their
+    # span before a short line can steal part of it.
+    order = sorted(range(len(lines)), key=lambda i: -len(lines[i]["speech"].split()))
+    taken: list[tuple[int, int]] = []
+    found: dict[str, tuple[float, float, float]] = {}
+
+    for index in order:
+        line = lines[index]
+        span = locate(line["speech"], words, taken)
+        if span is None:
             continue
+        start_i, end_i, score = span
+        taken.append((start_i, end_i))
+        found[line["id"]] = (words[start_i]["start"], words[end_i]["end"], score)
 
-        line_id, score = best_match(heard, lines)
-        flag = " " if score >= MIN_SIMILARITY else "?"
-        print(f"  {flag} {index:>2}  {end - start:5.1f}s  {score:.2f}  {line_id:<14} {heard[:56]}")
-
-        if score >= MIN_SIMILARITY and (
-            line_id not in best or score > best[line_id][0]
-        ):
-            best[line_id] = (score, clip, heard)
-
-    print()
     written, missing = 0, []
     for line in lines:
-        entry = best.get(line["id"])
-        if entry is None:
+        hit = found.get(line["id"])
+        if hit is None:
             missing.append(line)
             continue
-        export(entry[1], VOICE / f"{line['id']}.mp3")
+        start, end, score = hit
+        cut(take, start, end, VOICE / f"{line['id']}.mp3")
+        print(f"  {score:.2f}  {end - start:5.1f}s  {line['id']}")
         written += 1
 
-    print(f"wrote {written} clips to public/voice/")
+    print(f"\nwrote {written} of {len(lines)} clips to public/voice/")
     if missing:
-        print(f"\n{len(missing)} line(s) not matched — re-record just these:")
+        print(f"\n{len(missing)} line(s) not found in the recording:")
         for line in missing:
             print(f"  [{line['id']}] {line['speech']}")
-
+        print("\nRead those again into a second file and re-run — already-written")
+        print("clips are left alone unless a better match turns up.")
     return 0
 
 
@@ -139,8 +127,7 @@ def newest_recording() -> Path | None:
     if not folder.exists():
         folder = Path.home() / "Documents"
     audio = [
-        p
-        for p in folder.glob("*")
+        p for p in folder.glob("*")
         if p.suffix.lower() in {".m4a", ".mp3", ".wav", ".wma", ".flac", ".ogg"}
     ]
     return max(audio, key=lambda p: p.stat().st_mtime) if audio else None
@@ -155,99 +142,73 @@ def duration(path: Path) -> float:
     return float(out.stdout.strip())
 
 
-def detect_spans(take: Path) -> list[tuple[float, float]]:
-    """Inverts ffmpeg's silence list into the spans that contain speech."""
-    proc = subprocess.run(
-        ["ffmpeg", "-hide_banner", "-nostats", "-i", str(take),
-         "-af", f"silencedetect=noise={SILENCE_DB}dB:d={SILENCE_SEC}",
-         "-f", "null", "-"],
-        capture_output=True, text=True,
-    )
-    log = proc.stderr
-
-    starts = [float(m) for m in re.findall(r"silence_start: ([\d.]+)", log)]
-    ends = [float(m) for m in re.findall(r"silence_end: ([\d.]+)", log)]
-    total = duration(take)
-
-    # Speech runs from the end of each silence to the start of the next.
-    boundaries: list[tuple[float, float]] = []
-    cursor = 0.0
-    for index, start in enumerate(starts):
-        if start > cursor:
-            boundaries.append((cursor, start))
-        cursor = ends[index] if index < len(ends) else total
-    if cursor < total:
-        boundaries.append((cursor, total))
-
-    return [
-        (max(a - PAD_SEC, 0), min(b + PAD_SEC, total))
-        for a, b in boundaries
-        if b - a >= MIN_SEGMENT_SEC
-    ]
-
-
-def extract(take: Path, start: float, end: float, out: Path) -> None:
-    subprocess.run(
-        ["ffmpeg", "-y", "-hide_banner", "-loglevel", "error",
-         "-ss", f"{start:.3f}", "-to", f"{end:.3f}", "-i", str(take),
-         "-ac", "1", "-ar", "16000", str(out)],
-        check=True,
-    )
-
-
-def transcribe(clip: Path, key: str) -> str:
-    """Retries on 429 rather than dropping the segment — a lost transcript
-    means a line silently missing from the finished assistant."""
-    for attempt in range(TRANSCRIBE_RETRIES):
-        with clip.open("rb") as handle:
-            response = requests.post(
-                TRANSCRIBE_URL,
-                headers={"Authorization": f"Bearer {key}"},
-                files={"file": (clip.name, handle, "audio/wav")},
-                data={"model": TRANSCRIBE_MODEL, "language": "en",
-                      "response_format": "json"},
-                timeout=120,
-            )
-        if response.status_code == 200:
-            time.sleep(TRANSCRIBE_GAP_SEC)
-            return response.json().get("text", "").strip()
-
-        if response.status_code == 429:
-            wait = float(response.headers.get("retry-after", 0)) or (
-                TRANSCRIBE_GAP_SEC * (attempt + 2)
-            )
-            print(f"    rate limited, waiting {wait:.0f}s…")
-            time.sleep(wait)
-            continue
-
-        print(f"    transcribe failed {response.status_code}: {response.text[:120]}")
-        return ""
-
-    print("    giving up on this segment after repeated rate limits")
-    return ""
+def transcribe_words(take: Path, key: str) -> list[dict]:
+    with take.open("rb") as handle:
+        response = requests.post(
+            TRANSCRIBE_URL,
+            headers={"Authorization": f"Bearer {key}"},
+            files={"file": (take.name, handle)},
+            data={
+                "model": TRANSCRIBE_MODEL,
+                "language": "en",
+                "response_format": "verbose_json",
+                "timestamp_granularities[]": "word",
+            },
+            timeout=300,
+        )
+    if response.status_code != 200:
+        print(f"transcription failed {response.status_code}: {response.text[:200]}",
+              file=sys.stderr)
+        return []
+    return response.json().get("words", []) or []
 
 
 def normalise(text: str) -> str:
-    """Punctuation-free lowercase, so an em dash in the script does not count
-    against a transcript that never had one."""
     return " ".join(re.sub(r"[^a-z0-9 ]", " ", text.lower()).split())
 
 
-def best_match(heard: str, lines: list[dict]) -> tuple[str, float]:
-    target = normalise(heard)
-    scored = [
-        (SequenceMatcher(None, target, normalise(line["speech"])).ratio(), line["id"])
-        for line in lines
-    ]
-    score, line_id = max(scored)
-    return line_id, score
+def locate(
+    speech: str, words: list[dict], taken: list[tuple[int, int]]
+) -> tuple[int, int, float] | None:
+    """
+    Finds the run of transcript words that best matches one written line.
+
+    Slides a window whose length brackets the line's own word count, scores
+    each against the line, and keeps the best. Windows overlapping an
+    already-claimed run are skipped, so two similar lines cannot both take it.
+    """
+    target = normalise(speech)
+    n = len(target.split())
+    if n == 0 or not words:
+        return None
+
+    flat = [normalise(w.get("word", "")) for w in words]
+    best: tuple[int, int, float] | None = None
+
+    for size in range(max(n - WINDOW_SLACK, 1), n + WINDOW_SLACK + 1):
+        for start in range(0, len(words) - size + 1):
+            end = start + size - 1
+            if any(start <= b and a <= end for a, b in taken):
+                continue
+            candidate = " ".join(flat[start : end + 1]).strip()
+            if not candidate:
+                continue
+            score = SequenceMatcher(None, target, candidate).ratio()
+            if best is None or score > best[2]:
+                best = (start, end, score)
+
+    if best is None or best[2] < MIN_SIMILARITY:
+        return None
+    return best
 
 
-def export(clip: Path, out: Path) -> None:
+def cut(take: Path, start: float, end: float, out: Path) -> None:
     """Loudness-normalised so no clip is noticeably louder than its neighbour."""
     out.parent.mkdir(parents=True, exist_ok=True)
     subprocess.run(
-        ["ffmpeg", "-y", "-hide_banner", "-loglevel", "error", "-i", str(clip),
+        ["ffmpeg", "-y", "-hide_banner", "-loglevel", "error",
+         "-ss", f"{max(start - PAD_SEC, 0):.3f}", "-to", f"{end + PAD_SEC:.3f}",
+         "-i", str(take),
          "-af", "loudnorm=I=-16:TP=-1.5:LRA=11",
          "-codec:a", "libmp3lame", "-b:a", "96k", "-ar", "44100", "-ac", "1",
          str(out)],

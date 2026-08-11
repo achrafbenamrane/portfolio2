@@ -1,55 +1,38 @@
 import { groq } from "@ai-sdk/groq";
 import { generateText, type LanguageModel } from "ai";
 
-import { SYSTEM_INSTRUCTIONS } from "@/lib/voice/knowledge";
+import { ANSWERS, UNAVAILABLE } from "@/content/voice";
 
 /**
- * Open-ended questions about Achraf and this site.
+ * Routes a spoken question to one of Achraf's recorded answers.
+ *
+ * The model CHOOSES a line; it does not write one. That is the whole point:
+ * every reply the assistant speaks has to exist as audio in Achraf's own
+ * voice, and nothing can produce a sentence he never recorded. Generating free
+ * text would mean falling back to a synthetic voice for exactly the questions
+ * visitors care most about, which is the inconsistency this replaces.
+ *
+ * So the model does the part it is good at — understanding that "do you know
+ * React Native?" is a question about his work — and the answer comes back as
+ * an id whose clip is already on disk.
  *
  * This endpoint is public and costs money per call, so the guards below are
- * part of the feature rather than hardening bolted on afterwards. The
- * deterministic intent table still runs FIRST on the client — commands and the
- * common questions never reach this route at all, so it only pays for genuinely
- * novel questions.
+ * part of the feature. The deterministic keyword table still runs FIRST on the
+ * client, so commands and obvious questions never reach here at all.
  */
 
-/**
- * Groq when a key is present, otherwise Vercel's AI Gateway.
- *
- * Groq is the default because its free tier serves this outright, where the
- * Gateway refuses every request until a card is on file. Keeping both means
- * the endpoint follows whichever is provisioned rather than hard-failing on
- * the one that is not — and switching later is an env var, not a deploy.
- *
- * GROQ_MODEL overrides the default: Groq retires model ids periodically, and
- * that should be a dashboard change, not a code change. Current catalogue:
- * https://console.groq.com/docs/models
- */
-function resolveModel(): LanguageModel {
-  if (process.env.GROQ_API_KEY) {
-    return groq(process.env.GROQ_MODEL ?? "llama-3.3-70b-versatile");
-  }
-  return "anthropic/claude-haiku-4.5";
-}
+const MODEL: LanguageModel = process.env.GROQ_API_KEY
+  ? groq(process.env.GROQ_MODEL ?? "llama-3.3-70b-versatile")
+  : "anthropic/claude-haiku-4.5";
 
-/** Spoken answers are short; this is a hard stop, not a target. */
-const MAX_OUTPUT_TOKENS = 200;
-
-/** A real spoken question is short. Anything longer is not a question. */
+/** Choosing a number needs a handful of tokens, not a paragraph. */
+const MAX_OUTPUT_TOKENS = 8;
 const MAX_QUESTION_CHARS = 300;
 
 const WINDOW_MS = 60_000;
 const MAX_PER_WINDOW = 8;
 const MAX_PER_HOUR = 40;
 
-/**
- * Per-IP limiter held in module scope.
- *
- * Fluid Compute reuses instances across requests, so this holds for the
- * traffic a portfolio sees. It is deliberately not a distributed limiter: that
- * would mean provisioning Redis for a site that gets a few visitors a day.
- * The real cost ceiling is MAX_OUTPUT_TOKENS combined with the answer cache.
- */
 const hits = new Map<string, number[]>();
 
 function rateLimit(ip: string) {
@@ -58,7 +41,6 @@ function rateLimit(ip: string) {
   times.push(now);
   hits.set(ip, times);
 
-  // Keep the map from growing without bound on a long-lived instance.
   if (hits.size > 5_000) {
     for (const [key, value] of hits) {
       if (value.every((t) => now - t > 3_600_000)) hits.delete(key);
@@ -69,16 +51,27 @@ function rateLimit(ip: string) {
   return lastMinute <= MAX_PER_WINDOW && times.length <= MAX_PER_HOUR;
 }
 
-/**
- * Identical questions are common on a portfolio — "what do you do", "are you
- * available" — and the answer only changes when the content does. Caching them
- * for the life of the instance removes most of the repeat spend.
- */
-const answers = new Map<string, string>();
+/** Same question, same answer — so a repeat costs nothing. */
+const routed = new Map<string, string>();
+
+const CATALOGUE = ANSWERS.map(
+  (answer, index) => `${index + 1}. ${answer.speech}`,
+).join("\n");
+
+const INSTRUCTIONS = `You route questions asked on Achraf Benamrane's portfolio
+website to one of his pre-recorded answers.
+
+Below are the answers he can give, numbered. Reply with the NUMBER of the one
+that best addresses the visitor's question, and nothing else — no words, no
+punctuation, no explanation.
+
+If no answer genuinely addresses the question, reply 0. Do not stretch: a
+loosely related answer is worse than admitting there isn't one.
+
+ANSWERS:
+${CATALOGUE}`;
 
 export async function POST(request: Request) {
-  // Same-origin only. Does not stop a determined caller, but it stops the
-  // casual "found an open LLM endpoint" case, which is the realistic threat.
   const origin = request.headers.get("origin");
   if (origin) {
     const host = request.headers.get("host");
@@ -90,10 +83,7 @@ export async function POST(request: Request) {
   const ip =
     request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "unknown";
   if (!rateLimit(ip)) {
-    return Response.json(
-      { error: "Too many questions — give it a minute." },
-      { status: 429 },
-    );
+    return Response.json({ error: "Too many questions" }, { status: 429 });
   }
 
   let question: unknown;
@@ -102,7 +92,6 @@ export async function POST(request: Request) {
   } catch {
     return Response.json({ error: "Bad request" }, { status: 400 });
   }
-
   if (typeof question !== "string") {
     return Response.json({ error: "Bad request" }, { status: 400 });
   }
@@ -113,30 +102,38 @@ export async function POST(request: Request) {
   }
 
   const key = trimmed.toLowerCase();
-  const cached = answers.get(key);
-  if (cached) return Response.json({ answer: cached, cached: true });
+  const cached = routed.get(key);
+  if (cached) return Response.json(answerFor(cached), { headers: HIT });
 
   try {
     const { text } = await generateText({
-      model: resolveModel(),
-      instructions: SYSTEM_INSTRUCTIONS,
+      model: MODEL,
+      instructions: INSTRUCTIONS,
       prompt: trimmed,
       maxOutputTokens: MAX_OUTPUT_TOKENS,
-      temperature: 0.3,
+      temperature: 0,
     });
 
-    const answer = text.trim();
-    if (!answer) {
-      return Response.json({ error: "Empty answer" }, { status: 502 });
-    }
+    // The model was asked for a bare number; take the first one it produced
+    // and ignore anything else, rather than trusting the format.
+    const picked = Number.parseInt(text.match(/\d+/)?.[0] ?? "0", 10);
+    const answer = ANSWERS[picked - 1];
+    const id = answer ? answer.id : UNAVAILABLE.id;
 
-    if (answers.size > 500) answers.clear();
-    answers.set(key, answer);
+    if (routed.size > 500) routed.clear();
+    routed.set(key, id);
 
-    return Response.json({ answer });
+    return Response.json(answerFor(id));
   } catch (error) {
-    // Never surface the provider's error text to a public caller.
     console.error("ask route failed:", error);
-    return Response.json({ error: "Assistant unavailable" }, { status: 502 });
+    return Response.json(answerFor(UNAVAILABLE.id), { status: 200 });
   }
+}
+
+const HIT = { "x-answer-cache": "hit" };
+
+function answerFor(id: string) {
+  const answer =
+    ANSWERS.find((entry) => entry.id === id) ?? UNAVAILABLE;
+  return { id: answer.id, text: answer.speech };
 }

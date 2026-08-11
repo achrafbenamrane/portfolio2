@@ -174,6 +174,16 @@ export const GREETING = {
   speech: `Hi, I am Achraf. Ask me about my work. Or tell me what to open.`,
 } as const;
 
+/**
+ * Every answer the assistant can speak, for the router to choose between.
+ *
+ * Commands are excluded: "closing that" is not an answer to a question, and
+ * offering it to the router only invites it to pick nonsense.
+ */
+export const ANSWERS = INTENTS.filter(
+  (intent) => intent.action.kind !== "close",
+).map((intent) => ({ id: intent.id, speech: intent.speech }));
+
 /** Everything that needs an audio clip, for the generator script. */
 export const ALL_LINES = [
   GREETING,

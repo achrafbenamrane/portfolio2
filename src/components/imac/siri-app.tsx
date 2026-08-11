@@ -6,6 +6,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import {
   FALLBACK,
   GREETING,
+  INTENTS,
   UNAVAILABLE,
   type VoiceAction,
 } from "@/content/voice";
@@ -114,15 +115,22 @@ export default function SiriApp({
         });
 
         if (!response.ok) throw new Error(String(response.status));
-        const { answer } = (await response.json()) as { answer?: string };
-        if (!answer) throw new Error("empty");
+        const { id, text } = (await response.json()) as {
+          id?: string;
+          text?: string;
+        };
+        if (!id || !text) throw new Error("empty");
 
-        setReply(answer);
+        setReply(text);
         setPhase("speaking");
-        // Generated text has no recorded clip by definition, so this is the
-        // browser voice. Passing an id that is never in the manifest keeps
-        // that explicit rather than accidental.
-        await speak("__generated__", answer);
+
+        // The route returns the ID of a line Achraf actually recorded, so this
+        // plays his voice like every other reply. Nothing the assistant says
+        // is ever synthesised.
+        const routed = INTENTS.find((intent) => intent.id === id);
+        if (routed) onAction(routed.action);
+
+        await speak(id, text);
         setPhase("idle");
       } catch {
         // Understood but unanswerable — say that, rather than blaming the
@@ -193,8 +201,8 @@ export default function SiriApp({
             on-device; this is not, and saying so protects both claims. */}
         <p className="siri-note">
           {cloned
-            ? "Replies in Achraf's own voice. "
-            : "Replies use the browser voice until the cloned clips ship. "}
+            ? "Every reply is Achraf's own recorded voice. "
+            : "Voice clips are still loading. "}
           {"Speech is transcribed by your browser's service, not on this device."}
         </p>
       </div>

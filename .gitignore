@@ -60,3 +60,5 @@ __pycache__/
 # The raw voice take. The 18 cut clips ship; the clean continuous recording
 # does not need to — it is a better voice-cloning sample than the clips are.
 /assets-source/voice-take.*
+/assets-source/voice-raw/
+/assets-source/voice-preview/

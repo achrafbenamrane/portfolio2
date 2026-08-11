@@ -6,7 +6,6 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import {
   FALLBACK,
   GREETING,
-  INTENTS,
   UNAVAILABLE,
   type VoiceAction,
 } from "@/content/voice";
@@ -16,7 +15,7 @@ import {
   listenOnce,
   type RecognizerError,
 } from "@/lib/voice/recognizer";
-import { hasClonedVoice, loadManifest, speak, stopSpeaking } from "@/lib/voice/speaker";
+import { loadManifest, speak, stopSpeaking } from "@/lib/voice/speaker";
 import { AppWindow } from "./apps";
 import { useAimTarget } from "./desktop-pointer";
 
@@ -52,12 +51,12 @@ export default function SiriApp({
   const [transcript, setTranscript] = useState("");
   const [reply, setReply] = useState<string>(GREETING.speech);
   const [error, setError] = useState<string | null>(null);
-  const [cloned, setCloned] = useState(false);
   const stopRef = useRef<(() => void) | null>(null);
   const supported = isSupported();
 
+  // Warm the manifest so the first reply does not wait on it.
   useEffect(() => {
-    void loadManifest().then(() => setCloned(hasClonedVoice()));
+    void loadManifest();
   }, []);
 
   // Greet once on open, so the assistant has a voice before being asked.
@@ -115,22 +114,16 @@ export default function SiriApp({
         });
 
         if (!response.ok) throw new Error(String(response.status));
-        const { id, text } = (await response.json()) as {
-          id?: string;
-          text?: string;
-        };
-        if (!id || !text) throw new Error("empty");
+        const { answer } = (await response.json()) as { answer?: string };
+        if (!answer) throw new Error("empty");
 
-        setReply(text);
+        setReply(answer);
         setPhase("speaking");
 
-        // The route returns the ID of a line Achraf actually recorded, so this
-        // plays his voice like every other reply. Nothing the assistant says
-        // is ever synthesised.
-        const routed = INTENTS.find((intent) => intent.id === id);
-        if (routed) onAction(routed.action);
-
-        await speak(id, text);
+        // No stored clip exists for a sentence written just now, so speak()
+        // has it synthesised — then runs the same robot treatment it runs on
+        // the stored clips, so the two are indistinguishable.
+        await speak("__generated__", answer);
         setPhase("idle");
       } catch {
         // Understood but unanswerable — say that, rather than blaming the
@@ -200,9 +193,6 @@ export default function SiriApp({
         {/* Truthful about where the audio goes. The hand tracking really is
             on-device; this is not, and saying so protects both claims. */}
         <p className="siri-note">
-          {cloned
-            ? "Every reply is Achraf's own recorded voice. "
-            : "Voice clips are still loading. "}
           {"Speech is transcribed by your browser's service, not on this device."}
         </p>
       </div>

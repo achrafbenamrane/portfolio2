@@ -1,31 +1,24 @@
+import { robotise } from "./robot-dsp";
+
 /**
  * Playback for the assistant's replies.
  *
- * Every scripted line is pre-rendered in Achraf's cloned voice and shipped as
- * a static file, so at runtime this is an `<audio>` play — no API key, no
- * per-request cost, no latency, and it works offline. `npm run voice:lines`
- * regenerates them.
+ * Everything the assistant says goes through the same path: fetch audio,
+ * decode it, run the robot treatment over the samples, play the result. A
+ * stored answer and one generated for an unanticipated question therefore
+ * sound like the same machine by construction, rather than by two chains being
+ * kept in step by hand.
  *
- * Until those clips exist the browser's own speech synthesis stands in. It
- * sounds nothing like him, which is the point: the feature is usable while the
- * recording is outstanding, and obviously unfinished rather than silently
- * broken.
+ * The treatment runs here rather than at build time for exactly that reason —
+ * generated speech cannot be processed ahead of time, so if the stored clips
+ * were baked the two would drift apart.
  */
 
 const MANIFEST_URL = "/voice/manifest.json";
 
-// Chrome populates the voice list asynchronously and fires this once ready.
-// Without it the first reply of a session gets whatever the default is.
-if (typeof speechSynthesis !== "undefined") {
-  speechSynthesis.addEventListener("voiceschanged", () => {
-    chosenVoice = undefined;
-  });
-}
-
 let manifest: Set<string> | null = null;
 let manifestPromise: Promise<Set<string>> | null = null;
 
-/** Which lines have a real clip. Fetched once; absent manifest means none. */
 export async function loadManifest(): Promise<Set<string>> {
   if (manifest) return manifest;
   if (!manifestPromise) {
@@ -45,44 +38,80 @@ export function hasClonedVoice() {
   return (manifest?.size ?? 0) > 0;
 }
 
-let current: HTMLAudioElement | null = null;
+let context: AudioContext | null = null;
+let playing: AudioBufferSourceNode | null = null;
+
+/** Processed audio, keyed by clip id or by the text that generated it. */
+const cache = new Map<string, AudioBuffer>();
+
+function audioContext(): AudioContext | null {
+  if (typeof window === "undefined") return null;
+  const Ctor =
+    window.AudioContext ??
+    (window as unknown as { webkitAudioContext?: typeof AudioContext })
+      .webkitAudioContext;
+  if (!Ctor) return null;
+  context ??= new Ctor();
+  return context;
+}
 
 export function stopSpeaking() {
-  if (current) {
-    current.pause();
-    current = null;
+  if (playing) {
+    try {
+      playing.stop();
+    } catch {
+      // Already finished; nothing to stop.
+    }
+    playing = null;
   }
   if (typeof speechSynthesis !== "undefined") speechSynthesis.cancel();
 }
 
-/**
- * Picks a male English system voice.
- *
- * Left alone, `speechSynthesis` uses the platform default — Zira on Windows,
- * which is female, so a portfolio that speaks as Achraf answered in a woman's
- * voice. There is no reliable gender field, so this matches on the names the
- * major platforms actually ship.
- */
-const MALE_VOICE = /\b(david|daniel|alex|george|james|fred|mark|guy|male)\b/i;
+async function processed(
+  key: string,
+  fetchAudio: () => Promise<ArrayBuffer>,
+): Promise<AudioBuffer | null> {
+  const cached = cache.get(key);
+  if (cached) return cached;
 
-let chosenVoice: SpeechSynthesisVoice | null | undefined;
+  const ctx = audioContext();
+  if (!ctx) return null;
 
-function pickVoice(): SpeechSynthesisVoice | null {
-  if (chosenVoice !== undefined) return chosenVoice;
+  const decoded = await ctx.decodeAudioData(await fetchAudio());
+  const samples = decoded.getChannelData(0);
+  const treated = robotise(samples, decoded.sampleRate);
 
-  const voices = speechSynthesis.getVoices();
-  // getVoices() is empty until the list loads; stay undefined so the next
-  // call tries again rather than caching a miss forever.
-  if (voices.length === 0) return null;
+  const buffer = ctx.createBuffer(1, treated.length, decoded.sampleRate);
+  // copyToChannel wants a Float32Array over a plain ArrayBuffer; the one from
+  // robotise is typed as ArrayBufferLike, which TS will not narrow.
+  buffer.copyToChannel(new Float32Array(treated), 0);
 
-  const english = voices.filter((voice) => voice.lang.startsWith("en"));
-  chosenVoice =
-    english.find((voice) => MALE_VOICE.test(voice.name)) ??
-    english[0] ??
-    null;
-  return chosenVoice;
+  if (cache.size > 40) cache.clear();
+  cache.set(key, buffer);
+  return buffer;
 }
 
+function play(buffer: AudioBuffer): Promise<void> {
+  const ctx = audioContext();
+  if (!ctx) return Promise.resolve();
+
+  // Browsers start the context suspended until a gesture; the mic tap counts.
+  if (ctx.state === "suspended") void ctx.resume();
+
+  return new Promise((resolve) => {
+    const source = ctx.createBufferSource();
+    source.buffer = buffer;
+    source.connect(ctx.destination);
+    source.onended = () => {
+      if (playing === source) playing = null;
+      resolve();
+    };
+    playing = source;
+    source.start();
+  });
+}
+
+/** Last resort if audio cannot be decoded or generated at all. */
 function speakWithBrowser(text: string): Promise<void> {
   return new Promise((resolve) => {
     if (typeof speechSynthesis === "undefined") {
@@ -90,16 +119,8 @@ function speakWithBrowser(text: string): Promise<void> {
       return;
     }
     const utterance = new SpeechSynthesisUtterance(text);
-    const voice = pickVoice();
-    if (voice) utterance.voice = voice;
-
-    // Deep and a little slow, to sit closer to the robot treatment on the
-    // recorded clips. It cannot match them — synthesis output cannot be routed
-    // through Web Audio, so no effect can be applied to it — but a low flat
-    // pitch is the part of that character this API can actually reach.
     utterance.pitch = 0.45;
     utterance.rate = 0.96;
-
     utterance.onend = () => resolve();
     utterance.onerror = () => resolve();
     speechSynthesis.speak(utterance);
@@ -107,30 +128,37 @@ function speakWithBrowser(text: string): Promise<void> {
 }
 
 /**
- * Speaks a line, preferring its cloned clip. Resolves when the audio finishes,
- * so the caller can hold the UI in its "speaking" state for exactly that long.
+ * Speaks a line. `id` selects a stored clip when one exists; otherwise the
+ * text is sent for synthesis. Either way the same treatment is applied.
  */
 export async function speak(id: string, text: string): Promise<void> {
   stopSpeaking();
 
-  const clips = await loadManifest();
-  if (!clips.has(id)) return speakWithBrowser(text);
+  try {
+    const clips = await loadManifest();
 
-  return new Promise((resolve) => {
-    const audio = new Audio(`/voice/${id}.mp3`);
-    current = audio;
-    audio.onended = () => {
-      if (current === audio) current = null;
-      resolve();
-    };
-    // A clip listed in the manifest but missing on disk should still talk.
-    audio.onerror = () => {
-      if (current === audio) current = null;
-      void speakWithBrowser(text).then(resolve);
-    };
-    void audio.play().catch(() => {
-      if (current === audio) current = null;
-      void speakWithBrowser(text).then(resolve);
-    });
-  });
+    const buffer = clips.has(id)
+      ? await processed(id, () =>
+          fetch(`/voice/${id}.mp3`).then((r) => {
+            if (!r.ok) throw new Error(String(r.status));
+            return r.arrayBuffer();
+          }),
+        )
+      : await processed(`gen:${text}`, () =>
+          fetch("/api/speak", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ text }),
+          }).then((r) => {
+            if (!r.ok) throw new Error(String(r.status));
+            return r.arrayBuffer();
+          }),
+        );
+
+    if (buffer) return await play(buffer);
+  } catch {
+    // Fall through to the system voice rather than saying nothing at all.
+  }
+
+  return speakWithBrowser(text);
 }

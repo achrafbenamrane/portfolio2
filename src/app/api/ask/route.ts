@@ -1,32 +1,27 @@
 import { groq } from "@ai-sdk/groq";
 import { generateText, type LanguageModel } from "ai";
 
-import { ANSWERS, UNAVAILABLE } from "@/content/voice";
+import { SYSTEM_INSTRUCTIONS } from "@/lib/voice/knowledge";
 
 /**
- * Routes a spoken question to one of Achraf's recorded answers.
+ * Open-ended questions about Achraf and this site.
  *
- * The model CHOOSES a line; it does not write one. That is the whole point:
- * every reply the assistant speaks has to exist as audio in Achraf's own
- * voice, and nothing can produce a sentence he never recorded. Generating free
- * text would mean falling back to a synthetic voice for exactly the questions
- * visitors care most about, which is the inconsistency this replaces.
- *
- * So the model does the part it is good at — understanding that "do you know
- * React Native?" is a question about his work — and the answer comes back as
- * an id whose clip is already on disk.
+ * The model writes the answer again, rather than picking from a fixed list.
+ * That was only a restriction while every reply had to be a clip Achraf had
+ * recorded; now that speech is generated, any sentence can be spoken, so the
+ * limit no longer buys anything.
  *
  * This endpoint is public and costs money per call, so the guards below are
  * part of the feature. The deterministic keyword table still runs FIRST on the
- * client, so commands and obvious questions never reach here at all.
+ * client, so commands and the common questions never reach here at all.
  */
 
 const MODEL: LanguageModel = process.env.GROQ_API_KEY
   ? groq(process.env.GROQ_MODEL ?? "llama-3.3-70b-versatile")
   : "anthropic/claude-haiku-4.5";
 
-/** Choosing a number needs a handful of tokens, not a paragraph. */
-const MAX_OUTPUT_TOKENS = 8;
+/** Spoken answers are short; a hard stop, not a target. */
+const MAX_OUTPUT_TOKENS = 200;
 const MAX_QUESTION_CHARS = 300;
 
 const WINDOW_MS = 60_000;
@@ -51,39 +46,24 @@ function rateLimit(ip: string) {
   return lastMinute <= MAX_PER_WINDOW && times.length <= MAX_PER_HOUR;
 }
 
-/** Same question, same answer — so a repeat costs nothing. */
-const routed = new Map<string, string>();
-
-const CATALOGUE = ANSWERS.map(
-  (answer, index) => `${index + 1}. ${answer.speech}`,
-).join("\n");
-
-const INSTRUCTIONS = `You route questions asked on Achraf Benamrane's portfolio
-website to one of his pre-recorded answers.
-
-Below are the answers he can give, numbered. Reply with the NUMBER of the one
-that best addresses the visitor's question, and nothing else — no words, no
-punctuation, no explanation.
-
-If no answer genuinely addresses the question, reply 0. Do not stretch: a
-loosely related answer is worse than admitting there isn't one.
-
-ANSWERS:
-${CATALOGUE}`;
+/** Repeated questions are common on a portfolio and the answer only changes
+ *  when the content does, so caching removes most of the repeat spend. */
+const answers = new Map<string, string>();
 
 export async function POST(request: Request) {
   const origin = request.headers.get("origin");
-  if (origin) {
-    const host = request.headers.get("host");
-    if (host && !origin.endsWith(host)) {
-      return Response.json({ error: "Forbidden" }, { status: 403 });
-    }
+  const host = request.headers.get("host");
+  if (origin && host && !origin.endsWith(host)) {
+    return Response.json({ error: "Forbidden" }, { status: 403 });
   }
 
   const ip =
     request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "unknown";
   if (!rateLimit(ip)) {
-    return Response.json({ error: "Too many questions" }, { status: 429 });
+    return Response.json(
+      { error: "Too many questions — give it a minute." },
+      { status: 429 },
+    );
   }
 
   let question: unknown;
@@ -102,38 +82,30 @@ export async function POST(request: Request) {
   }
 
   const key = trimmed.toLowerCase();
-  const cached = routed.get(key);
-  if (cached) return Response.json(answerFor(cached), { headers: HIT });
+  const cached = answers.get(key);
+  if (cached) return Response.json({ answer: cached, cached: true });
 
   try {
     const { text } = await generateText({
       model: MODEL,
-      instructions: INSTRUCTIONS,
+      instructions: SYSTEM_INSTRUCTIONS,
       prompt: trimmed,
       maxOutputTokens: MAX_OUTPUT_TOKENS,
-      temperature: 0,
+      temperature: 0.3,
     });
 
-    // The model was asked for a bare number; take the first one it produced
-    // and ignore anything else, rather than trusting the format.
-    const picked = Number.parseInt(text.match(/\d+/)?.[0] ?? "0", 10);
-    const answer = ANSWERS[picked - 1];
-    const id = answer ? answer.id : UNAVAILABLE.id;
+    const answer = text.trim();
+    if (!answer) {
+      return Response.json({ error: "Empty answer" }, { status: 502 });
+    }
 
-    if (routed.size > 500) routed.clear();
-    routed.set(key, id);
+    if (answers.size > 500) answers.clear();
+    answers.set(key, answer);
 
-    return Response.json(answerFor(id));
+    return Response.json({ answer });
   } catch (error) {
+    // Never surface the provider's error text to a public caller.
     console.error("ask route failed:", error);
-    return Response.json(answerFor(UNAVAILABLE.id), { status: 200 });
+    return Response.json({ error: "Assistant unavailable" }, { status: 502 });
   }
-}
-
-const HIT = { "x-answer-cache": "hit" };
-
-function answerFor(id: string) {
-  const answer =
-    ANSWERS.find((entry) => entry.id === id) ?? UNAVAILABLE;
-  return { id: answer.id, text: answer.speech };
 }

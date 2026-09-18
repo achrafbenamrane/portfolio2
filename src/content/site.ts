@@ -597,11 +597,11 @@ export const experiences: readonly Experience[] = [
     organisation: "Sonelgaz — Khenchela, Algeria",
     period: "Feb — Apr 2026",
     image: {
-      src: "/experience/sonelgaz.webp",
-      width: 1086,
-      height: 716,
-      alt: "Achraf at a desk in the Sonelgaz office, a desk phone and workstation beside him.",
-      caption: "At the office, Sonelgaz Khenchela",
+      src: "/experience/sonelgaz-thesis.webp",
+      width: 800,
+      height: 1035,
+      alt: "Cover page of the Master's thesis: Design and Development of an Intelligent and Secure Internal Communication Platform for SONELGAZ Employees, with Artificial Intelligence Integration. Badji Mokhtar University, academic year 2025/2026.",
+      caption: "The Master's thesis, on the Sonelgaz platform",
     },
     description:
       "Designed and developed a secure internal communication platform for Sonelgaz employees.",

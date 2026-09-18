@@ -8,7 +8,7 @@ import { experiences } from "@/content/site";
 export const metadata: Metadata = {
   title: "Experience",
   description:
-    "Freelance work, university study, community leadership and co-founded projects.",
+    "A full-stack role, a security internship, university study and co-founded projects.",
 };
 
 export default function ExperiencePage() {
@@ -17,7 +17,7 @@ export default function ExperiencePage() {
       <PageHeader
         index="02 / EXPERIENCE"
         title="Experience"
-        description="Freelance practice, university study, community leadership and co-founded projects."
+        description="A full-stack role, a security internship, university study and the projects co-founded along the way."
         meta={{
           label: "ROLES & EDUCATION",
           value: `${experiences.length.toString().padStart(3, "0")} ENTRIES`,

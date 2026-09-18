@@ -39,7 +39,7 @@ export const site = {
   tagline:
     "I combine development, design and security to build modern digital solutions.",
 
-  bio: "Full-Stack Developer, UI/UX Designer, Graphic Designer, and Network & Information Security Engineer. Currently reading a Master's in Network & Information Security at Badji Mokhtar University, Annaba.",
+  bio: "Full-Stack Engineer with an MSc in Network & Information Security, and experience in web and mobile application development, secure communication platforms, UI/UX design and technical project leadership. Currently working remotely at PROGIX, building full-stack applications with React, Next.js, Node.js and PostgreSQL.",
 
   availability: "AVAILABLE FOR WORK",
   location: "ANNABA, ALGERIA",
@@ -562,21 +562,32 @@ export interface Experience {
 
 export const experiences: readonly Experience[] = [
   {
-    role: "Freelance Designer & Developer",
-    organisation: "Freelance",
-    period: "2025 — Present",
+    role: "Full-Stack Engineer",
+    organisation: "PROGIX — Montreal, Canada (remote)",
+    period: "May 2026 — Present",
     description:
-      "Web development and design for clients: responsive, user-friendly sites built on UI/UX principles and graphic design expertise.",
+      "Building web and mobile applications end to end with React, Next.js, Node.js, Express.js and PostgreSQL, as part of a fully remote team.",
     achievements: [
-      "Built responsive, user-friendly websites end to end",
-      "Applied UI/UX principles and graphic design expertise",
-      "Managed projects directly with clients",
+      "REST APIs, database schemas, authentication and application logic",
+      "Interactive 3D interfaces with Three.js, UI/UX prototypes and design systems",
+      "Debugging, optimisation and deployment",
     ],
   },
   {
-    role: "Master's 1, Network & Information Security",
+    role: "Cybersecurity & Network Intern",
+    organisation: "Sonelgaz — Khenchela, Algeria",
+    period: "Feb — Apr 2026",
+    description:
+      "Designed and developed a secure internal communication platform for Sonelgaz employees.",
+    achievements: [
+      "Role-based access control, strong authentication and encrypted communication",
+      "Explored AI-assisted anomaly detection for monitoring suspicious activity",
+    ],
+  },
+  {
+    role: "Master's Degree (MSc), Network & Information Security",
     organisation: "Badji Mokhtar University, Annaba",
-    period: "2025",
+    period: "2026",
     description:
       "Advanced study in cybersecurity, network architecture and information protection.",
     achievements: [
@@ -586,7 +597,7 @@ export const experiences: readonly Experience[] = [
     ],
   },
   {
-    role: "Bachelor's Degree, Computer Systems",
+    role: "Bachelor's Degree, Computer Science",
     organisation: "Badji Mokhtar University, Annaba",
     period: "2024",
     description:
@@ -598,39 +609,26 @@ export const experiences: readonly Experience[] = [
     ],
   },
   {
-    role: "Leader, Graphic & UI/UX Design Kernel",
+    role: "Co-Founder & UI/UX Design Kernel Lead",
     organisation: "Open-Source Community Annaba",
-    period: "2023 — 2024",
+    period: "2023 — 2025",
     description:
-      "Led the design kernel and mentored students in graphic and UI/UX design through volunteer training sessions.",
+      "Co-founded the Computer Science Department's Open-Source Community Club and led its design kernel.",
     achievements: [
-      "Mentored students in graphic and UI/UX design",
-      "Ran volunteer training sessions",
-      "Built leadership and communication practice",
+      "Mentored students in graphic design and UI/UX through volunteer training sessions",
+      "Maintained the computer labs",
+      "Organised events, including the international Study in Japan event in Annaba",
     ],
   },
   {
-    role: "Co-Founder, Smart Dental Platform",
-    organisation: "Badji Mokhtar University, Annaba",
+    role: "Team Lead & Co-Founder",
+    organisation: "Smart Dental Platform Startup, Badji Mokhtar University",
     period: "2023 — 2024",
     description:
-      "Collaborated across the Medicine and Technology faculties to build a smart dental platform.",
+      "Led a team across the Medicine and Technology faculties to build a smart dental SaaS platform.",
     achievements: [
-      "Built the platform with cross-faculty collaboration",
-      "Earned a startup brevet for innovation",
-      "Bridged technology and healthcare",
-    ],
-  },
-  {
-    role: "Co-Founder, Open-Source Community Club",
-    organisation: "Computer Science Department, Annaba",
-    period: "2023 — 2024",
-    description:
-      "Founded the department's Open-Source Community Club, maintained the computer labs and organised events including the international 'Study in Japan Annaba 2024'.",
-    achievements: [
-      "Founded the Open-Source Community Club",
-      "Maintained computer labs, officially certified for the work",
-      "Organised 'Study in Japan Annaba 2024'",
+      "Built the frontend, backend and UI/UX",
+      "The project obtained a Startup Brevet",
     ],
   },
 ];

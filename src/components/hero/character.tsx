@@ -79,7 +79,19 @@ function PortraitMesh({ signal }: { signal: HeroSignal }) {
 
   const scale = Math.min(1, Math.max(0.6, size.width / 640));
 
-  return <mesh geometry={geometry} material={material} scale={scale} />;
+  // Sat lower in the frame so the head clears the nav bar. Done here, in
+  // world space, rather than by translating the canvas with CSS: the camera's
+  // visible height is 3.22 world units, so a fixed offset is a fixed FRACTION
+  // of the viewport — about 126px on a 900px screen — and scales with it
+  // instead of being a pixel count that is right on one monitor.
+  return (
+    <mesh
+      geometry={geometry}
+      material={material}
+      scale={scale}
+      position={[0, -0.45, 0]}
+    />
+  );
 }
 
 export default function Character({ signal }: { signal: HeroSignal }) {

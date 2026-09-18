@@ -42,6 +42,26 @@ function subscribeMotion(onChange: () => void) {
 const getMotion = () => matchMedia(REDUCED_MOTION).matches;
 const getServerMotion = () => false;
 
+/**
+ * Below this the desktop is not worth rendering at all.
+ *
+ * It is authored at 800 CSS px, and on a phone the glass works out around
+ * 270 px across — a scale of about 0.34, which puts the menu bar text under
+ * four pixels tall. Unreadable, un-clickable, and it still costs a WebGL
+ * context and the three.js bundle. The section list further down the page is
+ * the route to the same four pages, and always was on a phone.
+ */
+const WIDE = "(min-width: 768px)";
+
+function subscribeWide(onChange: () => void) {
+  const query = matchMedia(WIDE);
+  query.addEventListener("change", onChange);
+  return () => query.removeEventListener("change", onChange);
+}
+
+const getWide = () => matchMedia(WIDE).matches;
+const getServerWide = () => false;
+
 export default function ImacSection() {
   const signal = useHeroSignal();
   const router = useRouter();
@@ -54,6 +74,7 @@ export default function ImacSection() {
     getMotion,
     getServerMotion,
   );
+  const wide = useSyncExternalStore(subscribeWide, getWide, getServerWide);
 
   // A second WebGL context is not worth paying for while the section is below
   // the fold. Latches once — the canvas costs nothing at idle on demand.
@@ -105,15 +126,18 @@ export default function ImacSection() {
           </span>
         </div>
 
-        {/* Sized from HEIGHT, not width: the camera has to frame the whole
-            machine including the stand, so the canvas height decides
-            everything and the width follows from a 4:3 ratio. */}
-        <div className="mt-6 flex justify-center">
+        {/* Width-driven with a HEIGHT CAP, which is the only formulation that
+            cannot overflow either axis. Deriving the width from the height
+            alone — the previous approach — put a 729px stage in the 327px a
+            phone has available, and 1120px in an iPad's 720px. The camera
+            still needs to frame the whole machine, so max-w is the height
+            budget converted through the same 4:3 ratio. */}
+        <div className="mt-6 hidden justify-center md:flex">
           <div
             ref={stageRef}
-            className="relative aspect-4/3 h-[82vh] max-h-220 min-h-100"
+            className="relative aspect-4/3 w-full max-w-[calc(82vh*4/3)]"
           >
-            {mounted && (
+            {mounted && wide && (
               <>
                 <Canvas
                   dpr={[1, 1.75]}
@@ -164,6 +188,13 @@ export default function ImacSection() {
             )}
           </div>
         </div>
+
+        {/* Shown by CSS rather than by the `wide` flag, so a desktop never
+            flashes it before hydration decides. */}
+        <p className="mt-6 max-w-md text-balance leading-relaxed text-dim md:hidden">
+          The interactive desktop needs a wider screen — open this page on a
+          laptop to point at it with your finger. Everything in it is below.
+        </p>
       </div>
     </section>
   );

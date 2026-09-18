@@ -179,9 +179,11 @@ const ICON_SIZES = {
 /**
  * One icon, drawn the same on the home screen and on an app's launch screen.
  *
- * The radius is a real home-screen tile's (≈22%), not a round number: the
- * icons were cut from a screenshot at that radius, and a tile rounded any
- * tighter would show a sliver of the tint behind them in every corner.
+ * The radius is a real home-screen tile's, measured off the screenshot the
+ * icons were cut from: circular corners at 28% of the tile (the straight
+ * edge starts 27% in and the diagonal inset is 16px of 189 — both figures
+ * for a circle, not a squircle). The icons carry that same shape in their
+ * alpha, so tile and image round along one line.
  */
 function AppIcon({
   app,
@@ -196,15 +198,20 @@ function AppIcon({
 
   return (
     <span
-      className={`relative block overflow-hidden rounded-[22.5%] bg-white/15 shadow-[0_4px_10px_rgba(0,0,0,0.35)] ring-1 ring-white/20 ${box} ${className}`}
+      className={`relative block overflow-hidden rounded-[28%] shadow-[0_4px_10px_rgba(0,0,0,0.35)] ring-1 ring-white/20 ${box} ${className}`}
     >
       {app.icon ? (
-        <Image src={app.icon} alt="" fill sizes={img} className="object-cover" />
+        /* A touch over size, so an icon trimmed inside its own edge (the
+           ones cut from a screenshot) is clipped by the tile rather than
+           showing a hairline of wallpaper around itself. */
+        <Image src={app.icon} alt="" fill sizes={img} className="scale-[1.04] object-cover" />
       ) : (
-        /* Initials until a logo lands, so a missing icon reads as deliberate
-           rather than as a broken image. */
+        /* Initials on a tinted tile until a logo lands, so a missing icon
+           reads as deliberate rather than as a broken image. The tint is
+           only here: behind a real icon it would show as a hairline in the
+           corners wherever the two shapes disagree by a subpixel. */
         <span
-          className={`grid size-full place-items-center font-bold text-white ${text}`}
+          className={`grid size-full place-items-center bg-white/15 font-bold text-white ${text}`}
         >
           {initials(app.title)}
         </span>

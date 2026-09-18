@@ -101,15 +101,26 @@ function WorkRow({
     <li>
       <button ref={ref} type="button" onClick={open} className="fw-row">
         <span className="fw-num">{String(index + 1).padStart(3, "0")}</span>
-        <span className="fw-thumb">
-          <Image
-            src={project.images[0]}
-            alt=""
-            width={72}
-            height={44}
-            unoptimized={project.images[0].startsWith("http")}
-          />
-        </span>
+        {/* An app is its icon, whole and rounded as on a phone. Cropping a
+            square icon to the wide thumb slot left a band of colour with
+            half a logo in it. */}
+        {project.icon ? (
+          <span className="fw-thumb fw-thumb-app">
+            <span className="fw-app-icon">
+              <Image src={project.icon} alt="" width={40} height={40} />
+            </span>
+          </span>
+        ) : (
+          <span className="fw-thumb">
+            <Image
+              src={project.images[0]}
+              alt=""
+              width={72}
+              height={44}
+              unoptimized={project.images[0].startsWith("http")}
+            />
+          </span>
+        )}
         <span className="fw-name">
           {project.title}
           <em>{project.category}</em>

@@ -558,9 +558,15 @@ export interface Experience {
   period: string;
   description: string;
   achievements: readonly string[];
-  /** A photograph from the time, shown 4:5 beside the entry. */
+  /**
+   * A photograph from the time, shown whole beside the entry — never
+   * cropped, so the card takes the photo's own shape. Width and height are
+   * the file's pixel size; they set the aspect ratio before the image loads.
+   */
   image?: {
     src: string;
+    width: number;
+    height: number;
     alt: string;
     caption: string;
   };
@@ -573,6 +579,8 @@ export const experiences: readonly Experience[] = [
     period: "May 2026 — Present",
     image: {
       src: "/experience/progix.webp",
+      width: 962,
+      height: 1240,
       alt: "A laptop showing a Google Meet call with the PROGIX team, eight faces on screen.",
       caption: "On a call with the PROGIX team",
     },
@@ -590,6 +598,8 @@ export const experiences: readonly Experience[] = [
     period: "Feb — Apr 2026",
     image: {
       src: "/experience/sonelgaz.webp",
+      width: 1086,
+      height: 716,
       alt: "Achraf at a desk in the Sonelgaz office, a desk phone and workstation beside him.",
       caption: "At the office, Sonelgaz Khenchela",
     },
@@ -606,6 +616,8 @@ export const experiences: readonly Experience[] = [
     period: "2026",
     image: {
       src: "/experience/msc.webp",
+      width: 1008,
+      height: 1318,
       alt: "Achraf in a graduation sash holding a cap that reads “I did it”, seated on the steps of the Department of Computer Science.",
       caption: "Graduation, Department of Computer Science",
     },
@@ -624,6 +636,8 @@ export const experiences: readonly Experience[] = [
     period: "2025",
     image: {
       src: "/experience/design.webp",
+      width: 1080,
+      height: 607,
       alt: "Achraf at a desk in a design studio, a “Graphic Design” sign on the wall behind him and a laptop open beside him.",
       caption: "At the studio",
     },
@@ -641,6 +655,8 @@ export const experiences: readonly Experience[] = [
     period: "2024",
     image: {
       src: "/experience/bsc.webp",
+      width: 808,
+      height: 1400,
       alt: "Achraf speaking into a microphone at a lectern beside the Algerian flag, an audience seated to the left.",
       caption: "Presenting at Badji Mokhtar University",
     },

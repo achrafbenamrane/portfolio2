@@ -59,7 +59,7 @@ export default function Experience() {
                 <div
                   className={
                     entry.image
-                      ? "md:col-span-5 md:col-start-4"
+                      ? "md:col-span-6 md:col-start-4"
                       : "md:col-span-9 md:col-start-4"
                   }
                 >
@@ -72,20 +72,26 @@ export default function Experience() {
                 {/* Placed between heading and body in the DOM so a phone
                     reads period, role, photo, text — the order a magazine
                     page reads in — and pinned to the right column on wide
-                    screens, spanning both text rows. */}
+                    screens, spanning both text rows.
+
+                    The photo is shown whole, at its own aspect ratio, in a
+                    small card: a snapshot pinned beside the entry, not a
+                    hero image. Cropping every photo to one shape lost the
+                    edges of every one of them. */}
                 {entry.image && (
-                  <figure className="max-w-sm md:col-span-4 md:col-start-9 md:row-span-2 md:row-start-1 md:max-w-none">
-                    <div className="rounded-xl bg-canvas p-2 shadow-[0_30px_60px_-32px_rgba(24,38,49,0.45)] ring-1 ring-line">
-                      <div className="relative aspect-[4/5] overflow-hidden rounded-lg bg-surface-2">
+                  <figure className="w-full max-w-[15rem] md:col-span-3 md:col-start-10 md:row-span-2 md:row-start-1 md:justify-self-end">
+                    <div className="rounded-xl bg-canvas p-1.5 shadow-[0_24px_48px_-28px_rgba(24,38,49,0.45)] ring-1 ring-line">
+                      <div className="overflow-hidden rounded-lg bg-surface-2">
                         <Image
                           src={entry.image.src}
                           alt={entry.image.alt}
-                          fill
-                          sizes="(min-width: 768px) 30vw, 24rem"
-                          className="object-cover transition-transform duration-700 group-hover:scale-[1.03]"
+                          width={entry.image.width}
+                          height={entry.image.height}
+                          sizes="15rem"
+                          className="block h-auto w-full transition-transform duration-700 group-hover:scale-[1.03]"
                         />
                       </div>
-                      <figcaption className="meta px-1 pb-1 pt-3 text-dim">
+                      <figcaption className="meta px-1 pb-1 pt-2.5 text-dim">
                         {entry.image.caption}
                       </figcaption>
                     </div>
@@ -95,7 +101,7 @@ export default function Experience() {
                 <div
                   className={
                     entry.image
-                      ? "md:col-span-5 md:col-start-4"
+                      ? "md:col-span-6 md:col-start-4"
                       : "md:col-span-9 md:col-start-4"
                   }
                 >

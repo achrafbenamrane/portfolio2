@@ -1,5 +1,7 @@
 import { MsEdgeTTS, OUTPUT_FORMAT } from "msedge-tts";
 
+import { forSpeech } from "@/lib/voice/pronounce";
+
 /**
  * Speech for an answer that has no stored clip.
  *
@@ -68,7 +70,9 @@ export async function POST(request: Request) {
     const tts = new MsEdgeTTS();
     await tts.setMetadata(VOICE, OUTPUT_FORMAT.AUDIO_24KHZ_48KBITRATE_MONO_MP3);
 
-    const result = tts.toStream(trimmed, { pitch: PITCH, rate: RATE });
+    // Respelt for the synthesiser only. The answer shown on screen keeps the
+    // spellings Achraf uses; this is purely what the voice is fed.
+    const result = tts.toStream(forSpeech(trimmed), { pitch: PITCH, rate: RATE });
     const stream = result.audioStream ?? result;
 
     const chunks: Buffer[] = [];

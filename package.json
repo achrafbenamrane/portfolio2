@@ -11,7 +11,7 @@
     "voice:lines": "node scripts/voice-lines.mjs",
     "voice:split": "python scripts/split-voice-take.py",
     "voice:robot": "python scripts/robot-voice.py",
-    "voice:generate": "node scripts/voice-generate.mjs"
+    "voice:generate": "node --experimental-strip-types scripts/voice-generate.mjs"
   },
   "dependencies": {
     "@ai-sdk/groq": "^4.0.26",

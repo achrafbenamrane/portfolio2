@@ -17,6 +17,8 @@
 import { createWriteStream, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { MsEdgeTTS, OUTPUT_FORMAT } from "msedge-tts";
 
+import { forSpeech } from "../src/lib/voice/pronounce.ts";
+
 const VOICE = process.env.TTS_VOICE ?? "en-US-ChristopherNeural";
 const PITCH = "-18Hz";
 const RATE = "-6%";
@@ -32,7 +34,9 @@ for (const line of script.lines) {
   const tts = new MsEdgeTTS();
   await tts.setMetadata(VOICE, OUTPUT_FORMAT.AUDIO_24KHZ_48KBITRATE_MONO_MP3);
 
-  const result = tts.toStream(line.speech, { pitch: PITCH, rate: RATE });
+  // Same respelling the live endpoint uses, so a stored clip and a generated
+  // sentence say a name the same way.
+  const result = tts.toStream(forSpeech(line.speech), { pitch: PITCH, rate: RATE });
   const stream = result.audioStream ?? result;
 
   await new Promise((resolve, reject) => {

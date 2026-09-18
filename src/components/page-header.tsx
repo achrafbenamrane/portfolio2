@@ -15,7 +15,7 @@ export default function PageHeader({
 }) {
   return (
     <header
-      className="border-b border-line/70 px-6 pb-10 pt-40 md:px-12 md:pt-36"
+      className="px-6 pb-10 pt-40 md:px-12 md:pt-36"
       style={{
         /* A pale wash of the nav's blue, so the bar, the masthead and the
            white page beneath step down through one hue. Pale rather than a

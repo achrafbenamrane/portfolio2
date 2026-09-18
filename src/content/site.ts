@@ -117,14 +117,17 @@ export interface Project {
   category: ProjectCategory;
   tags: readonly string[];
   year: string;
-  /** First image is the index-row preview. */
+  /** First image is the index-row preview, and the showcase mockup. */
   images: readonly string[];
   href?: string;
+  /** Leads the Work page in a device mockup. Keep this to a handful. */
+  featured?: boolean;
 }
 
 export const projects: readonly Project[] = [
   {
     slug: "neemafood",
+    featured: true,
     title: "NeemaFood",
     description:
       "Mobile application connecting local food vendors with customers looking for great food deals. Real-time vendor discovery, seamless ordering, secure payments and personalised recommendations.",
@@ -147,6 +150,7 @@ export const projects: readonly Project[] = [
   },
   {
     slug: "smart-dental",
+    featured: true,
     title: "Smart Dental Platform",
     description:
       "Healthcare platform built with the Medicine and Technology faculties, connecting patients and dental practitioners. Earned a startup brevet for innovative project development.",
@@ -164,6 +168,7 @@ export const projects: readonly Project[] = [
   },
   {
     slug: "desktop-ids",
+    featured: true,
     title: "Desktop IDS",
     description:
       "Advanced intrusion detection system for desktop networks — packet inspection, signature matching and live alerting.",
@@ -179,6 +184,7 @@ export const projects: readonly Project[] = [
   },
   {
     slug: "oneframe",
+    featured: true,
     title: "ONEFRAME",
     description:
       "E-commerce storefront built for my own brand, from product pages through to checkout.",
@@ -190,6 +196,7 @@ export const projects: readonly Project[] = [
   },
   {
     slug: "manliness-ebook",
+    featured: true,
     title: "Manliness Evolution Ebook",
     description:
       "Interactive digital book exploring modern masculinity and personal growth, with a smooth paged reading experience.",
@@ -205,6 +212,7 @@ export const projects: readonly Project[] = [
   },
   {
     slug: "student-portal",
+    featured: true,
     title: "Student Reclamation Portal",
     description:
       "Student complaint management system with automated Telegram notifications — reclamations route straight to class delegates for quick resolution.",

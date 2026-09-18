@@ -93,7 +93,11 @@ export default function Desktop({
   const [openPhase, setOpenPhase] = useState(false);
   const [opened, setOpened] = useState<FolderSpec | null>(null);
   const [app, setApp] = useState<AppId>(null);
-  const [handControl, setHandControl] = useState(true);
+  // Off until asked for. The camera is often already running because the
+  // visitor enabled it up in the hero, and inheriting that would hand them a
+  // finger cursor on a screen they have only just scrolled to — control they
+  // never asked for over a machine they are still working out.
+  const [handControl, setHandControl] = useState(false);
   const [clock, setClock] = useState("");
 
   useEffect(() => {
@@ -220,7 +224,11 @@ export default function Desktop({
   ];
 
   const diving = openPhase || opened !== null;
-  const tracking = signal.status === "running";
+  const cameraOn = signal.status === "running";
+  // What the menu bar reports is whether the POINTER is live, not whether the
+  // camera is. They are different things now that the toggle defaults to off,
+  // and reporting the camera made the menu bar contradict the switch.
+  const tracking = cameraOn && handControl;
 
   return (
     <DesktopPointerProvider
@@ -310,10 +318,16 @@ export default function Desktop({
                 onClose={() => setApp(null)}
                 handControl={handControl}
                 onToggleHandControl={() => {
-                  if (!handControl && !tracking) enableCamera();
+                  if (!handControl && !cameraOn) enableCamera();
                   setHandControl((on) => !on);
                 }}
-                status={tracking ? "Live" : "Camera not enabled"}
+                status={
+                  tracking
+                    ? "Live"
+                    : cameraOn
+                      ? "Camera on, control off"
+                      : "Camera not enabled"
+                }
               />
             )}
           </div>

@@ -27,8 +27,6 @@ export default function SiteFooter() {
             CONTACT
           </Link>
         </div>
-
-        <span className="meta text-dim">NEXT.JS · THREE.JS · MEDIAPIPE</span>
       </div>
     </footer>
   );

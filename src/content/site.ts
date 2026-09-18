@@ -55,7 +55,6 @@ export const site = {
       label: "LinkedIn",
       href: "https://linkedin.com/in/mohamed-achraf-benamrane-582127350",
     },
-    { label: "Instagram", href: "https://instagram.com/adventurero_dz" },
   ],
 } as const;
 

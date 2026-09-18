@@ -58,6 +58,29 @@ export const site = {
   ],
 } as const;
 
+/* ── testimonials ────────────────────────────────────────────────── */
+
+export interface Testimonial {
+  quote: string;
+  name: string;
+  /** Role and company, e.g. "Founder, NeemaFood". */
+  role: string;
+  /** Optional headshot in /public. Initials are drawn when absent. */
+  avatar?: string;
+}
+
+/**
+ * Real quotes only.
+ *
+ * The section renders nothing while this is empty, which is the correct
+ * behaviour rather than a placeholder to fill in later: invented praise from
+ * invented people is the one thing on a portfolio a recruiter can actually
+ * check, and being caught at it costs more than having no testimonials at all.
+ *
+ * Add an entry and the section appears on its own.
+ */
+export const testimonials: readonly Testimonial[] = [];
+
 /* ── projects ────────────────────────────────────────────────────── */
 
 export type ProjectCategory =

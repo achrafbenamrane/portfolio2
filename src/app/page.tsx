@@ -1,8 +1,10 @@
 import Link from "next/link";
 
+import CtaBanner from "@/components/cta-banner";
 import Hero from "@/components/hero/hero";
 import { HeroSignalProvider } from "@/components/hero/hero-signal-context";
 import ImacSection from "@/components/imac/imac-section";
+import Testimonials from "@/components/testimonials";
 import { SECTIONS } from "@/content/nav";
 
 export default function Home() {
@@ -43,6 +45,11 @@ export default function Home() {
           ))}
         </ul>
       </nav>
+
+      {/* Renders nothing until there are real quotes. */}
+      <Testimonials />
+
+      <CtaBanner />
     </HeroSignalProvider>
   );
 }

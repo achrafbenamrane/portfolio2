@@ -17,12 +17,14 @@ export default function CtaBanner() {
   return (
     <section className="px-6 pb-24 md:px-12">
       <div
-        className="relative mx-auto max-w-350 overflow-hidden rounded-2xl px-7 py-14 md:px-14 md:py-20"
+        className="relative mx-auto max-w-350 overflow-hidden rounded-2xl border border-line px-7 py-14 md:px-14 md:py-20"
         style={{
           background:
-            "radial-gradient(120% 140% at 85% 15%, #3D7FC0 0%, transparent 55%)," +
-            "radial-gradient(90% 120% at 15% 90%, #1B4A78 0%, transparent 60%)," +
-            "linear-gradient(135deg, #0E2438 0%, #133A5E 55%, #0B1C2C 100%)",
+            // Lifted off the page it now sits on: the old navy was close
+            // enough to the new ground that the banner disappeared into it.
+            "radial-gradient(120% 140% at 85% 15%, #2BA7BE 0%, transparent 55%)," +
+            "radial-gradient(90% 120% at 15% 90%, #10566B 0%, transparent 60%)," +
+            "linear-gradient(135deg, #0B3A49 0%, #12586C 55%, #082B38 100%)",
         }}
       >
         <div className="relative grid gap-10 md:grid-cols-[1fr_auto] md:items-end md:gap-16">
@@ -41,7 +43,7 @@ export default function CtaBanner() {
 
             <Link
               href="/contact"
-              className="group mt-7 inline-flex items-center gap-2.5 rounded-full bg-white px-6 py-3 text-sm font-medium text-ink transition-colors hover:bg-white/90"
+              className="group mt-7 inline-flex items-center gap-2.5 rounded-full bg-white px-6 py-3 text-sm font-medium text-canvas transition-colors hover:bg-white/90"
             >
               START A PROJECT
               <span

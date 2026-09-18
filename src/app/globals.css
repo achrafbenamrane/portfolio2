@@ -10,18 +10,20 @@
  * warm at all. It has nothing to compete with.
  *
  * Lightness values are chosen against measured contrast, not by eye:
- * ink 15:1 on canvas, dim 6.6:1, accent 5.8:1.
+ * ink 16.1:1 on canvas, dim 9.2:1, accent 9.1:1 — all well past AA, which
+ * matters more on a dark ground because thin type on dark reads lighter than
+ * the same ratio on white.
  */
 
 @theme {
-  --color-canvas: oklch(0.99 0.003 240); /* #FAFCFE white, faintly cold */
-  --color-surface-1: oklch(0.965 0.006 240); /* #F0F4F7 raised   */
-  --color-surface-2: oklch(0.925 0.01 240); /* #E0E7EC recessed */
-  --color-line: oklch(0.84 0.014 240); /* #C3CCD3 hairline */
-  --color-ink: oklch(0.26 0.028 242); /* #182631 slate ink */
-  --color-dim: oklch(0.47 0.024 242); /* #4F5D67 muted     */
-  --color-accent: oklch(0.5 0.105 245); /* #24689B glacier blue */
-  --color-warn: oklch(0.55 0.115 55); /* #A45D25 warm, ties to the paper */
+  --color-canvas: #06242f; /* deep teal, the page ground */
+  --color-surface-1: #0b3442; /* raised    */
+  --color-surface-2: #114254; /* recessed  */
+  --color-line: #1b5468; /* hairline  */
+  --color-ink: #ffffff; /* type      */
+  --color-dim: #a9c8d4; /* muted     */
+  --color-accent: #4fd3e6; /* cyan, lifted off the teal */
+  --color-warn: #f0a868; /* warm, and still legible on dark */
 
   --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-geist-mono), ui-monospace, monospace;
@@ -35,13 +37,22 @@
 
 @layer base {
   html {
-    color-scheme: light;
+    color-scheme: dark;
   }
 
   body {
-    background: var(--color-canvas);
+    /* Two very wide radials over the flat ground, so the page has the depth
+       of the reference rather than reading as one block of colour. Fixed
+       attachment keeps the glow with the viewport instead of scrolling a
+       bright patch down the page. */
+    background:
+      radial-gradient(90% 60% at 80% 0%, #0f5a6d 0%, transparent 55%),
+      radial-gradient(70% 50% at 0% 40%, #0a3d4e 0%, transparent 60%),
+      var(--color-canvas);
+    background-attachment: fixed;
     color: var(--color-ink);
     font-family: var(--font-sans);
+    font-weight: 500;
     -webkit-font-smoothing: antialiased;
   }
 
@@ -81,8 +92,8 @@
     position: absolute;
     inset: 0;
     pointer-events: none;
-    opacity: 0.035;
-    mix-blend-mode: multiply;
+    opacity: 0.06;
+    mix-blend-mode: soft-light;
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E");
   }
 }

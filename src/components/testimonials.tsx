@@ -13,9 +13,9 @@ import { testimonials } from "@/content/site";
  * is the one place a reader can verify a claim, and placeholder praise from
  * placeholder people is worse than silence.
  *
- * Inverted against the page on purpose. Everything around it is dark; a light
- * card is what makes a quote read as someone else speaking rather than more of
- * the same voice.
+ * Raised off the page rather than inverted. On a dark ground a lighter
+ * surface with a hairline is what makes a quote read as someone else
+ * speaking, where a card the same colour as the page reads as nothing.
  */
 export default function Testimonials() {
   const [index, setIndex] = useState(0);
@@ -32,7 +32,7 @@ export default function Testimonials() {
 
   return (
     <section className="px-6 pb-24 md:px-12" aria-label="Testimonials">
-      <div className="mx-auto max-w-350 rounded-2xl bg-canvas px-7 py-10 text-ink md:px-12 md:py-14">
+      <div className="mx-auto max-w-350 rounded-2xl border border-line bg-surface-1 px-7 py-10 md:px-12 md:py-14">
         <div className="grid gap-10 md:grid-cols-[minmax(0,22rem)_1fr] md:gap-16">
           <div>
             <p className="meta text-dim">TESTIMONIALS</p>

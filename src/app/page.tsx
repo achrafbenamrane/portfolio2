@@ -4,6 +4,7 @@ import CtaBanner from "@/components/cta-banner";
 import Hero from "@/components/hero/hero";
 import { HeroSignalProvider } from "@/components/hero/hero-signal-context";
 import ImacSection from "@/components/imac/imac-section";
+import Services from "@/components/services";
 import Testimonials from "@/components/testimonials";
 import { SECTIONS } from "@/content/nav";
 
@@ -14,6 +15,11 @@ export default function Home() {
        downloads the hand model once. */
     <HeroSignalProvider>
       <Hero />
+
+      {/* Before the desktop: it says what the work is, so the machine that
+          follows reads as a demonstration rather than a novelty. */}
+      <Services />
+
       <ImacSection />
 
       {/* The 3D desktop needs a camera and a pointer. This is the plain-text

@@ -58,6 +58,54 @@ export const site = {
   ],
 } as const;
 
+/* ── services ────────────────────────────────────────────────────── */
+
+export interface Service {
+  /** Matches an icon in src/components/services.tsx. */
+  icon: "code" | "phone" | "shield" | "pen";
+  title: string;
+  description: string;
+  /** Deep-links the Work page filter, so a claim leads to the evidence. */
+  href: string;
+}
+
+/**
+ * The four disciplines, drawn from the skill groups above and the categories
+ * the projects are already filed under — not aspirational extras. Every one of
+ * these has finished work behind it on the Work page, which is the only reason
+ * to claim it.
+ */
+export const services: readonly Service[] = [
+  {
+    icon: "code",
+    title: "Web Development",
+    description:
+      "Full-stack sites and platforms in React, Next.js and Node — from the database through to the interface.",
+    href: "/work",
+  },
+  {
+    icon: "phone",
+    title: "Mobile Apps",
+    description:
+      "Cross-platform applications in React Native, with real-time data and payments built in.",
+    href: "/work",
+  },
+  {
+    icon: "shield",
+    title: "Network & Security",
+    description:
+      "Intrusion detection, network hardening and Cisco infrastructure, backed by a Master's in the field.",
+    href: "/work",
+  },
+  {
+    icon: "pen",
+    title: "UI/UX & Branding",
+    description:
+      "Interfaces, identities and print design — the visual side handled by the person who builds it.",
+    href: "/work",
+  },
+];
+
 /* ── testimonials ────────────────────────────────────────────────── */
 
 export interface Testimonial {

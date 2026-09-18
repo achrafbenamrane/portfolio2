@@ -14,11 +14,21 @@ import RoleRotator from "./role-rotator";
 export default function Hero() {
   return (
     <>
-      <section className="relative flex min-h-dvh flex-col justify-center overflow-hidden px-6 pb-16 pt-40 md:px-12 md:pt-32">
+      <section
+        className="relative flex min-h-dvh flex-col justify-center overflow-hidden px-6 pb-16 pt-40 md:px-12 md:pt-32"
+        style={{
+          /* The nav's blue, continued. The bar sits directly above this, so
+             anything else would put a seam across the top of the page. The
+             radial lifts the right side, where the portrait sits. */
+          background:
+            "radial-gradient(70% 90% at 72% 40%, #1B4A78 0%, transparent 62%)," +
+            "linear-gradient(160deg, #0E2438 0%, #133A5E 55%, #0B1C2C 100%)",
+        }}
+      >
         <HeroCanvas />
 
         <div className="pointer-events-none relative z-10 max-w-2xl">
-          <p className="meta text-dim">{site.availability}</p>
+          <p className="meta text-white/60">{site.availability}</p>
 
           {/*
             Two-tier lockup. The size ratio isn't arbitrary: wide tracking makes
@@ -28,27 +38,27 @@ export default function Hero() {
             of a heading with a stray label above it.
           */}
           <h1 className="mt-6 uppercase">
-            <span className="block whitespace-nowrap text-[clamp(1.1rem,3.1vw,2.6rem)] font-light leading-none tracking-[0.2em] text-dim">
+            <span className="block whitespace-nowrap text-[clamp(1.1rem,3.1vw,2.6rem)] font-light leading-none tracking-[0.2em] text-white/70">
               {site.nameLines.light}
             </span>
-            <span className="mt-2 block whitespace-nowrap text-[clamp(2.25rem,6vw,5rem)] font-black leading-[0.85] tracking-[-0.035em]">
+            <span className="mt-2 block whitespace-nowrap text-[clamp(2.25rem,6vw,5rem)] font-black leading-[0.85] tracking-[-0.035em] text-white">
               {site.nameLines.bold}
             </span>
           </h1>
 
           <RoleRotator roles={site.roles} />
 
-          <p className="mt-4 max-w-md text-balance text-dim">{site.tagline}</p>
+          <p className="mt-4 max-w-md text-balance text-white/75">{site.tagline}</p>
 
           <div className="pointer-events-auto mt-10">
             <HandControl />
-            <p className="meta mt-3 max-w-62 leading-relaxed text-dim">
+            <p className="meta mt-3 max-w-62 leading-relaxed text-white/60">
               OPEN YOUR HAND FOR THE PORTRAIT · CLOSE IT TO FOLD
             </p>
           </div>
         </div>
 
-        <div className="meta pointer-events-none absolute inset-x-0 bottom-6 hidden justify-end px-12 text-dim lg:flex">
+        <div className="meta pointer-events-none absolute inset-x-0 bottom-6 hidden justify-end px-12 text-white/60 lg:flex">
           <span>{site.location}</span>
         </div>
       </section>

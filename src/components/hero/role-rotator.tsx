@@ -54,11 +54,11 @@ export default function RoleRotator({ roles }: { roles: readonly string[] }) {
     // Light and widely tracked to match the top line of the name lockup — at
     // font-medium with tight tracking it read as a different typographic system
     // sitting directly under the black surname.
-    <p className="mt-5 text-[clamp(0.95rem,2.1vw,1.4rem)] font-light tracking-[0.18em]">
+    <p className="mt-5 text-[clamp(0.95rem,2.1vw,1.4rem)] font-light tracking-[0.18em] text-white">
       {text}
       <span
         aria-hidden
-        className="ml-1 inline-block h-[1em] w-[2px] translate-y-[0.12em] animate-pulse bg-accent"
+        className="ml-1 inline-block h-[1em] w-[2px] translate-y-[0.12em] animate-pulse bg-[#7CC4F0]"
       />
     </p>
   );

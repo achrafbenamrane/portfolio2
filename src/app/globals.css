@@ -87,6 +87,32 @@
   }
 }
 
+/*
+ * A small horizontal drift, for the arrow pointing at the hand-control panel.
+ *
+ * Motion is what makes a marginal note get read at all — a static arrow in a
+ * static column is furniture. Kept to 3px and a slow cycle so it reads as a
+ * nudge rather than a blinking banner; the reduced-motion block below stops it
+ * outright.
+ */
+@utility nudge {
+  animation: nudge 1.8s ease-in-out infinite;
+}
+
+@keyframes nudge {
+  /* The independent `translate` property, NOT transform: the arrow is also
+     rotated a quarter turn on narrow screens, and animating `transform` would
+     overwrite that rotation and leave it pointing at nothing. These two
+     properties compose; two `transform` declarations do not. */
+  0%,
+  100% {
+    translate: 0;
+  }
+  50% {
+    translate: -3px;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

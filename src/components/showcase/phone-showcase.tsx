@@ -39,7 +39,7 @@ export default function PhoneShowcase({ apps }: { apps: readonly Project[] }) {
   );
 
   return (
-    <div className="mx-auto w-full max-w-[19rem]">
+    <div className="mx-auto w-full max-w-[15rem]">
       <div className="relative">
         {/* Side buttons. Four divs, and they do more to sell the device than
             any amount of bezel detail — without them it is a rounded rect. */}
@@ -74,7 +74,7 @@ export default function PhoneShowcase({ apps }: { apps: readonly Project[] }) {
                   className="absolute inset-x-0 bottom-0 z-20 flex h-8 items-end justify-center pb-2"
                 >
                   <span
-                    className={`h-1 w-28 rounded-full transition-colors ${
+                    className={`h-1 w-24 rounded-full transition-colors ${
                       open ? "bg-white/70 hover:bg-white" : "bg-white/45"
                     }`}
                   />
@@ -84,7 +84,7 @@ export default function PhoneShowcase({ apps }: { apps: readonly Project[] }) {
                     would clip whatever is behind it. */}
                 <span
                   aria-hidden
-                  className="absolute left-1/2 top-2 z-20 h-6 w-24 -translate-x-1/2 rounded-full bg-black"
+                  className="absolute left-1/2 top-1.5 z-20 h-5 w-20 -translate-x-1/2 rounded-full bg-black"
                 />
               </div>
             </div>
@@ -103,7 +103,7 @@ function StatusBar() {
   return (
     <div
       aria-hidden
-      className="absolute inset-x-0 top-0 z-10 flex items-center justify-between px-6 pt-2.5 text-[10px] font-semibold text-white"
+      className="absolute inset-x-0 top-0 z-10 flex items-center justify-between px-4 pt-2 text-[9px] font-semibold text-white"
     >
       <span>{CLOCK}</span>
 
@@ -139,7 +139,7 @@ function HomeScreen({
 }) {
   return (
     <div className="absolute inset-0 bg-gradient-to-b from-[#12304A] via-[#0E2438] to-[#1B4A78]">
-      <div className="grid grid-cols-4 gap-x-3 gap-y-5 px-5 pt-14">
+      <div className="grid grid-cols-4 gap-x-2 gap-y-4 px-4 pt-12">
         {apps.map((app) => (
           <button
             key={app.slug}
@@ -147,19 +147,19 @@ function HomeScreen({
             onClick={() => onLaunch(app)}
             className="group/icon flex flex-col items-center gap-1.5"
           >
-            <span className="relative block size-12 overflow-hidden rounded-[0.9rem] bg-white/15 shadow-[0_4px_10px_rgba(0,0,0,0.35)] ring-1 ring-white/20 transition-transform duration-200 group-hover/icon:scale-105 group-active/icon:scale-95">
+            <span className="relative block size-10 overflow-hidden rounded-[0.7rem] bg-white/15 shadow-[0_4px_10px_rgba(0,0,0,0.35)] ring-1 ring-white/20 transition-transform duration-200 group-hover/icon:scale-105 group-active/icon:scale-95">
               {app.icon ? (
-                <Image src={app.icon} alt="" fill sizes="48px" className="object-cover" />
+                <Image src={app.icon} alt="" fill sizes="40px" className="object-cover" />
               ) : (
                 /* Initials until a logo lands, so a missing icon reads as
                    deliberate rather than as a broken image. */
-                <span className="grid size-full place-items-center text-[13px] font-bold text-white">
+                <span className="grid size-full place-items-center text-[11px] font-bold text-white">
                   {initials(app.title)}
                 </span>
               )}
             </span>
 
-            <span className="max-w-full truncate text-[9px] leading-tight text-white/90">
+            <span className="max-w-full truncate text-[8px] leading-tight text-white/90">
               {app.title}
             </span>
           </button>
@@ -187,7 +187,7 @@ function AppView({
         src={shots[shot]}
         alt={`${app.title}, screen ${shot + 1} of ${shots.length}`}
         fill
-        sizes="320px"
+        sizes="260px"
         unoptimized={shots[shot]?.startsWith("http")}
         className="object-cover object-top"
       />

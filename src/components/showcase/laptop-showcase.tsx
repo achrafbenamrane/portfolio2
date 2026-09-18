@@ -31,7 +31,7 @@ export default function LaptopShowcase({ sites }: { sites: readonly Project[] })
   if (!site) return null;
 
   return (
-    <div className="mx-auto w-full max-w-4xl">
+    <div className="mx-auto w-full max-w-2xl">
       {/* Lid. The camera dot and the thin inner bezel are the two details that
           separate "laptop" from "screenshot with a dark border". */}
       <div className="rounded-t-2xl bg-gradient-to-b from-[#3A4754] to-[#1A2027] p-[3px] shadow-[0_28px_60px_-26px_rgba(11,16,21,0.7)]">
@@ -58,7 +58,7 @@ export default function LaptopShowcase({ sites }: { sites: readonly Project[] })
                   src={site.images[0]}
                   alt={`${site.title} — ${site.category}`}
                   fill
-                  sizes="(min-width: 768px) 60vw, 92vw"
+                  sizes="(min-width: 768px) 42vw, 92vw"
                   unoptimized={site.images[0].startsWith("http")}
                   className="object-cover object-top"
                 />

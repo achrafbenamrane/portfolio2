@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-import { services, type Service } from "@/content/site";
+import { services, servicesIntro, type Service } from "@/content/site";
 
 /**
  * What Achraf does, as four cards.
@@ -24,25 +24,24 @@ export default function Services() {
       <div className="mx-auto max-w-350">
         <div className="grid gap-8 border-b border-line pb-10 md:grid-cols-[minmax(0,1fr)_minmax(0,26rem)] md:items-end md:gap-16">
           <div>
-            <p className="meta text-dim">WHAT I DO</p>
+            <p className="meta text-dim">{servicesIntro.label}</p>
             <h2 className="mt-5 text-[clamp(1.9rem,4vw,3rem)] font-bold leading-[1.05] tracking-tight">
-              Ideas that
+              {servicesIntro.headingTop}
               <br />
-              make an impact
+              <span className="text-accent">{servicesIntro.headingBottom}</span>
             </h2>
           </div>
 
           <div>
             <p className="text-balance leading-relaxed text-dim">
-              I combine development, design and security to build digital
-              products that work properly — and keep working once they are live.
+              {servicesIntro.body}
             </p>
 
             <Link
               href="/work"
               className="group mt-6 inline-flex items-center gap-2.5 rounded-full border border-line px-5 py-2.5 text-sm font-medium transition-colors hover:border-accent hover:text-accent"
             >
-              Explore work
+              {servicesIntro.cta}
               <span
                 aria-hidden
                 className="transition-transform duration-200 group-hover:translate-x-1"

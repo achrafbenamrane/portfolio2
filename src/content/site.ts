@@ -70,6 +70,23 @@ export interface Service {
 }
 
 /**
+ * The section's own copy. It lives here with everything else you would edit to
+ * change what the page says.
+ *
+ * "Ideas that make an impact" was a placeholder lifted from a reference
+ * screenshot, and it described no one. The line below is the actual argument:
+ * three disciplines usually mean three people and two handovers, and the
+ * interesting thing about Achraf is that they do not.
+ */
+export const servicesIntro = {
+  label: "WHAT I DO",
+  headingTop: "From the wireframe",
+  headingBottom: "to the firewall",
+  body: "Most projects lose something in the handover — design to development, development to whoever secures it. I work across all three, so nothing gets lost in between.",
+  cta: "See the work",
+} as const;
+
+/**
  * The four disciplines, drawn from the skill groups above and the categories
  * the projects are already filed under — not aspirational extras. Every one of
  * these has finished work behind it on the Work page, which is the only reason

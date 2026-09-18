@@ -672,6 +672,13 @@ export const experiences: readonly Experience[] = [
     role: "Co-Founder & UI/UX Design Kernel Lead",
     organisation: "Open-Source Community Annaba",
     period: "2023 — 2025",
+    image: {
+      src: "/experience/osc.webp",
+      width: 719,
+      height: 1280,
+      alt: "A classroom design session: the OSC monogram open in Inkscape on a laptop, mirrored on the projector screen behind it.",
+      caption: "Drawing the OSC logo in Inkscape, at a session",
+    },
     description:
       "Co-founded the Computer Science Department's Open-Source Community Club and led its design kernel.",
     achievements: [

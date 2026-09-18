@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
 
 import PageHeader from "@/components/page-header";
-import WorkIndex from "@/components/work-index";
-import WorkShowcase from "@/components/work-showcase";
+import WorkGrid from "@/components/work-grid";
 import { projects } from "@/content/site";
 
 export const metadata: Metadata = {
@@ -18,8 +17,7 @@ export default function WorkPage() {
         title="Work"
         description="Web, mobile, desktop, automation and design — filtered by discipline."
       />
-      <WorkShowcase />
-      <WorkIndex />
+      <WorkGrid />
     </>
   );
 }

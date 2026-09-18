@@ -16,6 +16,19 @@ import { robotise } from "./robot-dsp";
 
 const MANIFEST_URL = "/voice/manifest.json";
 
+/**
+ * How machine-like the assistant sounds, 0 to 1.
+ *
+ * 0.18 keeps a faint synthetic edge — enough that it reads as an assistant
+ * rather than a recording of someone — while leaving the neural voice's own
+ * intonation intact, which is what makes it sound like a person at all. The
+ * full treatment at 1 works by discarding pitch, and pitch is most of what the
+ * ear uses to decide something is alive.
+ *
+ * One number, one place. Raise it toward 1 for the hard robot.
+ */
+const ROBOT_AMOUNT = 0.18;
+
 let manifest: Set<string> | null = null;
 let manifestPromise: Promise<Set<string>> | null = null;
 
@@ -79,7 +92,7 @@ async function processed(
 
   const decoded = await ctx.decodeAudioData(await fetchAudio());
   const samples = decoded.getChannelData(0);
-  const treated = robotise(samples, decoded.sampleRate);
+  const treated = robotise(samples, decoded.sampleRate, ROBOT_AMOUNT);
 
   const buffer = ctx.createBuffer(1, treated.length, decoded.sampleRate);
   // copyToChannel wants a Float32Array over a plain ArrayBuffer; the one from

@@ -143,37 +143,73 @@ function lowpass(data: Float32Array, sampleRate: number, hz: number) {
   }
 }
 
-/** Applies the full chain. Returns a new buffer; the input is untouched. */
-export function robotise(input: Float32Array, sampleRate: number): Float32Array {
+/** Loudness-matched peak, so changing the amount changes character, not volume. */
+function normalise(data: Float32Array, target = 0.92) {
+  let peak = 0;
+  for (let i = 0; i < data.length; i += 1) peak = Math.max(peak, Math.abs(data[i]));
+  const gain = peak > 1e-6 ? target / peak : 1;
+  for (let i = 0; i < data.length; i += 1) {
+    data[i] = Math.max(-1, Math.min(1, data[i] * gain));
+  }
+}
+
+/**
+ * Applies the chain at a given strength. Returns a new buffer; the input is
+ * untouched.
+ *
+ * `amount` is a genuine dial rather than a switch. At 0 the neural voice is
+ * passed through untouched, which is the most lifelike it gets; at 1 it is the
+ * full machine. Anything between blends the two AFTER each side is matched for
+ * loudness — blending before that just makes the louder side dominate and
+ * reads as a volume change rather than a change of character.
+ *
+ * The blend is what makes low settings sound human at all: the treatment works
+ * by discarding pitch, and it is the dry signal underneath that puts the pitch
+ * contour back.
+ */
+export function robotise(
+  input: Float32Array,
+  sampleRate: number,
+  amount = 1,
+): Float32Array {
+  if (amount <= 0.001) return Float32Array.from(input);
+
   const out = phaseZero(input);
 
   const step = (2 * Math.PI * CARRIER_HZ) / sampleRate;
+  const depth = CARRIER_DEPTH * amount;
   for (let i = 0; i < out.length; i += 1) {
-    out[i] *= 1 - CARRIER_DEPTH + CARRIER_DEPTH * Math.sin(step * i);
+    out[i] *= 1 - depth + depth * Math.sin(step * i);
   }
 
-  const dry = Float32Array.from(out);
+  // The comb reads from a snapshot so its taps see the pre-echo signal rather
+  // than their own output. Named apart from the dry blend below, which is a
+  // different signal entirely — the untreated input.
+  const combSource = Float32Array.from(out);
   const delays = ECHO_MS.map((ms) => Math.round((ms / 1000) * sampleRate));
   for (let i = 0; i < out.length; i += 1) {
-    let sum = dry[i] * ECHO_IN_GAIN;
+    let sum = combSource[i] * ECHO_IN_GAIN;
     for (let d = 0; d < delays.length; d += 1) {
       const j = i - delays[d];
-      if (j >= 0) sum += dry[j] * ECHO_DECAY[d];
+      if (j >= 0) sum += combSource[j] * ECHO_DECAY[d];
     }
     out[i] = sum;
   }
 
-  highpass(out, sampleRate, HIGHPASS_HZ);
-  lowpass(out, sampleRate, LOWPASS_HZ);
+  // The band limit is the most audible "small speaker" cue, so it opens up as
+  // the amount comes down rather than clamping a nearly-dry signal.
+  highpass(out, sampleRate, HIGHPASS_HZ * amount);
+  lowpass(out, sampleRate, LOWPASS_HZ + (1 - amount) * 9000);
 
-  // Normalise to a consistent peak so no reply is louder than another, then
-  // hard-limit whatever the comb pushed over.
-  let peak = 0;
-  for (let i = 0; i < out.length; i += 1) peak = Math.max(peak, Math.abs(out[i]));
-  const gain = peak > 1e-6 ? 0.92 / peak : 1;
+  normalise(out);
+  if (amount >= 0.999) return out;
+
+  const dry = Float32Array.from(input);
+  normalise(dry);
   for (let i = 0; i < out.length; i += 1) {
-    out[i] = Math.max(-1, Math.min(1, out[i] * gain));
+    out[i] = out[i] * amount + (dry[i] ?? 0) * (1 - amount);
   }
+  normalise(out);
 
   return out;
 }

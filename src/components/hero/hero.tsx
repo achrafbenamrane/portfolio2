@@ -52,9 +52,6 @@ export default function Hero() {
 
           <div className="pointer-events-auto mt-10">
             <HandControl />
-            <p className="meta mt-3 max-w-62 leading-relaxed text-white/60">
-              OPEN YOUR HAND FOR THE PORTRAIT · CLOSE IT TO FOLD
-            </p>
           </div>
         </div>
 

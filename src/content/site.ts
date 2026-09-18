@@ -675,7 +675,7 @@ export const experiences: readonly Experience[] = [
     image: {
       src: "/experience/osc.webp",
       width: 719,
-      height: 1280,
+      height: 943,
       alt: "A classroom design session: the OSC monogram open in Inkscape on a laptop, mirrored on the projector screen behind it.",
       caption: "Drawing the OSC logo in Inkscape, at a session",
     },

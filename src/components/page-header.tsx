@@ -17,23 +17,22 @@ export default function PageHeader({
     <header
       className="px-6 pb-10 pt-40 md:px-12 md:pt-36"
       style={{
-        /* A pale wash of the nav's blue, so the bar, the masthead and the
-           white page beneath step down through one hue. Pale rather than a
-           mid blue, and the dark type kept, because a blue light enough to
-           read as "lighter than the nav" cannot carry white text — even pure
-           white drops to 4.2:1 on a medium blue, under AA. The dark type
-           measures 11.8:1 here at the band's darkest point. */
+        /* A medium blue — the iMac's shell colour — sitting between the navy
+           bar above and the white page below. Only PURE white type clears AA
+           on it (5.3:1 at the band's lightest point; the muted white variants
+           fall to 3.9:1), so the label and description drop their opacity
+           and take their hierarchy from size and weight instead. */
         background:
-          "radial-gradient(80% 90% at 90% 0%, #EEF5FB 0%, transparent 60%)," +
-          "linear-gradient(135deg, #E6F0F9 0%, #D3E3F1 100%)",
+          "radial-gradient(80% 90% at 90% 0%, #3A7FBF 0%, transparent 60%)," +
+          "linear-gradient(135deg, #245E95 0%, #2E6FA8 100%)",
       }}
     >
       <div className="mx-auto max-w-350">
-        <p className="meta text-dim">{index}</p>
-        <h1 className="mt-4 text-[clamp(2.25rem,7vw,5rem)] font-semibold uppercase leading-[0.9] tracking-[-0.04em]">
+        <p className="meta text-white">{index}</p>
+        <h1 className="mt-4 text-[clamp(2.25rem,7vw,5rem)] font-semibold uppercase leading-[0.9] tracking-[-0.04em] text-white">
           {title}
         </h1>
-        <p className="mt-5 max-w-md text-balance text-dim">{description}</p>
+        <p className="mt-5 max-w-md text-balance text-white">{description}</p>
       </div>
     </header>
   );

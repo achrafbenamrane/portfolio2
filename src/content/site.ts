@@ -122,6 +122,12 @@ export interface Project {
   href?: string;
   /** Leads the Work page in a device mockup. Keep this to a handful. */
   featured?: boolean;
+  /**
+   * Square app icon, for the phone's home screen — e.g. "/apps/neemafood.png".
+   * Without one the home screen draws a tinted tile with the app's initials,
+   * so a missing logo looks deliberate rather than broken.
+   */
+  icon?: string;
 }
 
 export const projects: readonly Project[] = [

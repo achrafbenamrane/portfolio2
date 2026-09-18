@@ -1,161 +1,192 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
 
-import ProjectMockup from "@/components/project-mockup";
-import { projectCategories, projects, type Project } from "@/content/site";
+import LaptopShowcase from "@/components/showcase/laptop-showcase";
+import PhoneShowcase from "@/components/showcase/phone-showcase";
+import { projects, type Project } from "@/content/site";
 
 /**
- * Work as a gallery of alternating rows.
+ * Work, grouped by the device the work actually runs on.
  *
- * Rebuilt from a tile grid. Nineteen equal tiles give every project the same
- * weight and read as a catalogue; alternating full-width rows give the page a
- * rhythm and let each mockup be large enough to actually see, which is the
- * only reason to have mockups at all.
- *
- * Filtering is the one piece of state, and the only reason this is a client
- * component.
+ * This replaces a filtered list of cards. A filter asks the reader to do the
+ * sorting; grouping by device does it for them, and it lets each group be
+ * shown the right way — apps launching on a phone, sites loading in a browser,
+ * print as flat plates. The category chips were doing the same job worse,
+ * because picking "Mobile Development" still only produced more cards.
  */
+
+const APPS = projects.filter((p) => p.category === "Mobile Development");
+
+/** Anything with a URL you can actually open belongs in the browser. */
+const SITES = projects.filter(
+  (p) =>
+    p.href &&
+    (p.category === "Web Development" ||
+      p.category === "Desktop Development" ||
+      p.category === "AI Automation"),
+);
+
+/**
+ * Automations with nothing to open, and the design work — two bands, not one.
+ * Lumping them together put Shopify-to-Telegram pipelines under a heading that
+ * said "print and identity", which is just untrue.
+ */
+const AUTOMATIONS = projects.filter(
+  (p) => p.category === "AI Automation" && !SITES.includes(p),
+);
+
+const DESIGN = projects.filter((p) => p.category === "Graphic Design");
+
 export default function WorkGallery() {
-  const [category, setCategory] = useState<string>("All");
-
-  const visible =
-    category === "All"
-      ? projects
-      : projects.filter((project) => project.category === category);
-
   return (
-    <section className="px-6 pb-24 md:px-12">
-      <div className="mx-auto max-w-350">
-        {/* Sticky, because the filter is useless once you have scrolled past
-            it — and this page is now very tall. */}
-        <div className="sticky top-0 z-20 -mx-6 bg-canvas/85 px-6 backdrop-blur-sm md:-mx-12 md:px-12">
-          <div className="flex flex-wrap items-baseline justify-between gap-4 border-b border-line pb-4 pt-4">
-            <span className="meta text-dim">FILTER</span>
-            <span className="meta text-dim">
-              {visible.length.toString().padStart(3, "0")} OF{" "}
-              {projects.length.toString().padStart(3, "0")}
-            </span>
-          </div>
+    <div className="pb-24">
+      {APPS.length > 0 && (
+        <Band
+          label="APPS"
+          title="Built for the phone"
+          blurb="Tap an icon to open the app and swipe through its screens."
+          count={APPS.length}
+        >
+          <PhoneShowcase apps={APPS} />
+        </Band>
+      )}
 
-          <div className="flex flex-wrap gap-2 py-4">
-            {projectCategories.map((option) => (
-              <button
-                key={option}
-                type="button"
-                onClick={() => setCategory(option)}
-                aria-pressed={category === option}
-                className={`meta rounded-full border px-3 py-1.5 transition-colors ${
-                  category === option
-                    ? "border-accent text-accent"
-                    : "border-line text-dim hover:text-ink"
-                }`}
-              >
-                {option}
-              </button>
+      {SITES.length > 0 && (
+        <Band
+          label="WEB"
+          title="Built for the browser"
+          blurb="Pick a tab to load the site. Visit opens the real thing."
+          count={SITES.length}
+        >
+          <LaptopShowcase sites={SITES} />
+        </Band>
+      )}
+
+      {AUTOMATIONS.length > 0 && (
+        <Band
+          label="AUTOMATION"
+          title="Built to run itself"
+          blurb="Workflows that fire without anyone watching them."
+          count={AUTOMATIONS.length}
+        >
+          <ul className="grid grid-cols-1 gap-5 sm:grid-cols-2">
+            {AUTOMATIONS.map((project) => (
+              <Plate key={project.slug} project={project} showBlurb />
             ))}
-          </div>
+          </ul>
+        </Band>
+      )}
+
+      {DESIGN.length > 0 && (
+        <Band label="DESIGN" title="Print and identity" count={DESIGN.length}>
+          <ul className="grid grid-cols-2 gap-5 lg:grid-cols-3">
+            {DESIGN.map((project) => (
+              <Plate key={project.slug} project={project} />
+            ))}
+          </ul>
+        </Band>
+      )}
+    </div>
+  );
+}
+
+function Band({
+  label,
+  title,
+  blurb,
+  count,
+  children,
+}: {
+  label: string;
+  title: string;
+  blurb?: string;
+  count: number;
+  children: React.ReactNode;
+}) {
+  return (
+    <section className="border-b border-line px-6 py-16 last:border-0 md:px-12 md:py-24">
+      <div className="mx-auto max-w-350">
+        <div className="flex flex-wrap items-baseline justify-between gap-4 border-b border-line pb-4">
+          <span className="meta text-dim">{label}</span>
+          <span className="meta text-dim">
+            {count.toString().padStart(3, "0")}
+          </span>
         </div>
 
-        {visible.length === 0 ? (
-          <p className="py-20 text-center text-dim">
-            Nothing in this discipline yet.
-          </p>
-        ) : (
-          <ol className="pt-10">
-            {visible.map((project, index) => (
-              <ProjectRow
-                key={project.slug}
-                project={project}
-                index={index}
-                priority={index === 0}
-              />
-            ))}
-          </ol>
-        )}
+        <div className="grid gap-10 pt-10 md:grid-cols-[minmax(0,20rem)_1fr] md:gap-16">
+          <div>
+            <h2 className="text-[clamp(1.6rem,3vw,2.4rem)] font-bold leading-[1.05] tracking-tight">
+              {title}
+            </h2>
+            {blurb && (
+              <p className="mt-4 max-w-prose text-balance leading-relaxed text-dim">
+                {blurb}
+              </p>
+            )}
+          </div>
+
+          <div className="min-w-0">{children}</div>
+        </div>
       </div>
     </section>
   );
 }
 
-function ProjectRow({
+function Plate({
   project,
-  index,
-  priority,
+  showBlurb = false,
 }: {
   project: Project;
-  index: number;
-  priority: boolean;
+  showBlurb?: boolean;
 }) {
-  const remote = project.images[0].startsWith("http");
-  // Alternate which side the mockup falls on, so the eye is not dragged down
-  // a single column for nineteen rows.
-  const flipped = index % 2 === 1;
-
-  return (
-    <li className="group border-b border-line py-14 last:border-0 md:py-20">
-      <div className="grid items-center gap-8 md:grid-cols-12 md:gap-14">
-        <div
-          className={`md:col-span-7 ${flipped ? "md:order-2 md:col-start-6" : ""}`}
-        >
-          <ProjectMockup
-            category={project.category}
+  const body = (
+    <>
+      <div className="relative w-full overflow-hidden rounded-lg bg-surface-2">
+        <div style={{ paddingTop: "75%" }} />
+        <div className="absolute inset-0">
+          <Image
             src={project.images[0]}
             alt={`${project.title} — ${project.category}`}
-            unoptimized={remote}
-            priority={priority}
+            fill
+            sizes="(min-width: 1024px) 22vw, 45vw"
+            unoptimized={project.images[0].startsWith("http")}
+            className="object-cover transition-transform duration-500 group-hover:scale-[1.03]"
           />
         </div>
-
-        <div className={`md:col-span-5 ${flipped ? "md:order-1 md:row-start-1" : ""}`}>
-          <p className="meta text-dim">
-            {(index + 1).toString().padStart(2, "0")} · {project.category}
-          </p>
-
-          <h2 className="mt-4 text-[clamp(1.6rem,3vw,2.5rem)] font-bold leading-[1.05] tracking-tight">
-            {project.title}
-          </h2>
-
-          <p className="mt-4 max-w-prose text-balance leading-relaxed text-dim">
-            {project.description}
-          </p>
-
-          <ul className="mt-6 flex flex-wrap gap-2">
-            {project.tags.map((tag) => (
-              <li
-                key={tag}
-                className="meta rounded-full border border-line px-2.5 py-1 text-dim"
-              >
-                {tag}
-              </li>
-            ))}
-          </ul>
-
-          <div className="mt-7 flex items-center gap-5">
-            <span className="meta text-dim">{project.year}</span>
-
-            {/* Only a live project gets a link. One without a URL must not
-                pretend to be clickable. */}
-            {project.href && (
-              <Link
-                href={project.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="group/link inline-flex items-center gap-2 border-b border-line pb-0.5 text-sm font-medium transition-colors hover:border-accent hover:text-accent"
-              >
-                Visit project
-                <span
-                  aria-hidden
-                  className="transition-transform duration-200 group-hover/link:translate-x-1"
-                >
-                  →
-                </span>
-              </Link>
-            )}
-          </div>
-        </div>
       </div>
+
+      <p className="mt-3 text-sm font-medium transition-colors group-hover:text-accent">
+        {project.title}
+      </p>
+      <p className="meta text-dim">{project.year}</p>
+
+      {/* Automations are the one group a thumbnail cannot explain — a
+          screenshot of a Make.com canvas says nothing on its own. */}
+      {showBlurb && (
+        <p className="mt-2 text-balance text-sm leading-relaxed text-dim">
+          {project.description}
+        </p>
+      )}
+    </>
+  );
+
+  return (
+    <li className="group">
+      {/* Only a live project links out; the rest must not look clickable. */}
+      {project.href ? (
+        <Link
+          href={project.href}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="block"
+        >
+          {body}
+        </Link>
+      ) : (
+        <article>{body}</article>
+      )}
     </li>
   );
 }

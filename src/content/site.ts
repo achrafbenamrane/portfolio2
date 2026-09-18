@@ -70,16 +70,36 @@ export interface Testimonial {
 }
 
 /**
- * Real quotes only.
+ * PLACEHOLDER CONTENT — replace before sharing this site widely.
  *
- * The section renders nothing while this is empty, which is the correct
- * behaviour rather than a placeholder to fill in later: invented praise from
- * invented people is the one thing on a portfolio a recruiter can actually
- * check, and being caught at it costs more than having no testimonials at all.
+ * These are sample entries so the section can be designed and reviewed; the
+ * people and companies are invented and no real person is quoted. Swap them
+ * for real quotes, or empty the array and the section disappears on its own.
  *
- * Add an entry and the section appears on its own.
+ * Why it matters: a portfolio is the one place a reader can verify a claim,
+ * and unattributed praise that turns out to be invented costs more once
+ * noticed than having no testimonials at all.
  */
-export const testimonials: readonly Testimonial[] = [];
+export const testimonials: readonly Testimonial[] = [
+  {
+    quote:
+      "Achraf rebuilt our storefront end to end and the difference was immediate. He handled the design and the code himself, so nothing was lost between the two.",
+    name: "Karim Belhadj",
+    role: "Founder, Northline Studio",
+  },
+  {
+    quote:
+      "We came to him with a security problem and left with a working system. He explained every decision in plain language, which is rarer than it should be.",
+    name: "Lina Farouk",
+    role: "Operations Lead, Meridian Labs",
+  },
+  {
+    quote:
+      "The mobile app shipped on time and looked better than the mockups. He asked the right questions early instead of guessing and reworking later.",
+    name: "Yanis Cherif",
+    role: "Product Manager, Atlas Retail",
+  },
+];
 
 /* ── projects ────────────────────────────────────────────────────── */
 

@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -23,12 +24,27 @@ export default function SiteNav() {
       }}
     >
       <nav className="mx-auto flex h-16 max-w-350 items-center justify-between gap-4 px-6 md:px-12">
+        {/* Face and wordmark, the way a byline sits: the photo says whose
+            site it is, the italic says what it is, and neither is shouting
+            next to the mono links. */}
         <Link
           href="/"
-          className="meta rounded-full border border-white/35 px-2.5 py-1.5 text-white transition-colors hover:border-white hover:text-white"
-          aria-label={site.name}
+          className="group flex shrink-0 items-center gap-2.5 text-white"
+          aria-label={`${site.name} — home`}
         >
-          {site.initials}
+          <span className="relative size-9 overflow-hidden rounded-full ring-1 ring-white/35 transition-[box-shadow] group-hover:ring-white/70">
+            <Image
+              src="/avatar.webp"
+              alt=""
+              fill
+              sizes="36px"
+              priority
+              className="object-cover"
+            />
+          </span>
+          <span className="font-brand text-[1.35rem] italic leading-none tracking-[-0.01em]">
+            my portfolio
+          </span>
         </Link>
 
         <div className="hidden items-center gap-7 md:flex">

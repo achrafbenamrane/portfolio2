@@ -25,6 +25,7 @@
 
   --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-geist-mono), ui-monospace, monospace;
+  --font-brand: var(--font-instrument-serif), "Iowan Old Style", Georgia, serif;
 
   --text-meta: 0.6875rem;
   --text-meta--line-height: 1.1;

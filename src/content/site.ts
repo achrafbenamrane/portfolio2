@@ -588,6 +588,11 @@ export const experiences: readonly Experience[] = [
     role: "Cybersecurity & Network Intern",
     organisation: "Sonelgaz — Khenchela, Algeria",
     period: "Feb — Apr 2026",
+    image: {
+      src: "/experience/sonelgaz.webp",
+      alt: "Achraf at a desk in the Sonelgaz office, a desk phone and workstation beside him.",
+      caption: "At the office, Sonelgaz Khenchela",
+    },
     description:
       "Designed and developed a secure internal communication platform for Sonelgaz employees.",
     achievements: [

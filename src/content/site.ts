@@ -618,6 +618,24 @@ export const experiences: readonly Experience[] = [
     ],
   },
   {
+    // TODO: studio name and exact period still to come from Achraf.
+    role: "Graphic Designer",
+    organisation: "Design studio",
+    period: "2025",
+    image: {
+      src: "/experience/design.webp",
+      alt: "Achraf at a desk in a design studio, a “Graphic Design” sign on the wall behind him and a laptop open beside him.",
+      caption: "At the studio",
+    },
+    description:
+      "Print and identity work for local businesses — outdoor advertising panels and menus for Rital Fast Food, packaging for ONEFRAME, logos for DMD and Berchicha Store.",
+    achievements: [
+      "Brand identities and logos",
+      "Large-format print: panels, banners, menus and packaging",
+      "Adobe Illustrator, Photoshop and Inkscape",
+    ],
+  },
+  {
     role: "Bachelor's Degree, Computer Science",
     organisation: "Badji Mokhtar University, Annaba",
     period: "2024",

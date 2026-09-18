@@ -14,7 +14,13 @@ import { services, type Service } from "@/content/site";
  */
 export default function Services() {
   return (
-    <section className="px-6 pb-20 pt-4 md:px-12" aria-label="Services">
+    <section
+      /* Generous top space: this is the first white section after the
+         blue hero, and a colour change needs room around it or the two
+         read as one block that happened to change colour. */
+      className="px-6 pb-20 pt-20 md:px-12 md:pt-28"
+      aria-label="Services"
+    >
       <div className="mx-auto max-w-350">
         <div className="grid gap-8 border-b border-line pb-10 md:grid-cols-[minmax(0,1fr)_minmax(0,26rem)] md:items-end md:gap-16">
           <div>

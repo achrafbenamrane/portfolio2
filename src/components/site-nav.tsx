@@ -10,11 +10,22 @@ export default function SiteNav() {
   const pathname = usePathname();
 
   return (
-    <header className="fixed inset-x-0 top-0 z-50 border-b border-line/60 bg-canvas/70 backdrop-blur-md">
+    <header
+      className="fixed inset-x-0 top-0 z-50 border-b border-white/10"
+      style={{
+        /* The same blue as the closing banner, turned horizontal: the CTA's
+           135deg diagonal would show only one end across a bar this wide and
+           short. Opaque, not translucent — over a white page a see-through
+           bar lightens as you scroll and the measured contrast below stops
+           holding. */
+        background:
+          "linear-gradient(100deg, #0E2438 0%, #1B4A78 55%, #133A5E 100%)",
+      }}
+    >
       <nav className="mx-auto flex h-16 max-w-350 items-center justify-between gap-4 px-6 md:px-12">
         <Link
           href="/"
-          className="meta rounded-full border border-line px-2.5 py-1.5 transition-colors hover:border-accent hover:text-accent"
+          className="meta rounded-full border border-white/35 px-2.5 py-1.5 text-white transition-colors hover:border-white hover:text-white"
           aria-label={site.name}
         >
           {site.initials}
@@ -29,7 +40,7 @@ export default function SiteNav() {
                 href={section.href}
                 aria-current={active ? "page" : undefined}
                 className={`meta transition-colors ${
-                  active ? "text-accent" : "text-dim hover:text-ink"
+                  active ? "text-[#7CC4F0]" : "text-white/75 hover:text-white"
                 }`}
               >
                 {section.label}
@@ -41,7 +52,7 @@ export default function SiteNav() {
         <a
           href={site.cvHref}
           download
-          className="shrink-0 rounded-full bg-ink px-4 py-2 text-xs font-medium text-canvas transition-opacity hover:opacity-80"
+          className="shrink-0 rounded-full bg-white px-4 py-2 text-xs font-medium text-[#0E2438] transition-opacity hover:opacity-85"
         >
           Get my CV
         </a>
@@ -50,7 +61,7 @@ export default function SiteNav() {
       {/* The desktop links don't fit under ~768px, so small screens get a
           scrollable strip rather than a hamburger — four items don't justify
           hiding navigation behind a tap. */}
-      <div className="flex gap-5 overflow-x-auto border-t border-line/60 px-6 py-2.5 md:hidden">
+      <div className="flex gap-5 overflow-x-auto border-t border-white/10 px-6 py-2.5 md:hidden">
         {SECTIONS.map((section) => {
           const active = pathname.startsWith(section.href);
           return (
@@ -59,7 +70,7 @@ export default function SiteNav() {
               href={section.href}
               aria-current={active ? "page" : undefined}
               className={`meta whitespace-nowrap transition-colors ${
-                active ? "text-accent" : "text-dim"
+                active ? "text-[#7CC4F0]" : "text-white/75"
               }`}
             >
               {section.label}

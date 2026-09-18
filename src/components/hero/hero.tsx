@@ -15,7 +15,7 @@ export default function Hero() {
   return (
     <>
       <section
-        className="relative flex min-h-dvh flex-col justify-center overflow-hidden px-6 pb-16 pt-40 md:px-12 md:pt-32"
+        className="relative flex min-h-dvh flex-col justify-center overflow-hidden px-6 pb-0 pt-40 md:px-12 md:pt-32"
         style={{
           /* The nav's blue, continued. The bar sits directly above this, so
              anything else would put a seam across the top of the page. The
@@ -58,9 +58,6 @@ export default function Hero() {
           </div>
         </div>
 
-        <div className="meta pointer-events-none absolute inset-x-0 bottom-6 hidden justify-end px-12 text-white/60 lg:flex">
-          <span>{site.location}</span>
-        </div>
       </section>
     </>
   );

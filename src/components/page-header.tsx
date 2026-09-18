@@ -8,10 +8,17 @@ export default function PageHeader({
   index,
   title,
   description,
+  meta,
 }: {
   index: string;
   title: string;
   description: string;
+  /**
+   * The row that names the list beneath and counts it — "CREDENTIALS · 006
+   * TOTAL". Rendered inside the band rather than by the page below it, so the
+   * blue ends on that rule instead of stopping short of it.
+   */
+  meta?: { label: string; value: string };
 }) {
   return (
     <header
@@ -33,6 +40,13 @@ export default function PageHeader({
           {title}
         </h1>
         <p className="mt-5 max-w-md text-balance text-white">{description}</p>
+
+        {meta && (
+          <div className="mt-12 flex items-baseline justify-between border-t border-white/25 pt-4">
+            <h2 className="meta text-white/85">{meta.label}</h2>
+            <span className="meta text-white/85">{meta.value}</span>
+          </div>
+        )}
       </div>
     </header>
   );

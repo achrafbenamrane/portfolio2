@@ -4,13 +4,8 @@ export default function Experience() {
   return (
     <section className="px-6 pb-24 md:px-12">
       <div className="mx-auto max-w-350">
-        <div className="flex items-baseline justify-between border-b border-line pb-4">
-          <h2 className="meta text-dim">ROLES & EDUCATION</h2>
-          <span className="meta text-dim">
-            {experiences.length.toString().padStart(3, "0")} ENTRIES
-          </span>
-        </div>
-
+        {/* The "ROLES & EDUCATION · 006 ENTRIES" row now lives in the masthead
+            above, inside its blue band. */}
         <ol className="mt-10 grid gap-px bg-line md:grid-cols-2">
           {experiences.map((entry) => (
             <li

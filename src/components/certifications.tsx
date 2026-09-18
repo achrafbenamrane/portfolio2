@@ -6,13 +6,8 @@ export default function Certifications() {
   return (
     <section className="px-6 pb-24 md:px-12">
       <div className="mx-auto max-w-350">
-        <div className="flex items-baseline justify-between border-b border-line pb-4">
-          <h2 className="meta text-dim">CREDENTIALS</h2>
-          <span className="meta text-dim">
-            {certifications.length.toString().padStart(3, "0")} TOTAL
-          </span>
-        </div>
-
+        {/* The "CREDENTIALS · 006 TOTAL" row now lives in the masthead above,
+            inside its blue band. */}
         <ul className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {certifications.map((certification) => (
             <li

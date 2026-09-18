@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 
 import Certifications from "@/components/certifications";
 import PageHeader from "@/components/page-header";
+import { certifications } from "@/content/site";
 
 export const metadata: Metadata = {
   title: "Certifications",
@@ -16,6 +17,10 @@ export default function CertificationsPage() {
         index="03 / CERTIFICATIONS"
         title="Certifications"
         description="Degrees, automation credentials and community recognition."
+        meta={{
+          label: "CREDENTIALS",
+          value: `${certifications.length.toString().padStart(3, "0")} TOTAL`,
+        }}
       />
       <Certifications />
     </>

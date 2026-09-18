@@ -558,6 +558,12 @@ export interface Experience {
   period: string;
   description: string;
   achievements: readonly string[];
+  /** A photograph from the time, shown 4:5 beside the entry. */
+  image?: {
+    src: string;
+    alt: string;
+    caption: string;
+  };
 }
 
 export const experiences: readonly Experience[] = [
@@ -565,6 +571,11 @@ export const experiences: readonly Experience[] = [
     role: "Full-Stack Engineer",
     organisation: "PROGIX — Montreal, Canada (remote)",
     period: "May 2026 — Present",
+    image: {
+      src: "/experience/progix.webp",
+      alt: "A laptop showing a Google Meet call with the PROGIX team, eight faces on screen.",
+      caption: "On a call with the PROGIX team",
+    },
     description:
       "Building web and mobile applications end to end with React, Next.js, Node.js, Express.js and PostgreSQL, as part of a fully remote team.",
     achievements: [
@@ -588,6 +599,11 @@ export const experiences: readonly Experience[] = [
     role: "Master's Degree (MSc), Network & Information Security",
     organisation: "Badji Mokhtar University, Annaba",
     period: "2026",
+    image: {
+      src: "/experience/msc.webp",
+      alt: "Achraf in a graduation sash holding a cap that reads “I did it”, seated on the steps of the Department of Computer Science.",
+      caption: "Graduation, Department of Computer Science",
+    },
     description:
       "Advanced study in cybersecurity, network architecture and information protection.",
     achievements: [
@@ -600,6 +616,11 @@ export const experiences: readonly Experience[] = [
     role: "Bachelor's Degree, Computer Science",
     organisation: "Badji Mokhtar University, Annaba",
     period: "2024",
+    image: {
+      src: "/experience/bsc.webp",
+      alt: "Achraf speaking into a microphone at a lectern beside the Algerian flag, an audience seated to the left.",
+      caption: "Presenting at Badji Mokhtar University",
+    },
     description:
       "Foundation in computer science, programming and system design.",
     achievements: [

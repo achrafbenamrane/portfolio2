@@ -10,8 +10,10 @@ import type { Project } from "@/content/site";
  *
  * The point of a mockup is to show the app running on a device rather than as
  * a screenshot on a page, so the device has to behave like one. Tapping an
- * icon launches, the app fills the screen, and the home indicator takes you
- * back. A static frame around a screenshot does none of that.
+ * icon launches, the app fills the screen — its screen recording if it has
+ * one, its screenshots if not, a launch screen if it has neither yet — and
+ * the home indicator takes you back. A static frame around a screenshot does
+ * none of that.
  *
  * Drawn entirely in CSS. Nothing is rasterised, so it stays sharp at any size
  * and there is no stock artwork licence to carry.
@@ -30,7 +32,13 @@ export default function PhoneShowcase({ apps }: { apps: readonly Project[] }) {
     setShot(0);
   }, []);
 
-  const shots = open?.images ?? [];
+  // The icon doubles as the index-row preview, so it may sit first in
+  // `images`; it is not a screen and must not be shown as one.
+  const shots = open ? open.images.filter((src) => src !== open.icon) : [];
+
+  // Screenshots and recordings carry the phone's own status bar; drawing ours
+  // on top would put two clocks in the corner.
+  const contentHasBar = Boolean(open && (open.video || shots.length > 0));
 
   const step = useCallback(
     (delta: number) =>
@@ -63,7 +71,7 @@ export default function PhoneShowcase({ apps }: { apps: readonly Project[] }) {
                   <HomeScreen apps={apps} onLaunch={launch} />
                 )}
 
-                <StatusBar />
+                {!contentHasBar && <StatusBar />}
 
                 {/* A real control, not decoration: this is how you get back,
                     which is most of what makes the phone feel operable. */}
@@ -147,17 +155,11 @@ function HomeScreen({
             onClick={() => onLaunch(app)}
             className="group/icon flex flex-col items-center gap-1.5"
           >
-            <span className="relative block size-10 overflow-hidden rounded-[0.7rem] bg-white/15 shadow-[0_4px_10px_rgba(0,0,0,0.35)] ring-1 ring-white/20 transition-transform duration-200 group-hover/icon:scale-105 group-active/icon:scale-95">
-              {app.icon ? (
-                <Image src={app.icon} alt="" fill sizes="40px" className="object-cover" />
-              ) : (
-                /* Initials until a logo lands, so a missing icon reads as
-                   deliberate rather than as a broken image. */
-                <span className="grid size-full place-items-center text-[11px] font-bold text-white">
-                  {initials(app.title)}
-                </span>
-              )}
-            </span>
+            <AppIcon
+              app={app}
+              size="home"
+              className="transition-transform duration-200 group-hover/icon:scale-105 group-active/icon:scale-95"
+            />
 
             <span className="max-w-full truncate text-[8px] leading-tight text-white/90">
               {app.title}
@@ -165,6 +167,92 @@ function HomeScreen({
           </button>
         ))}
       </div>
+    </div>
+  );
+}
+
+const ICON_SIZES = {
+  home: { box: "size-10", img: "40px", text: "text-[11px]" },
+  splash: { box: "size-16", img: "64px", text: "text-lg" },
+} as const;
+
+/**
+ * One icon, drawn the same on the home screen and on an app's launch screen.
+ *
+ * The radius is a real home-screen tile's (≈22%), not a round number: the
+ * icons were cut from a screenshot at that radius, and a tile rounded any
+ * tighter would show a sliver of the tint behind them in every corner.
+ */
+function AppIcon({
+  app,
+  size,
+  className = "",
+}: {
+  app: Project;
+  size: keyof typeof ICON_SIZES;
+  className?: string;
+}) {
+  const { box, img, text } = ICON_SIZES[size];
+
+  return (
+    <span
+      className={`relative block overflow-hidden rounded-[22.5%] bg-white/15 shadow-[0_4px_10px_rgba(0,0,0,0.35)] ring-1 ring-white/20 ${box} ${className}`}
+    >
+      {app.icon ? (
+        <Image src={app.icon} alt="" fill sizes={img} className="object-cover" />
+      ) : (
+        /* Initials until a logo lands, so a missing icon reads as deliberate
+           rather than as a broken image. */
+        <span
+          className={`grid size-full place-items-center font-bold text-white ${text}`}
+        >
+          {initials(app.title)}
+        </span>
+      )}
+    </span>
+  );
+}
+
+/**
+ * What a phone shows while an app starts: its icon on a dark field. It is
+ * also the honest state for an app with nothing to show yet — a launch
+ * screen, rather than a gallery with nothing in it.
+ */
+function Splash({ app, note }: { app: Project; note?: string }) {
+  return (
+    <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 bg-[#0B1015]">
+      <AppIcon app={app} size="splash" />
+      <p className="text-[11px] font-medium text-white/90">{app.title}</p>
+      {note && <p className="meta absolute bottom-12 text-white/45">{note}</p>}
+    </div>
+  );
+}
+
+/**
+ * The screen recording, faded in over the launch screen once its first frame
+ * is up — which is what launching an app looks like. Muted and looping
+ * because it is a demo on a page, not a film someone pressed play on; the
+ * home bar is the way out, same as for any app.
+ */
+function Recording({ app }: { app: Project }) {
+  const [playing, setPlaying] = useState(false);
+
+  return (
+    <div className="absolute inset-0 bg-[#0B1015]">
+      <Splash app={app} />
+      <video
+        src={app.video}
+        autoPlay
+        muted
+        loop
+        playsInline
+        preload="auto"
+        onPlaying={() => setPlaying(true)}
+        aria-label={`${app.title}, screen recording`}
+        className={`absolute inset-0 size-full object-cover object-top transition-opacity duration-300 ${
+          playing ? "opacity-100" : "opacity-0"
+        }`}
+      />
     </div>
   );
 }
@@ -180,6 +268,9 @@ function AppView({
   shot: number;
   onStep: (delta: number) => void;
 }) {
+  if (app.video) return <Recording app={app} />;
+  if (shots.length === 0) return <Splash app={app} note="SCREENS COMING SOON" />;
+
   return (
     <div className="absolute inset-0 bg-black">
       <Image

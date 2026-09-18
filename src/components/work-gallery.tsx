@@ -46,7 +46,7 @@ export default function WorkGallery() {
         <Band
           label="APPS"
           title="Built for the phone"
-          blurb="Tap an icon to open the app and swipe through its screens."
+          blurb="Tap an icon to open the app and watch it run."
           count={APPS.length}
         >
           <PhoneShowcase apps={APPS} />

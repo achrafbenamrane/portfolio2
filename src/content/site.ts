@@ -193,6 +193,13 @@ export interface Project {
    * so a missing logo looks deliberate rather than broken.
    */
   icon?: string;
+  /**
+   * Screen recording that plays inside the phone when the app is opened —
+   * e.g. "/apps/neemafood.mp4", produced by `npm run app:video`. Takes
+   * precedence over the screenshot gallery: a recording shows the app being
+   * used, which no set of stills can.
+   */
+  video?: string;
 }
 
 export const projects: readonly Project[] = [
@@ -206,6 +213,7 @@ export const projects: readonly Project[] = [
     tags: ["React Native", "Firebase", "Real-time", "Food Delivery"],
     year: "2026",
     href: "https://neemafood.vercel.app/",
+    icon: "/apps/neemafood.png",
     images: [
       "https://res.cloudinary.com/dwvgbojw0/image/upload/v1769250138/logo_fnhfo9.png",
       "https://res.cloudinary.com/dwvgbojw0/image/upload/v1769250156/Screenshot_20260124-111331_yaqa13.jpg",
@@ -218,6 +226,64 @@ export const projects: readonly Project[] = [
       "https://res.cloudinary.com/dwvgbojw0/image/upload/v1769250145/Screenshot_20260124-111103_vvxydb.jpg",
       "https://res.cloudinary.com/dwvgbojw0/image/upload/v1769250140/Screenshot_20260124-111022_fcmkrq.jpg",
     ],
+  },
+  /*
+   * The rest of the phone. Icons are real; everything else below is a
+   * placeholder until the details arrive — title, description, year and
+   * stack are still to be confirmed, and each `video` lands once its screen
+   * recording has been through `npm run app:video`. An empty description
+   * keeps the entry out of the voice assistant's knowledge, so it cannot be
+   * asked about an app nobody has described yet.
+   */
+  {
+    slug: "pizza-heist",
+    title: "Pizza Heist",
+    description: "",
+    category: "Mobile Development",
+    tags: [],
+    year: "—",
+    icon: "/apps/pizza-heist.png",
+    images: ["/apps/pizza-heist.png"],
+  },
+  {
+    slug: "wave",
+    title: "Wave",
+    description: "",
+    category: "Mobile Development",
+    tags: [],
+    year: "—",
+    icon: "/apps/wave.png",
+    images: ["/apps/wave.png"],
+  },
+  {
+    slug: "cd",
+    title: "CD",
+    description: "",
+    category: "Mobile Development",
+    tags: [],
+    year: "—",
+    icon: "/apps/cd.png",
+    images: ["/apps/cd.png"],
+  },
+  {
+    slug: "infinity",
+    title: "Infinity",
+    description: "",
+    category: "Mobile Development",
+    tags: [],
+    year: "—",
+    icon: "/apps/infinity.png",
+    images: ["/apps/infinity.png"],
+  },
+  {
+    slug: "m",
+    title: "M",
+    description: "",
+    category: "Mobile Development",
+    tags: [],
+    year: "—",
+    icon: "/apps/m.png",
+    images: ["/apps/m.png"],
   },
   {
     slug: "smart-dental",

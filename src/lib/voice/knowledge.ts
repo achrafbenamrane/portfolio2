@@ -17,8 +17,16 @@ import {
  * with the page on the next request.
  */
 
+/**
+ * An entry with no description is a stub — an icon on the phone waiting for
+ * its details — and the assistant must not narrate it. Told about "Wave
+ * (Mobile Development)" and nothing else, a model fills the gap with a
+ * plausible sentence, and an invented feature is worse than "I don't know".
+ */
+const described = projects.filter((project) => project.description);
+
 function projectLines() {
-  return projects
+  return described
     .map((project) => {
       const link = project.href ? ` Live: ${project.href}.` : "";
       return `- ${project.title} (${project.year}, ${project.category}). ${project.description} Tech: ${project.tags.join(", ")}.${link}`;
@@ -65,7 +73,7 @@ ABOUT:
 ${site.bio}
 ${site.tagline}
 
-PROJECTS (${projects.length}):
+PROJECTS (${described.length}):
 ${projectLines()}
 
 EXPERIENCE (${experiences.length}):

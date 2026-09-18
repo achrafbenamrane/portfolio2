@@ -22,7 +22,7 @@ export default function HeroCanvas() {
   // full height, so the projection is untouched and only the position moves;
   // the section clips the overhang.
   return (
-    <div className="pointer-events-none absolute inset-y-0 right-0 w-full translate-y-12 md:translate-y-16 lg:w-[56%]">
+    <div className="pointer-events-none absolute inset-y-0 right-0 w-full translate-y-24 md:translate-y-32 lg:w-[56%]">
       {/* A soft pool behind the subject. The portrait is a cut-out of a man in
           a black suit: on a white page it separated on its own, but against
           this blue the shoulders merge into the background. Lifting the area

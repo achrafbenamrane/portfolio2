@@ -1,5 +1,4 @@
-import Image from "next/image";
-
+import ExperiencePhoto from "@/components/experience-photo";
 import { experiences, type Experience as Entry } from "@/content/site";
 
 /**
@@ -13,7 +12,7 @@ import { experiences, type Experience as Entry } from "@/content/site";
  * text, and the year is printed once per year, large, so the page reads as
  * a timeline without drawing one.
  *
- * A server component: text and images, nothing to hydrate.
+ * A server component; only the photographs hydrate, for their lightbox.
  */
 
 /** The year an entry belongs to — the first one its period names. */
@@ -79,23 +78,10 @@ export default function Experience() {
                     hero image. Cropping every photo to one shape lost the
                     edges of every one of them. */}
                 {entry.image && (
-                  <figure className="w-full max-w-[15rem] md:col-span-3 md:col-start-10 md:row-span-2 md:row-start-1 md:justify-self-end">
-                    <div className="rounded-xl bg-canvas p-1.5 shadow-[0_24px_48px_-28px_rgba(24,38,49,0.45)] ring-1 ring-line">
-                      <div className="overflow-hidden rounded-lg bg-surface-2">
-                        <Image
-                          src={entry.image.src}
-                          alt={entry.image.alt}
-                          width={entry.image.width}
-                          height={entry.image.height}
-                          sizes="15rem"
-                          className="block h-auto w-full transition-transform duration-700 group-hover:scale-[1.03]"
-                        />
-                      </div>
-                      <figcaption className="meta px-1 pb-1 pt-2.5 text-dim">
-                        {entry.image.caption}
-                      </figcaption>
-                    </div>
-                  </figure>
+                  <ExperiencePhoto
+                    image={entry.image}
+                    className="w-full max-w-[15rem] md:col-span-3 md:col-start-10 md:row-span-2 md:row-start-1 md:justify-self-end"
+                  />
                 )}
 
                 <div

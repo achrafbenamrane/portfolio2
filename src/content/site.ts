@@ -760,6 +760,11 @@ export const certifications: readonly Certification[] = [
     issuer: "Red Team Leaders",
     date: "2025",
     kind: "security",
+    image: {
+      src: "/certifications/crtom.webp",
+      width: 823,
+      height: 618,
+    },
     skills: [
       "Red Team Operations",
       "Adversary Emulation",

@@ -13,10 +13,10 @@ import {
 /**
  * The credentials bound as a book.
  *
- * It arrives closed and opens itself — the cover swings over to the first
- * spread a moment after the page loads — and the certificates are its
- * pages, one to a page, each turning around the spine in three
- * dimensions. Drag a page and it follows
+ * It waits closed until it has been scrolled into view, then opens itself
+ * — the cover swings over to the first spread while the reader is looking
+ * — and the certificates are its pages, one to a page, each turning
+ * around the spine in three dimensions. Drag a page and it follows
  * your hand until you let go, at which point it finishes turning or falls
  * back; click a page, press an arrow, or swipe, and it turns on its own.
  * Turn back past the contents and the cover closes over it; turn the last
@@ -56,8 +56,10 @@ const TURN_EASE = "cubic-bezier(0.4, 0.05, 0.25, 1)";
 const CLICK_PX = 6;
 /** Thickness of one sheet at the fore-edge, in px. */
 const LEAF_PX = 1.6;
-/** How long the closed book is seen before it opens itself. */
-const OPEN_AFTER_MS = 650;
+/** How long the closed book is seen, once in view, before it opens itself. */
+const OPEN_AFTER_MS = 500;
+/** How much of the book must be on screen before it counts as seen. */
+const SEEN_RATIO = 0.6;
 
 /** Sheets from the pages: cover and contents first, then two certificates
  *  per sheet, and a back cover on the last sheet's reverse. */
@@ -93,13 +95,32 @@ export default function CertificateBook({
   const book = useRef<HTMLDivElement>(null);
   const [turned, setTurned] = useState(0);
 
-  // Closed on arrival, then the cover opens itself: the one page turn the
-  // reader sees without asking, which is what tells them the rest turn.
-  // Someone who has asked for less motion gets it open straight away.
+  // Closed until it has been scrolled into view, then the cover opens
+  // itself: the one page turn the reader sees without asking, which is
+  // what tells them the rest turn — and it only counts if they were
+  // looking, so it waits for the book to be mostly on screen. Someone who
+  // has asked for less motion gets it open straight away.
   useEffect(() => {
-    const still = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const timer = window.setTimeout(() => setTurned(1), still ? 0 : OPEN_AFTER_MS);
-    return () => window.clearTimeout(timer);
+    const el = book.current;
+    if (!el) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      const timer = window.setTimeout(() => setTurned(1), 0);
+      return () => window.clearTimeout(timer);
+    }
+    let timer: number | null = null;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry?.isIntersecting) return;
+        observer.disconnect();
+        timer = window.setTimeout(() => setTurned((n) => (n === 0 ? 1 : n)), OPEN_AFTER_MS);
+      },
+      { threshold: SEEN_RATIO },
+    );
+    observer.observe(el);
+    return () => {
+      observer.disconnect();
+      if (timer !== null) window.clearTimeout(timer);
+    };
   }, []);
   /** The sheet under the hand, and how far it has come round. */
   const [drag, setDrag] = useState<{ sheet: number; angle: number } | null>(

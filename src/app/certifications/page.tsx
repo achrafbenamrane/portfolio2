@@ -7,7 +7,7 @@ import { certifications } from "@/content/site";
 export const metadata: Metadata = {
   title: "Certifications",
   description:
-    "Degrees, automation credentials and community recognition, with certificates.",
+    "A degree, a red-team credential, automation certifications and community recognition, with the certificates themselves.",
 };
 
 export default function CertificationsPage() {
@@ -16,7 +16,7 @@ export default function CertificationsPage() {
       <PageHeader
         index="03 / CERTIFICATIONS"
         title="Certifications"
-        description="Degrees, automation credentials and community recognition."
+        description="A degree, a red-team credential, automation certifications and community recognition — the documents themselves."
         meta={{
           label: "CREDENTIALS",
           value: `${certifications.length.toString().padStart(3, "0")} TOTAL`,

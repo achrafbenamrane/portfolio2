@@ -153,12 +153,18 @@ function Certifications() {
       {certifications.map((certification) => (
         <li key={certification.title}>
           <span className="fw-cert-img">
-            <Image
-              src={certification.image}
-              alt={certification.title}
-              width={220}
-              height={150}
-            />
+            {certification.image ? (
+              <Image
+                src={certification.image.src}
+                alt={certification.title}
+                width={220}
+                height={150}
+              />
+            ) : (
+              /* No scan yet: the issuer's name on the tile, so the slot
+                 reads as a certificate and not as a broken image. */
+              <span className="fw-cert-blank">{certification.issuer}</span>
+            )}
           </span>
           <p className="fw-cert-title">{certification.title}</p>
           <p className="fw-cert-issuer">

@@ -709,11 +709,30 @@ export const experiences: readonly Experience[] = [
 
 /* ── certifications ──────────────────────────────────────────────── */
 
+export type CertificationKind =
+  | "degree"
+  | "security"
+  | "automation"
+  | "recognition";
+
+export const certificationKinds: Record<CertificationKind, string> = {
+  degree: "DEGREE",
+  security: "SECURITY",
+  automation: "AUTOMATION",
+  recognition: "RECOGNITION",
+};
+
 export interface Certification {
   title: string;
   issuer: string;
   date: string;
-  image: string;
+  kind: CertificationKind;
+  /** The certificate itself, at the file's pixel size. Absent until scanned. */
+  image?: {
+    src: string;
+    width: number;
+    height: number;
+  };
   skills: readonly string[];
 }
 
@@ -722,7 +741,12 @@ export const certifications: readonly Certification[] = [
     title: "Bachelor's Degree in Computer Systems",
     issuer: "Badji Mokhtar University, Annaba",
     date: "2024",
-    image: "/certifications/bachelors-degree.webp",
+    kind: "degree",
+    image: {
+      src: "/certifications/bachelors-degree.webp",
+      width: 1280,
+      height: 910,
+    },
     skills: [
       "Computer Science",
       "Software Engineering",
@@ -732,10 +756,27 @@ export const certifications: readonly Certification[] = [
     ],
   },
   {
+    title: "CRTOM — Certified Red Team Operations Management",
+    issuer: "Red Team Leaders",
+    date: "2025",
+    kind: "security",
+    skills: [
+      "Red Team Operations",
+      "Adversary Emulation",
+      "Engagement Management",
+      "Reporting",
+    ],
+  },
+  {
     title: "Startup Brevet — Smart Dental Platform",
     issuer: "Badji Mokhtar University, Annaba",
     date: "2023 — 2024",
-    image: "/certifications/startup-brevet.webp",
+    kind: "recognition",
+    image: {
+      src: "/certifications/startup-brevet.webp",
+      width: 800,
+      height: 636,
+    },
     skills: [
       "Project Leadership",
       "Full-Stack Development",
@@ -747,7 +788,12 @@ export const certifications: readonly Certification[] = [
     title: "Open-Source Community Leader",
     issuer: "OSC Annaba — Computer Science Department",
     date: "2023 — 2024",
-    image: "/certifications/club-founder.webp",
+    kind: "recognition",
+    image: {
+      src: "/certifications/club-founder.webp",
+      width: 800,
+      height: 630,
+    },
     skills: [
       "Leadership",
       "Community Management",
@@ -759,7 +805,12 @@ export const certifications: readonly Certification[] = [
     title: "Event Organizer — Study in Japan 2024",
     issuer: "Open-Source Community Annaba",
     date: "2024",
-    image: "/certifications/events-organizer.webp",
+    kind: "recognition",
+    image: {
+      src: "/certifications/events-organizer.webp",
+      width: 818,
+      height: 634,
+    },
     skills: [
       "Event Management",
       "International Relations",
@@ -770,8 +821,13 @@ export const certifications: readonly Certification[] = [
   {
     title: "Make Foundation Certification",
     issuer: "Make.com",
-    date: "2024",
-    image: "/certifications/make-foundation.webp",
+    date: "2025",
+    kind: "automation",
+    image: {
+      src: "/certifications/make-foundation.webp",
+      width: 790,
+      height: 606,
+    },
     skills: [
       "AI Agents",
       "Advanced Automation",
@@ -782,8 +838,13 @@ export const certifications: readonly Certification[] = [
   {
     title: "Make Basics Certification",
     issuer: "Make.com",
-    date: "2024",
-    image: "/certifications/make-basics.webp",
+    date: "2025",
+    kind: "automation",
+    image: {
+      src: "/certifications/make-basics.webp",
+      width: 790,
+      height: 606,
+    },
     skills: [
       "AI Automation",
       "Workflow Design",

@@ -1,7 +1,6 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
 import { useState } from "react";
 
 import type { Project } from "@/content/site";
@@ -10,8 +9,10 @@ import type { Project } from "@/content/site";
  * A working laptop: a browser with a tab per site, and picking one loads it.
  *
  * Same idea as the phone — the site is shown running on a machine rather than
- * cropped onto a card. The address bar carries the project's real domain, and
- * "Visit" opens the real thing, so nothing in the chrome is decorative.
+ * cropped onto a card. The address bar carries the project's real domain, so
+ * nothing in the chrome is decorative. What the site is, and the link to the
+ * real thing, are the band's to print beside the machine: it is told which
+ * tab is open through `onSelect`.
  *
  * Drawn entirely in CSS, so it stays sharp at any size with no stock artwork.
  */
@@ -25,10 +26,21 @@ function hostOf(href?: string) {
   }
 }
 
-export default function LaptopShowcase({ sites }: { sites: readonly Project[] }) {
+export default function LaptopShowcase({
+  sites,
+  onSelect,
+}: {
+  sites: readonly Project[];
+  onSelect?: (site: Project) => void;
+}) {
   const [index, setIndex] = useState(0);
   const site = sites[index];
   if (!site) return null;
+
+  const select = (i: number) => {
+    setIndex(i);
+    onSelect?.(sites[i]);
+  };
 
   return (
     <div className="mx-auto w-full max-w-2xl">
@@ -45,7 +57,7 @@ export default function LaptopShowcase({ sites }: { sites: readonly Project[] })
             <BrowserChrome
               sites={sites}
               index={index}
-              onSelect={setIndex}
+              onSelect={select}
               host={hostOf(site.href)}
             />
 
@@ -76,33 +88,6 @@ export default function LaptopShowcase({ sites }: { sites: readonly Project[] })
           className="absolute left-1/2 top-0 h-2 w-24 -translate-x-1/2 rounded-b-lg bg-[#11181F]"
         />
       </div>
-
-      <div className="mx-auto mt-6 flex max-w-2xl flex-wrap items-baseline justify-center gap-x-5 gap-y-2 text-center">
-        <h3 className="text-lg font-medium tracking-tight">{site.title}</h3>
-        <span className="meta text-dim">
-          {site.category} · {site.year}
-        </span>
-        {site.href && (
-          <Link
-            href={site.href}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="group/link inline-flex items-center gap-1.5 border-b border-line pb-0.5 text-sm font-medium transition-colors hover:border-accent hover:text-accent"
-          >
-            Visit
-            <span
-              aria-hidden
-              className="transition-transform duration-200 group-hover/link:translate-x-1"
-            >
-              →
-            </span>
-          </Link>
-        )}
-      </div>
-
-      <p className="mt-3 text-balance text-center text-sm leading-relaxed text-dim">
-        {site.description}
-      </p>
     </div>
   );
 }

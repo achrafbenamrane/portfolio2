@@ -23,14 +23,30 @@ import type { Project } from "@/content/site";
  *  mismatch between the server's clock and the visitor's. */
 const CLOCK = "9:41";
 
-export default function PhoneShowcase({ apps }: { apps: readonly Project[] }) {
+export default function PhoneShowcase({
+  apps,
+  onSelect,
+}: {
+  apps: readonly Project[];
+  /** Told which app is open, and `null` when back on the home screen. */
+  onSelect?: (app: Project | null) => void;
+}) {
   const [open, setOpen] = useState<Project | null>(null);
   const [shot, setShot] = useState(0);
 
-  const launch = useCallback((app: Project) => {
-    setOpen(app);
-    setShot(0);
-  }, []);
+  const launch = useCallback(
+    (app: Project) => {
+      setOpen(app);
+      setShot(0);
+      onSelect?.(app);
+    },
+    [onSelect],
+  );
+
+  const home = () => {
+    setOpen(null);
+    onSelect?.(null);
+  };
 
   // The icon doubles as the index-row preview, so it may sit first in
   // `images`; it is not a screen and must not be shown as one.
@@ -77,7 +93,7 @@ export default function PhoneShowcase({ apps }: { apps: readonly Project[] }) {
                     which is most of what makes the phone feel operable. */}
                 <button
                   type="button"
-                  onClick={() => setOpen(null)}
+                  onClick={home}
                   aria-label="Home"
                   className="absolute inset-x-0 bottom-0 z-20 flex h-8 items-end justify-center pb-2"
                 >

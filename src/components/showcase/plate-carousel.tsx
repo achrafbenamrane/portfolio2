@@ -25,12 +25,16 @@ export default function PlateCarousel({
   projects,
   label,
   showBlurb = false,
+  onSelect,
+  selected = null,
 }: {
   projects: readonly Project[];
   label: string;
   /** Print the description under each plate — for work a picture alone
    *  cannot explain, like an automation's canvas. */
   showBlurb?: boolean;
+  onSelect?: (project: Project) => void;
+  selected?: Project | null;
 }) {
   const track = useRef<HTMLUListElement>(null);
   const drag = useRef<{ x: number; left: number; moved: boolean } | null>(null);
@@ -147,7 +151,9 @@ export default function PlateCarousel({
       {/* Bleeds past the column on the right (and both sides on a phone)
           so the next plate peeks in from the edge — the strongest cue
           that there is more without a single control. scroll-p keeps the
-          snap points aligned with the visible edge, not the bleed. */}
+          snap points aligned with the visible edge, not the bleed, and the
+          hair of padding is room for the chosen plate's ring, which the
+          scroller would otherwise clip. */}
       <ul
         ref={track}
         onScroll={readPosition}
@@ -160,7 +166,7 @@ export default function PlateCarousel({
         onDragStart={(e) => e.preventDefault()}
         tabIndex={0}
         aria-label={label}
-        className={`-mx-6 flex gap-5 overflow-x-auto scroll-px-6 px-6 pb-2 [scrollbar-width:none] md:mx-0 md:-mr-12 md:scroll-pl-0 md:pl-0 md:pr-12 [&::-webkit-scrollbar]:hidden ${
+        className={`-mx-6 flex gap-5 overflow-x-auto scroll-px-6 px-6 pt-1 pb-3 [scrollbar-width:none] md:-ml-1 md:-mr-12 md:scroll-pl-1 md:pl-1 md:pr-12 [&::-webkit-scrollbar]:hidden ${
           dragging
             ? "cursor-grabbing snap-none select-none"
             : "cursor-grab snap-x snap-mandatory"
@@ -171,6 +177,8 @@ export default function PlateCarousel({
             key={project.slug}
             project={project}
             showBlurb={showBlurb}
+            onSelect={onSelect}
+            selected={selected?.slug === project.slug}
             className={`shrink-0 snap-start ${
               showBlurb ? "w-[19rem] sm:w-[22rem]" : "w-[17rem] sm:w-[19rem]"
             }`}

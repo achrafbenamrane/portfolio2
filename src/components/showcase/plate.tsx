@@ -13,16 +13,26 @@ export default function Plate({
   showBlurb = false,
   className = "",
   sizes = "(min-width: 1024px) 22vw, 45vw",
+  onSelect,
+  selected = false,
 }: {
   project: Project;
   showBlurb?: boolean;
   className?: string;
   /** The `sizes` hint for the image, since the plate's width is the caller's. */
   sizes?: string;
+  /** With this, a click selects the plate (for details printed elsewhere)
+   *  instead of leaving the page; the live link belongs to that panel. */
+  onSelect?: (project: Project) => void;
+  selected?: boolean;
 }) {
   const body = (
     <>
-      <div className="relative w-full overflow-hidden rounded-lg bg-surface-2">
+      <div
+        className={`relative w-full overflow-hidden rounded-lg bg-surface-2 transition-shadow ${
+          selected ? "ring-2 ring-accent ring-offset-2 ring-offset-canvas" : ""
+        }`}
+      >
         <div style={{ paddingTop: "75%" }} />
         <div className="absolute inset-0">
           <Image
@@ -36,7 +46,11 @@ export default function Plate({
         </div>
       </div>
 
-      <p className="mt-3 text-sm font-medium transition-colors group-hover:text-accent">
+      <p
+        className={`mt-3 text-sm font-medium transition-colors group-hover:text-accent ${
+          selected ? "text-accent" : ""
+        }`}
+      >
         {project.title}
       </p>
       <p className="meta text-dim">{project.year}</p>
@@ -53,8 +67,17 @@ export default function Plate({
 
   return (
     <li className={`group ${className}`}>
-      {/* Only a live project links out; the rest must not look clickable. */}
-      {project.href ? (
+      {onSelect ? (
+        <button
+          type="button"
+          onClick={() => onSelect(project)}
+          aria-pressed={selected}
+          className="block w-full text-left"
+        >
+          {body}
+        </button>
+      ) : /* Only a live project links out; the rest must not look clickable. */
+      project.href ? (
         <Link
           href={project.href}
           target="_blank"

@@ -1,11 +1,10 @@
 "use client";
 
-import Image from "next/image";
-import Link from "next/link";
-
 import LaptopShowcase from "@/components/showcase/laptop-showcase";
 import PhoneShowcase from "@/components/showcase/phone-showcase";
-import { projects, type Project } from "@/content/site";
+import Plate from "@/components/showcase/plate";
+import PlateCarousel from "@/components/showcase/plate-carousel";
+import { projects } from "@/content/site";
 
 /**
  * Work, grouped by the device the work actually runs on.
@@ -80,12 +79,13 @@ export default function WorkGallery() {
       )}
 
       {DESIGN.length > 0 && (
-        <Band label="DESIGN" title="Print and identity" count={DESIGN.length}>
-          <ul className="grid grid-cols-2 gap-5 lg:grid-cols-3">
-            {DESIGN.map((project) => (
-              <Plate key={project.slug} project={project} />
-            ))}
-          </ul>
+        <Band
+          label="DESIGN"
+          title="Print and identity"
+          blurb="Swipe through, or use the arrows."
+          count={DESIGN.length}
+        >
+          <PlateCarousel projects={DESIGN} label="Print and identity work" />
         </Band>
       )}
     </div>
@@ -131,62 +131,5 @@ function Band({
         </div>
       </div>
     </section>
-  );
-}
-
-function Plate({
-  project,
-  showBlurb = false,
-}: {
-  project: Project;
-  showBlurb?: boolean;
-}) {
-  const body = (
-    <>
-      <div className="relative w-full overflow-hidden rounded-lg bg-surface-2">
-        <div style={{ paddingTop: "75%" }} />
-        <div className="absolute inset-0">
-          <Image
-            src={project.images[0]}
-            alt={`${project.title} — ${project.category}`}
-            fill
-            sizes="(min-width: 1024px) 22vw, 45vw"
-            unoptimized={project.images[0].startsWith("http")}
-            className="object-cover transition-transform duration-500 group-hover:scale-[1.03]"
-          />
-        </div>
-      </div>
-
-      <p className="mt-3 text-sm font-medium transition-colors group-hover:text-accent">
-        {project.title}
-      </p>
-      <p className="meta text-dim">{project.year}</p>
-
-      {/* Automations are the one group a thumbnail cannot explain — a
-          screenshot of a Make.com canvas says nothing on its own. */}
-      {showBlurb && (
-        <p className="mt-2 text-balance text-sm leading-relaxed text-dim">
-          {project.description}
-        </p>
-      )}
-    </>
-  );
-
-  return (
-    <li className="group">
-      {/* Only a live project links out; the rest must not look clickable. */}
-      {project.href ? (
-        <Link
-          href={project.href}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="block"
-        >
-          {body}
-        </Link>
-      ) : (
-        <article>{body}</article>
-      )}
-    </li>
   );
 }

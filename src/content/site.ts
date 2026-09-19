@@ -653,6 +653,13 @@ export const experiences: readonly Experience[] = [
     role: "Bachelor's Degree, Computer Science",
     organisation: "Badji Mokhtar University, Annaba",
     period: "2024",
+    image: {
+      src: "/experience/podium.webp",
+      width: 403,
+      height: 535,
+      alt: "Achraf speaking into a microphone at a lectern beside the Algerian flag, an audience seated to the left.",
+      caption: "Presenting at Badji Mokhtar University",
+    },
     description:
       "Foundation in computer science, programming and system design.",
     achievements: [
@@ -685,7 +692,7 @@ export const experiences: readonly Experience[] = [
     organisation: "Smart Dental Platform Startup, Badji Mokhtar University",
     period: "2023 — 2024",
     image: {
-      src: "/experience/smart-dental.webp",
+      src: "/experience/podium.webp",
       width: 403,
       height: 535,
       alt: "Achraf speaking into a microphone at a lectern beside the Algerian flag, an audience seated to the left.",

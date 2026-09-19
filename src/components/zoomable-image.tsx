@@ -70,28 +70,22 @@ function inside(x: number, y: number, r: Rect) {
   );
 }
 
-export default function ZoomableImage({
-  image,
-  alt,
-  label,
-  sizes,
-  className = "",
-  imageClassName = "",
-}: {
-  image: ZoomableSource;
-  /** Describes the image for readers of the small one and the large one. */
-  alt: string;
-  /** What the button does, e.g. "View larger: graduation day". */
-  label: string;
-  /** The `sizes` hint for the small image, since its width is the caller's. */
-  sizes: string;
-  className?: string;
-  imageClassName?: string;
-}) {
-  const card = useRef<HTMLButtonElement>(null);
+function rectOf(el: Element): Rect {
+  const r = el.getBoundingClientRect();
+  return { left: r.left, top: r.top, width: r.width, height: r.height };
+}
+
+/**
+ * The lightbox itself, as a hook: `openFrom(element)` flies the image out
+ * of that element's box, `overlay` is what to render, and the flight back
+ * measures the element again, so it lands wherever the element is by then.
+ * ZoomableImage is the common case (the element is the small image); the
+ * certificate book opens from a page while a separate button is pressed.
+ */
+export function useLightbox(image: ZoomableSource, alt: string) {
+  const origin = useRef<Element | null>(null);
   const big = useRef<HTMLImageElement>(null);
   const scrim = useRef<HTMLDivElement>(null);
-  const hoverTimer = useRef<number | null>(null);
   const closing = useRef(false);
   /** Pointer tracking while open: where it was, whether it has reached the
    *  big image, and how far it has moved in any direction but towards it. */
@@ -99,27 +93,22 @@ export default function ZoomableImage({
 
   const [view, setView] = useState<{ from: Rect; to: Rect } | null>(null);
 
-  const open = () => {
-    const el = card.current;
-    if (!el || view) return;
-    const r = el.getBoundingClientRect();
+  const openFrom = (el: Element) => {
+    if (view) return;
+    origin.current = el;
     approach.current = { x: NaN, y: NaN, offCourse: 0, reached: false };
     closing.current = false;
-    setView({
-      from: { left: r.left, top: r.top, width: r.width, height: r.height },
-      to: fitToViewport(image.width, image.height),
-    });
+    setView({ from: rectOf(el), to: fitToViewport(image.width, image.height) });
   };
 
   const close = () => {
     const img = big.current;
     const dim = scrim.current;
-    const el = card.current;
+    const el = origin.current;
     if (!view || !img || !dim || !el || closing.current) return;
     closing.current = true;
     // Measured again now — the page may have moved since it opened.
-    const r = el.getBoundingClientRect();
-    const back = transformBetween(r, view.to);
+    const back = transformBetween(rectOf(el), view.to);
     const flight = img.animate(
       [{ transform: "none" }, { transform: back }],
       { duration: CLOSE_MS, easing: EASE, fill: "forwards" },
@@ -130,11 +119,11 @@ export default function ZoomableImage({
     });
     flight.onfinish = () => {
       setView(null);
-      el.focus({ preventScroll: true });
+      if (el instanceof HTMLElement) el.focus({ preventScroll: true });
     };
   };
 
-  // Fly in from the card once the large image is in the DOM.
+  // Fly in from the origin once the large image is in the DOM.
   useEffect(() => {
     const img = big.current;
     const dim = scrim.current;
@@ -158,20 +147,6 @@ export default function ZoomableImage({
     // which is this effect's dependency.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [view]);
-
-  const onCardEnter = (e: React.PointerEvent) => {
-    if (e.pointerType !== "mouse") return;
-    // Start fetching the full file now, so it is there when the card opens.
-    new window.Image().src = image.src;
-    hoverTimer.current = window.setTimeout(open, HOVER_INTENT_MS);
-  };
-
-  const onCardLeave = () => {
-    if (hoverTimer.current !== null) {
-      window.clearTimeout(hoverTimer.current);
-      hoverTimer.current = null;
-    }
-  };
 
   const onMove = (e: React.PointerEvent) => {
     if (!view || e.pointerType !== "mouse") return;
@@ -205,6 +180,96 @@ export default function ZoomableImage({
     a.y = y;
   };
 
+  /** Begin fetching the full file, so it is there by the time it opens. */
+  const preload = () => {
+    new window.Image().src = image.src;
+  };
+
+  const overlay =
+    view &&
+    createPortal(
+      <div
+        ref={scrim}
+        role="dialog"
+        aria-modal="true"
+        aria-label={alt}
+        tabIndex={-1}
+        onClick={(e) => {
+          if (e.target === e.currentTarget) close();
+        }}
+        onPointerMove={onMove}
+        onWheel={close}
+        className="fixed inset-0 z-100 bg-[#0E2438]/60 outline-none backdrop-blur-sm"
+      >
+        {/* The bare photograph, laid out where it will rest; the animation
+            starts it over the origin. Not next/image: this is the file
+            itself, already fetched, at its own size. */}
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          ref={big}
+          src={image.src}
+          alt=""
+          width={view.to.width}
+          height={view.to.height}
+          draggable={false}
+          className="fixed origin-top-left rounded-2xl shadow-[0_40px_90px_-30px_rgba(0,0,0,0.6)] select-none"
+          style={{
+            left: view.to.left,
+            top: view.to.top,
+            width: view.to.width,
+            height: view.to.height,
+          }}
+        />
+      </div>,
+      document.body,
+    );
+
+  return { openFrom, preload, isOpen: view !== null, overlay };
+}
+
+export default function ZoomableImage({
+  image,
+  alt,
+  label,
+  sizes,
+  className = "",
+  imageClassName = "",
+  fit = "natural",
+}: {
+  image: ZoomableSource;
+  /** Describes the image for readers of the small one and the large one. */
+  alt: string;
+  /** What the button does, e.g. "View larger: graduation day". */
+  label: string;
+  /** The `sizes` hint for the small image, since its width is the caller's. */
+  sizes: string;
+  className?: string;
+  imageClassName?: string;
+  /** "natural": the box takes the image's shape. "contain": the caller sizes
+   *  the box and the image sits whole inside it, so a row of them lines up. */
+  fit?: "natural" | "contain";
+}) {
+  const card = useRef<HTMLButtonElement>(null);
+  const hoverTimer = useRef<number | null>(null);
+  const { openFrom, preload, overlay } = useLightbox(image, alt);
+
+  const open = () => {
+    if (card.current) openFrom(card.current);
+  };
+
+  const onCardEnter = (e: React.PointerEvent) => {
+    if (e.pointerType !== "mouse") return;
+    preload();
+    hoverTimer.current = window.setTimeout(open, HOVER_INTENT_MS);
+  };
+
+  const onCardLeave = () => {
+    if (hoverTimer.current !== null) {
+      window.clearTimeout(hoverTimer.current);
+      hoverTimer.current = null;
+    }
+  };
+
   return (
     <>
       <button
@@ -222,47 +287,12 @@ export default function ZoomableImage({
           width={image.width}
           height={image.height}
           sizes={sizes}
-          className={`block h-auto w-full ${imageClassName}`}
+          className={`block w-full ${
+            fit === "contain" ? "h-full object-contain" : "h-auto"
+          } ${imageClassName}`}
         />
       </button>
-
-      {view &&
-        createPortal(
-          <div
-            ref={scrim}
-            role="dialog"
-            aria-modal="true"
-            aria-label={alt}
-            tabIndex={-1}
-            onClick={(e) => {
-              if (e.target === e.currentTarget) close();
-            }}
-            onPointerMove={onMove}
-            onWheel={close}
-            className="fixed inset-0 z-100 bg-[#0E2438]/60 outline-none backdrop-blur-sm"
-          >
-            {/* The bare photograph, laid out where it will rest; the
-                animation starts it over the card. Not next/image: this is
-                the file itself, already fetched on hover, at its own size. */}
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              ref={big}
-              src={image.src}
-              alt=""
-              width={view.to.width}
-              height={view.to.height}
-              draggable={false}
-              className="fixed origin-top-left rounded-2xl shadow-[0_40px_90px_-30px_rgba(0,0,0,0.6)] select-none"
-              style={{
-                left: view.to.left,
-                top: view.to.top,
-                width: view.to.width,
-                height: view.to.height,
-              }}
-            />
-          </div>,
-          document.body,
-        )}
+      {overlay}
     </>
   );
 }

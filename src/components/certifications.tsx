@@ -116,11 +116,11 @@ export default function Certifications() {
 
           {/* The desk. Sticky, so the document stays in view as the list is
               read down; keyed on the entry, so a change re-runs the rise. */}
-          <div className="self-start lg:sticky lg:top-28">
+          <div className="max-w-[30rem] self-start lg:sticky lg:top-28">
             <div key={current.title} className="rise">
               <Sheet
                 certification={current}
-                sizes="(min-width: 1024px) 50vw, 90vw"
+                sizes="(min-width: 1024px) 30rem, 24rem"
               />
 
               <div className="mt-6 flex items-baseline justify-between gap-6 border-t border-line pt-4">
@@ -155,7 +155,9 @@ export default function Certifications() {
                 {group.entries.map((certification) => {
                   return (
                     <li key={certification.title}>
-                      <Sheet certification={certification} sizes="90vw" />
+                      <div className="max-w-sm">
+                        <Sheet certification={certification} sizes="24rem" />
+                      </div>
                       <div className="mt-4 flex items-baseline gap-3">
                         <span className="meta text-accent">
                           {certification.number}

@@ -13,12 +13,13 @@ import {
 /**
  * The credentials bound as a book.
  *
- * A closed cover in the middle of the page; open it and the certificates
- * are its pages, one to a page, each turning around the spine in three
- * dimensions. Drag a page and it follows your hand until you let go, at
- * which point it finishes turning or falls back; click a page, press an
- * arrow, or swipe, and it turns on its own. The last page turned closes
- * the book on its back cover.
+ * It lies open on the page — contents on the left, the first certificate
+ * on the right — and the certificates are its pages, one to a page, each
+ * turning around the spine in three dimensions. Drag a page and it follows
+ * your hand until you let go, at which point it finishes turning or falls
+ * back; click a page, press an arrow, or swipe, and it turns on its own.
+ * Turn back past the contents and the cover closes over it; turn the last
+ * page and the book closes on its back.
  *
  * Built from sheets: each sheet is one element with a front face and a
  * back face, rotated about its left edge. Sheets not yet turned stack on
@@ -26,6 +27,12 @@ import {
  * the one in motion sits above everything. The whole book slides half a
  * page sideways when it is closed, so a closed cover sits centred rather
  * than to one side of an invisible spine.
+ *
+ * What makes it a book and not four rectangles: the boards of the cover
+ * showing past the edges of the paper, the fore-edge of the stack on each
+ * side growing and shrinking as pages move across, warm stock with tooth,
+ * the darkening of each page into the gutter, and the light that crosses
+ * a page as it turns edge-on.
  *
  * No library. The page turn is a CSS transform, the drag sets that
  * transform directly, and the rest is bookkeeping about which sheet is
@@ -46,6 +53,8 @@ const TURN_MS = 750;
 const TURN_EASE = "cubic-bezier(0.4, 0.05, 0.25, 1)";
 /** A press that moves less than this is a click, and turns the page. */
 const CLICK_PX = 6;
+/** Thickness of one sheet at the fore-edge, in px. */
+const LEAF_PX = 1.6;
 
 /** Sheets from the pages: cover and contents first, then two certificates
  *  per sheet, and a back cover on the last sheet's reverse. */
@@ -79,7 +88,8 @@ export default function CertificateBook({
   const count = sheets.length;
 
   const book = useRef<HTMLDivElement>(null);
-  const [turned, setTurned] = useState(0);
+  // Open at the first spread: the cover is already turned.
+  const [turned, setTurned] = useState(1);
   /** The sheet under the hand, and how far it has come round. */
   const [drag, setDrag] = useState<{ sheet: number; angle: number } | null>(
     null,
@@ -93,6 +103,7 @@ export default function CertificateBook({
 
   const closedFront = turned === 0;
   const closedBack = turned === count;
+  const open = !closedFront && !closedBack;
 
   const turnTo = (n: number) => setTurned(Math.max(0, Math.min(count, n)));
   const next = () => turnTo(turned + 1);
@@ -158,11 +169,18 @@ export default function CertificateBook({
     if (e.key === "ArrowLeft") prev();
   };
 
+  // The stack on each side: sheets lying there, less the one in the hand.
+  const leftLeaves = Math.max(0, turned - (drag && drag.sheet < turned ? 1 : 0));
+  const rightLeaves = Math.max(
+    0,
+    count - turned - (drag && drag.sheet >= turned ? 1 : 0),
+  );
+
   return (
     <div className="mx-auto max-w-[70rem]">
       {/* The stage: room above and below for the turning page, which
           swings out past the book's own box. */}
-      <div className="px-4 py-6 [perspective:2600px] sm:px-8">
+      <div className="px-4 py-8 [perspective:2600px] sm:px-8">
         <div
           ref={book}
           role="group"
@@ -188,21 +206,26 @@ export default function CertificateBook({
             transition: `transform ${TURN_MS}ms ${TURN_EASE}`,
           }}
         >
-          {/* The block of pages the sheets turn over: its edges and its
-              shadow on the desk are what make it a bound thing and not
-              cards floating in a row. */}
-          {!closedFront && (
+          {/* The boards: the cover, seen past the edges of the paper when
+              the book lies open, with the spine down the middle. */}
+          {open && (
             <div
               aria-hidden
-              className="absolute inset-y-[1%] left-0 w-1/2 rounded-l-sm bg-white shadow-[-2px_0_0_#E6EBEF,-4px_0_0_#F2F5F7,0_30px_60px_-30px_rgba(24,38,49,0.5)]"
-            />
+              className="cloth absolute -inset-x-[1.6%] -inset-y-[2.4%] rounded-md shadow-[0_50px_90px_-36px_rgba(24,38,49,0.65)]"
+              style={{
+                background:
+                  "linear-gradient(160deg, #163F66 0%, #0E2438 55%, #0B1C2C 100%)",
+              }}
+            >
+              <div className="absolute inset-y-0 left-1/2 w-[2.6%] -translate-x-1/2 bg-linear-to-r from-[#0B1C2C] via-[#091623] to-[#0B1C2C]" />
+            </div>
           )}
-          {!closedBack && (
-            <div
-              aria-hidden
-              className="absolute inset-y-[1%] right-0 w-1/2 rounded-r-sm bg-white shadow-[2px_0_0_#E6EBEF,4px_0_0_#F2F5F7,0_30px_60px_-30px_rgba(24,38,49,0.5)]"
-            />
-          )}
+
+          {/* The two stacks of pages, seen at the fore-edge and the foot:
+              each sheet a leaf, so a stack grows as pages are turned onto
+              it and thins as they leave. */}
+          {!closedFront && <Stack side="left" leaves={leftLeaves} />}
+          {!closedBack && <Stack side="right" leaves={rightLeaves} />}
 
           {sheets.map((sheet, i) => {
             const isTurned = i < turned;
@@ -211,8 +234,8 @@ export default function CertificateBook({
             // Untouched sheets stack first-on-top on the right; turned ones
             // last-on-top on the left; the one in the hand above all.
             const z = held !== null ? count + 2 : isTurned ? i + 1 : count - i;
-            // How far through its turn: the shading on both faces peaks
-            // edge-on, when the page is a sliver catching the light.
+            // How far through its turn: the light across both faces peaks
+            // edge-on, when the page is a sliver catching it.
             const shade = Math.sin((angle * Math.PI) / 180);
 
             return (
@@ -242,7 +265,7 @@ export default function CertificateBook({
             ? "CLICK THE COVER, OR DRAG IT, TO OPEN"
             : closedBack
               ? "THE END · TURN BACK TO REOPEN"
-              : `SPREAD ${String(turned).padStart(2, "0")} / ${String(count - 1).padStart(2, "0")}`}
+              : `SPREAD ${String(turned).padStart(2, "0")} / ${String(count - 1).padStart(2, "0")} · DRAG A PAGE, OR CLICK IT`}
         </p>
         <div className="flex gap-2">
           <ArrowButton label="Previous page" onClick={prev} disabled={closedFront}>
@@ -257,6 +280,45 @@ export default function CertificateBook({
   );
 }
 
+/**
+ * The edge of a stack of leaves: a strip of hairlines at the fore-edge
+ * and along the foot, one per sheet, stepped out from under the top page.
+ */
+function Stack({ side, leaves }: { side: "left" | "right"; leaves: number }) {
+  if (leaves === 0) return null;
+  const depth = leaves * LEAF_PX;
+  const lines =
+    "repeating-linear-gradient(var(--dir), #f4efe4 0 1px, #cfc6b4 1px 1.6px)";
+  return (
+    <div
+      aria-hidden
+      className={`absolute inset-y-0 w-1/2 ${side === "left" ? "left-0" : "right-0"}`}
+    >
+      {/* Fore-edge. */}
+      <div
+        className="absolute top-[0.6%] bottom-0"
+        style={{
+          width: depth,
+          [side === "left" ? "left" : "right"]: -depth,
+          background: lines,
+          ["--dir" as string]: side === "left" ? "to left" : "to right",
+        }}
+      />
+      {/* Foot. */}
+      <div
+        className={`absolute ${side === "left" ? "left-0" : "right-0"}`}
+        style={{
+          height: depth,
+          bottom: -depth,
+          width: `calc(100% + ${depth}px)`,
+          background: lines,
+          ["--dir" as string]: "to bottom",
+        }}
+      />
+    </div>
+  );
+}
+
 function FaceView({
   face,
   side,
@@ -266,11 +328,12 @@ function FaceView({
   side: "front" | "back";
   shade: number;
 }) {
+  const paper = face.kind === "contents" || face.kind === "certificate";
   return (
     <div
       className={`absolute inset-0 overflow-hidden @container [backface-visibility:hidden] ${
         side === "back" ? "[transform:rotateY(180deg)]" : ""
-      } ${side === "front" ? "rounded-r-sm" : "rounded-l-sm"}`}
+      } ${side === "front" ? "rounded-r-[3px]" : "rounded-l-[3px]"}`}
     >
       {face.kind === "cover" && <Cover />}
       {face.kind === "contents" && <Contents entries={face.entries} />}
@@ -283,23 +346,34 @@ function FaceView({
       )}
       {face.kind === "back" && <BackCover />}
 
-      {/* Light across the page as it turns, and the crease at the spine:
-          the front face's spine is its left edge, the back face's its
-          right. */}
+      {/* Into the gutter: a page darkens where it curves down to the
+          binding. The front face's spine is its left edge, the back
+          face's its right. */}
+      {paper && (
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0"
+          style={{
+            background:
+              side === "front"
+                ? "linear-gradient(to right, rgba(70,52,24,0.30) 0%, rgba(70,52,24,0.10) 5%, rgba(70,52,24,0.03) 12%, transparent 22%)"
+                : "linear-gradient(to left, rgba(70,52,24,0.30) 0%, rgba(70,52,24,0.10) 5%, rgba(70,52,24,0.03) 12%, transparent 22%)",
+          }}
+        />
+      )}
+
+      {/* Light crossing the page as it turns: the moving edge catches a
+          band of it while the rest falls into shadow. */}
       <div
         aria-hidden
         className="pointer-events-none absolute inset-0"
         style={{
+          opacity: shade,
           background:
             side === "front"
-              ? "linear-gradient(to right, rgba(24,38,49,0.18), transparent 12%)"
-              : "linear-gradient(to left, rgba(24,38,49,0.18), transparent 12%)",
+              ? "linear-gradient(to left, rgba(255,255,255,0.55) 0%, rgba(255,255,255,0.12) 18%, rgba(24,38,49,0.28) 100%)"
+              : "linear-gradient(to right, rgba(255,255,255,0.55) 0%, rgba(255,255,255,0.12) 18%, rgba(24,38,49,0.28) 100%)",
         }}
-      />
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-0 bg-[#0E2438]"
-        style={{ opacity: shade * 0.28 }}
       />
     </div>
   );
@@ -308,47 +382,68 @@ function FaceView({
 function Cover() {
   return (
     <div
-      className="flex h-full flex-col justify-between p-[7%] text-white"
+      className="cloth flex h-full flex-col justify-between p-[7%] text-white"
       style={{
         background:
           "radial-gradient(90% 70% at 20% 10%, #245E95 0%, transparent 60%)," +
           "linear-gradient(160deg, #133A5E 0%, #0E2438 60%, #0B1C2C 100%)",
       }}
     >
-      <div className="flex items-start justify-between">
+      {/* A blind-tooled frame: a rule pressed into the cloth. */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-[4.5%] rounded-[2px] border border-white/15 shadow-[inset_0_1px_0_rgba(0,0,0,0.35),0_1px_0_rgba(255,255,255,0.08)]"
+      />
+      <div className="relative flex items-start justify-between">
         <p className="meta text-white/70">03 / CERTIFICATIONS</p>
         <p className="meta text-white/70">{site.initials}</p>
       </div>
-      <div>
-        <p className="font-brand text-[clamp(1.6rem,5cqw,3.2rem)] italic leading-none tracking-[-0.01em]">
+      <div className="relative">
+        <p
+          className="font-brand text-[clamp(1.6rem,7cqw,3.4rem)] italic leading-none tracking-[-0.01em]"
+          style={{
+            textShadow:
+              "0 1px 0 rgba(255,255,255,0.18), 0 -1px 1px rgba(0,0,0,0.45)",
+          }}
+        >
           Credentials
         </p>
-        <p className="mt-[4%] max-w-[22ch] text-[clamp(0.7rem,1.6cqw,0.95rem)] leading-relaxed text-white/70">
+        <p className="mt-[4%] max-w-[22ch] text-[clamp(0.7rem,2.1cqw,0.95rem)] leading-relaxed text-white/70">
           A degree, a red-team credential, automation certifications and
           community recognition — the documents themselves.
         </p>
       </div>
-      <p className="meta text-white/70">{site.name}</p>
+      <p className="meta relative text-white/70">{site.name}</p>
     </div>
   );
 }
 
 function Contents({ entries }: { entries: readonly Numbered[] }) {
   return (
-    <div className="flex h-full flex-col bg-white p-[7%]">
-      <p className="meta border-b border-line pb-[3%] text-dim">CONTENTS</p>
-      <ol className="mt-[4%] space-y-[2.5%]">
+    <div className="paper flex h-full flex-col p-[7%]">
+      <p className="font-brand text-[clamp(1.2rem,5cqw,2.2rem)] italic leading-none">
+        Contents
+      </p>
+      <ol className="mt-[6%] space-y-[3%]">
         {entries.map((certification, i) => (
           <li
             key={certification.title}
-            className="grid grid-cols-[2.5rem_1fr_auto] items-baseline gap-x-2 text-[clamp(0.6rem,1.5cqw,0.9rem)] leading-snug"
+            className="flex items-baseline gap-x-2 text-[clamp(0.6rem,2cqw,0.9rem)] leading-snug"
           >
-            <span className="meta text-accent">{certification.number}</span>
+            <span className="meta shrink-0 text-accent">
+              {certification.number}
+            </span>
             <span className="truncate font-medium">{certification.title}</span>
-            <span className="meta text-dim">{i + 1}</span>
+            {/* Leaders: the dotted line that walks the eye to the folio. */}
+            <span
+              aria-hidden
+              className="mb-[0.2em] min-w-4 flex-1 border-b border-dotted border-ink/35"
+            />
+            <span className="font-brand shrink-0 italic text-dim">{i + 1}</span>
           </li>
         ))}
       </ol>
+      <p className="meta mt-auto text-dim">{site.name}</p>
     </div>
   );
 }
@@ -367,9 +462,11 @@ function CertificatePage({
     certification.image ?? { src: "", width: 4, height: 3 },
     `${certification.title} certificate`,
   );
+  // Pasted in by hand, so no two sit quite square.
+  const tilt = page % 2 === 0 ? "rotate(0.5deg)" : "rotate(-0.6deg)";
 
   return (
-    <div className="flex h-full flex-col bg-white p-[6%]">
+    <div className="paper flex h-full flex-col p-[6.5%]">
       <div className="flex items-baseline justify-between">
         <p className="meta text-dim">
           {certificationKinds[certification.kind]}
@@ -379,7 +476,8 @@ function CertificatePage({
 
       <div
         ref={sheet}
-        className="relative mt-[4%] aspect-4/3 w-full overflow-hidden rounded-sm bg-surface-2 ring-1 ring-line"
+        className="relative mt-[5%] aspect-4/3 w-full bg-white shadow-[0_1px_2px_rgba(60,45,20,0.18),0_6px_14px_-6px_rgba(60,45,20,0.35)] ring-1 ring-[#e6dfd0]"
+        style={{ transform: tilt }}
       >
         {certification.image ? (
           <Image
@@ -394,7 +492,7 @@ function CertificatePage({
           <div className="grid h-full place-items-center px-[8%] text-center">
             <div>
               <p className="meta text-dim">{certification.issuer}</p>
-              <p className="mt-2 text-[clamp(0.8rem,2cqw,1.2rem)] font-semibold leading-tight tracking-tight text-balance">
+              <p className="mt-2 text-[clamp(0.8rem,2.6cqw,1.2rem)] font-semibold leading-tight tracking-tight text-balance">
                 {certification.title}
               </p>
             </div>
@@ -416,17 +514,18 @@ function CertificatePage({
         )}
       </div>
 
-      <div className="mt-[4%] min-h-0 flex-1">
-        <h3 className="text-[clamp(0.75rem,1.9cqw,1.15rem)] font-semibold leading-snug tracking-tight text-balance">
+      <div className="mt-[6%] min-h-0 flex-1">
+        <h3 className="text-[clamp(0.75rem,2.5cqw,1.15rem)] font-semibold leading-snug tracking-tight text-balance">
           {certification.title}
         </h3>
-        <p className="mt-1 text-[clamp(0.6rem,1.4cqw,0.85rem)] text-dim">
+        <p className="mt-1 text-[clamp(0.6rem,1.9cqw,0.85rem)] text-dim">
           {certification.issuer} · {certification.date}
         </p>
       </div>
 
+      {/* The folio, in the book's own serif. */}
       <p
-        className={`meta mt-auto text-dim ${
+        className={`font-brand mt-auto text-[clamp(0.7rem,2.2cqw,1rem)] italic text-dim ${
           side === "front" ? "text-right" : "text-left"
         }`}
       >
@@ -441,14 +540,18 @@ function CertificatePage({
 function BackCover() {
   return (
     <div
-      className="flex h-full flex-col items-center justify-center text-white"
+      className="cloth flex h-full flex-col items-center justify-center text-white"
       style={{
         background:
           "linear-gradient(200deg, #133A5E 0%, #0E2438 60%, #0B1C2C 100%)",
       }}
     >
-      <p className="meta text-white/70">{site.initials}</p>
-      <p className="font-brand mt-3 text-[clamp(1rem,2.6cqw,1.6rem)] italic">
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-[4.5%] rounded-[2px] border border-white/15 shadow-[inset_0_1px_0_rgba(0,0,0,0.35),0_1px_0_rgba(255,255,255,0.08)]"
+      />
+      <p className="meta relative text-white/70">{site.initials}</p>
+      <p className="font-brand relative mt-3 text-[clamp(1rem,3.5cqw,1.6rem)] italic">
         my portfolio
       </p>
     </div>

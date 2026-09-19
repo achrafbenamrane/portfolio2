@@ -89,6 +89,41 @@
 }
 
 /*
+ * A leaf of paper, for the certificate book: warm stock rather than screen
+ * white, and tooth you can actually see — the grain above is tuned to hide
+ * on a page-sized ground; on a page-sized page it has to read as paper.
+ */
+@utility paper {
+  position: relative;
+  background-color: #faf7f0;
+
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.09;
+    mix-blend-mode: multiply;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.6' numOctaves='4'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+}
+
+/* Bookcloth over board: the navy, with a coarser weave laid over it. */
+@utility cloth {
+  position: relative;
+
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.22;
+    mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.4' numOctaves='2'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+}
+
+/*
  * A small horizontal drift, for the arrow pointing at the hand-control panel.
  *
  * Motion is what makes a marginal note get read at all — a static arrow in a

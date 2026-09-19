@@ -24,9 +24,13 @@ const DRAG_THRESHOLD = 5;
 export default function PlateCarousel({
   projects,
   label,
+  showBlurb = false,
 }: {
   projects: readonly Project[];
   label: string;
+  /** Print the description under each plate — for work a picture alone
+   *  cannot explain, like an automation's canvas. */
+  showBlurb?: boolean;
 }) {
   const track = useRef<HTMLUListElement>(null);
   const drag = useRef<{ x: number; left: number; moved: boolean } | null>(null);
@@ -166,8 +170,11 @@ export default function PlateCarousel({
           <Plate
             key={project.slug}
             project={project}
-            className="w-[17rem] shrink-0 snap-start sm:w-[19rem]"
-            sizes="19rem"
+            showBlurb={showBlurb}
+            className={`shrink-0 snap-start ${
+              showBlurb ? "w-[19rem] sm:w-[22rem]" : "w-[17rem] sm:w-[19rem]"
+            }`}
+            sizes={showBlurb ? "22rem" : "19rem"}
           />
         ))}
       </ul>

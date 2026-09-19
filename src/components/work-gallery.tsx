@@ -2,7 +2,6 @@
 
 import LaptopShowcase from "@/components/showcase/laptop-showcase";
 import PhoneShowcase from "@/components/showcase/phone-showcase";
-import Plate from "@/components/showcase/plate";
 import PlateCarousel from "@/components/showcase/plate-carousel";
 import { projects } from "@/content/site";
 
@@ -67,14 +66,10 @@ export default function WorkGallery() {
         <Band
           label="AUTOMATION"
           title="Built to run itself"
-          blurb="Workflows that fire without anyone watching them."
+          blurb="Workflows that fire without anyone watching them. Swipe through, or use the arrows."
           count={AUTOMATIONS.length}
         >
-          <ul className="grid grid-cols-1 gap-5 sm:grid-cols-2">
-            {AUTOMATIONS.map((project) => (
-              <Plate key={project.slug} project={project} showBlurb />
-            ))}
-          </ul>
+          <PlateCarousel projects={AUTOMATIONS} label="Automation work" showBlurb />
         </Band>
       )}
 

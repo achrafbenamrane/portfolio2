@@ -742,6 +742,23 @@ export interface Certification {
 
 export const certifications: readonly Certification[] = [
   {
+    title: "Master's Degree in Networks & Computer Security",
+    issuer: "Badji Mokhtar University, Annaba",
+    date: "2026",
+    kind: "degree",
+    image: {
+      src: "/certifications/masters-degree.webp",
+      width: 1280,
+      height: 905,
+    },
+    skills: [
+      "Network Security",
+      "Information Security",
+      "Secure Communication",
+      "Authentication & Access Control",
+    ],
+  },
+  {
     title: "Bachelor's Degree in Computer Systems",
     issuer: "Badji Mokhtar University, Annaba",
     date: "2024",
@@ -774,6 +791,39 @@ export const certifications: readonly Certification[] = [
       "Adversary Emulation",
       "Engagement Management",
       "Reporting",
+    ],
+  },
+  {
+    title: "Introduction to Cybersecurity",
+    issuer: "Cisco Networking Academy",
+    date: "2025",
+    kind: "security",
+    image: {
+      src: "/certifications/cisco-intro-cybersecurity.webp",
+      width: 1080,
+      height: 826,
+    },
+    skills: [
+      "Cyber Threats & Vulnerabilities",
+      "Online Safety",
+      "Organisational Defence",
+      "Cisco Networking",
+    ],
+  },
+  {
+    title: "Investigating Ransomware — Workshop",
+    issuer: "Cyber Triage",
+    date: "2025",
+    kind: "security",
+    image: {
+      src: "/certifications/cyber-triage-ransomware.webp",
+      width: 1025,
+      height: 719,
+    },
+    skills: [
+      "Incident Response",
+      "Digital Forensics",
+      "Ransomware Investigation",
     ],
   },
   {

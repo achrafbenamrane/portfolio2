@@ -729,7 +729,11 @@ export const certificationKinds: Record<CertificationKind, string> = {
 export interface Certification {
   title: string;
   issuer: string;
+  /** As shown: a year, or the span of the work it recognises. */
   date: string;
+  /** When it was issued, ISO, as far as the document says — for ordering.
+   *  "2024" alone sorts after every dated day in 2024. */
+  issued: string;
   kind: CertificationKind;
   /** The certificate itself, at the file's pixel size. Absent until scanned. */
   image?: {
@@ -745,6 +749,7 @@ export const certifications: readonly Certification[] = [
     title: "Master's Degree in Networks & Computer Security",
     issuer: "Badji Mokhtar University, Annaba",
     date: "2026",
+    issued: "2026-07-01",
     kind: "degree",
     image: {
       src: "/certifications/masters-degree.webp",
@@ -759,9 +764,99 @@ export const certifications: readonly Certification[] = [
     ],
   },
   {
+    title: "CRTOM — Certified Red Team Operations Management",
+    issuer: "Red Team Leaders",
+    date: "2025",
+    issued: "2025-12-24",
+    kind: "security",
+    image: {
+      src: "/certifications/crtom.webp",
+      width: 823,
+      height: 618,
+    },
+    skills: [
+      "Red Team Operations",
+      "Adversary Emulation",
+      "Engagement Management",
+      "Reporting",
+    ],
+  },
+  {
+    title: "Investigating Ransomware — Workshop",
+    issuer: "Cyber Triage",
+    date: "2025",
+    issued: "2025-12-24",
+    kind: "security",
+    image: {
+      src: "/certifications/cyber-triage-ransomware.webp",
+      width: 1025,
+      height: 719,
+    },
+    skills: [
+      "Incident Response",
+      "Digital Forensics",
+      "Ransomware Investigation",
+    ],
+  },
+  {
+    title: "Introduction to Cybersecurity",
+    issuer: "Cisco Networking Academy",
+    date: "2025",
+    issued: "2025-12-23",
+    kind: "security",
+    image: {
+      src: "/certifications/cisco-intro-cybersecurity.webp",
+      width: 1080,
+      height: 826,
+    },
+    skills: [
+      "Cyber Threats & Vulnerabilities",
+      "Online Safety",
+      "Organisational Defence",
+      "Cisco Networking",
+    ],
+  },
+  {
+    title: "Make Basics Certification",
+    issuer: "Make.com",
+    date: "2025",
+    issued: "2025-07-06",
+    kind: "automation",
+    image: {
+      src: "/certifications/make-basics.webp",
+      width: 790,
+      height: 606,
+    },
+    skills: [
+      "AI Automation",
+      "Workflow Design",
+      "API Integration",
+      "No-Code Development",
+    ],
+  },
+  {
+    title: "Make Foundation Certification",
+    issuer: "Make.com",
+    date: "2025",
+    issued: "2025-07-03",
+    kind: "automation",
+    image: {
+      src: "/certifications/make-foundation.webp",
+      width: 790,
+      height: 606,
+    },
+    skills: [
+      "AI Agents",
+      "Advanced Automation",
+      "Scenario Building",
+      "System Integration",
+    ],
+  },
+  {
     title: "Bachelor's Degree in Computer Systems",
     issuer: "Badji Mokhtar University, Annaba",
     date: "2024",
+    issued: "2024-07-21",
     kind: "degree",
     image: {
       src: "/certifications/bachelors-degree.webp",
@@ -777,59 +872,10 @@ export const certifications: readonly Certification[] = [
     ],
   },
   {
-    title: "CRTOM — Certified Red Team Operations Management",
-    issuer: "Red Team Leaders",
-    date: "2025",
-    kind: "security",
-    image: {
-      src: "/certifications/crtom.webp",
-      width: 823,
-      height: 618,
-    },
-    skills: [
-      "Red Team Operations",
-      "Adversary Emulation",
-      "Engagement Management",
-      "Reporting",
-    ],
-  },
-  {
-    title: "Introduction to Cybersecurity",
-    issuer: "Cisco Networking Academy",
-    date: "2025",
-    kind: "security",
-    image: {
-      src: "/certifications/cisco-intro-cybersecurity.webp",
-      width: 1080,
-      height: 826,
-    },
-    skills: [
-      "Cyber Threats & Vulnerabilities",
-      "Online Safety",
-      "Organisational Defence",
-      "Cisco Networking",
-    ],
-  },
-  {
-    title: "Investigating Ransomware — Workshop",
-    issuer: "Cyber Triage",
-    date: "2025",
-    kind: "security",
-    image: {
-      src: "/certifications/cyber-triage-ransomware.webp",
-      width: 1025,
-      height: 719,
-    },
-    skills: [
-      "Incident Response",
-      "Digital Forensics",
-      "Ransomware Investigation",
-    ],
-  },
-  {
     title: "Startup Brevet — Smart Dental Platform",
     issuer: "Badji Mokhtar University, Annaba",
     date: "2023 — 2024",
+    issued: "2024-06-29",
     kind: "recognition",
     image: {
       src: "/certifications/startup-brevet.webp",
@@ -847,6 +893,7 @@ export const certifications: readonly Certification[] = [
     title: "Open-Source Community Leader",
     issuer: "OSC Annaba — Computer Science Department",
     date: "2023 — 2024",
+    issued: "2024",
     kind: "recognition",
     image: {
       src: "/certifications/club-founder.webp",
@@ -864,6 +911,7 @@ export const certifications: readonly Certification[] = [
     title: "Event Organizer — Study in Japan 2024",
     issuer: "Open-Source Community Annaba",
     date: "2024",
+    issued: "2024",
     kind: "recognition",
     image: {
       src: "/certifications/events-organizer.webp",
@@ -875,40 +923,6 @@ export const certifications: readonly Certification[] = [
       "International Relations",
       "Public Speaking",
       "Coordination",
-    ],
-  },
-  {
-    title: "Make Foundation Certification",
-    issuer: "Make.com",
-    date: "2025",
-    kind: "automation",
-    image: {
-      src: "/certifications/make-foundation.webp",
-      width: 790,
-      height: 606,
-    },
-    skills: [
-      "AI Agents",
-      "Advanced Automation",
-      "Scenario Building",
-      "System Integration",
-    ],
-  },
-  {
-    title: "Make Basics Certification",
-    issuer: "Make.com",
-    date: "2025",
-    kind: "automation",
-    image: {
-      src: "/certifications/make-basics.webp",
-      width: 790,
-      height: 606,
-    },
-    skills: [
-      "AI Automation",
-      "Workflow Design",
-      "API Integration",
-      "No-Code Development",
     ],
   },
 ];

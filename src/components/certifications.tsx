@@ -1,19 +1,13 @@
 import CertificateBook from "@/components/certificate-book";
-import {
-  certificationKinds,
-  certifications,
-  type Certification,
-} from "@/content/site";
+import { certifications } from "@/content/site";
 
-const KINDS = Object.keys(certificationKinds) as Certification["kind"][];
-
-/** Page order: by kind, in the order kinds are declared, numbered so. */
-const ORDERED = KINDS.flatMap((kind) =>
-  certifications.filter((c) => c.kind === kind),
-).map((certification, index) => ({
-  ...certification,
-  number: String(index + 1).padStart(3, "0"),
-}));
+/** Page order: newest first, by issue date, and numbered so. */
+const ORDERED = [...certifications]
+  .sort((a, b) => b.issued.localeCompare(a.issued))
+  .map((certification, index) => ({
+    ...certification,
+    number: String(index + 1).padStart(3, "0"),
+  }));
 
 export default function Certifications() {
   return (

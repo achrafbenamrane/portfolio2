@@ -259,7 +259,8 @@ export const projects: readonly Project[] = [
   {
     slug: "getdraft",
     title: "Getdraft",
-    description: "",
+    description:
+      "Get discovered. It's a Draft! Athletes, coaches and recruiters connect with a single Draft — when it's mutual, chat unlocks.",
     category: "Mobile Development",
     tags: [],
     year: "—",

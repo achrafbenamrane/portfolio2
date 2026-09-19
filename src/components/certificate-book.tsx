@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { useLightbox } from "@/components/zoomable-image";
 import {
@@ -13,9 +13,10 @@ import {
 /**
  * The credentials bound as a book.
  *
- * It lies open on the page — contents on the left, the first certificate
- * on the right — and the certificates are its pages, one to a page, each
- * turning around the spine in three dimensions. Drag a page and it follows
+ * It arrives closed and opens itself — the cover swings over to the first
+ * spread a moment after the page loads — and the certificates are its
+ * pages, one to a page, each turning around the spine in three
+ * dimensions. Drag a page and it follows
  * your hand until you let go, at which point it finishes turning or falls
  * back; click a page, press an arrow, or swipe, and it turns on its own.
  * Turn back past the contents and the cover closes over it; turn the last
@@ -42,7 +43,7 @@ import {
 type Numbered = Certification & { number: string };
 
 type Face =
-  | { kind: "cover" }
+  | { kind: "cover"; entries: readonly Numbered[] }
   | { kind: "contents"; entries: readonly Numbered[] }
   | { kind: "certificate"; certification: Numbered; page: number }
   | { kind: "back" };
@@ -55,12 +56,14 @@ const TURN_EASE = "cubic-bezier(0.4, 0.05, 0.25, 1)";
 const CLICK_PX = 6;
 /** Thickness of one sheet at the fore-edge, in px. */
 const LEAF_PX = 1.6;
+/** How long the closed book is seen before it opens itself. */
+const OPEN_AFTER_MS = 650;
 
 /** Sheets from the pages: cover and contents first, then two certificates
  *  per sheet, and a back cover on the last sheet's reverse. */
 function bind(entries: readonly Numbered[]): Sheet[] {
   const faces: Face[] = [
-    { kind: "cover" },
+    { kind: "cover", entries },
     { kind: "contents", entries },
     ...entries.map<Face>((certification, i) => ({
       kind: "certificate",
@@ -88,8 +91,16 @@ export default function CertificateBook({
   const count = sheets.length;
 
   const book = useRef<HTMLDivElement>(null);
-  // Open at the first spread: the cover is already turned.
-  const [turned, setTurned] = useState(1);
+  const [turned, setTurned] = useState(0);
+
+  // Closed on arrival, then the cover opens itself: the one page turn the
+  // reader sees without asking, which is what tells them the rest turn.
+  // Someone who has asked for less motion gets it open straight away.
+  useEffect(() => {
+    const still = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const timer = window.setTimeout(() => setTurned(1), still ? 0 : OPEN_AFTER_MS);
+    return () => window.clearTimeout(timer);
+  }, []);
   /** The sheet under the hand, and how far it has come round. */
   const [drag, setDrag] = useState<{ sheet: number; angle: number } | null>(
     null,
@@ -177,7 +188,7 @@ export default function CertificateBook({
   );
 
   return (
-    <div className="mx-auto max-w-[70rem]">
+    <div className="mx-auto max-w-[54rem]">
       {/* The stage: room above and below for the turning page, which
           swings out past the book's own box. */}
       <div className="px-4 py-8 [perspective:2600px] sm:px-8">
@@ -335,7 +346,7 @@ function FaceView({
         side === "back" ? "[transform:rotateY(180deg)]" : ""
       } ${side === "front" ? "rounded-r-[3px]" : "rounded-l-[3px]"}`}
     >
-      {face.kind === "cover" && <Cover />}
+      {face.kind === "cover" && <Cover entries={face.entries} />}
       {face.kind === "contents" && <Contents entries={face.entries} />}
       {face.kind === "certificate" && (
         <CertificatePage
@@ -379,41 +390,95 @@ function FaceView({
   );
 }
 
-function Cover() {
+/**
+ * The cover: a title pressed into the cloth. A double rule round the
+ * edge, a medallion with the monogram at the centre, the title beneath it
+ * in the wordmark's serif, and the details in small capitals — the way a
+ * bound volume is lettered, in a foil that catches the light.
+ */
+const FOIL = "#D9BE85";
+const EMBOSS =
+  "0 1px 0 rgba(255,255,255,0.14), 0 -1px 1px rgba(0,0,0,0.55)";
+
+const WORDS = ["", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "eleven", "twelve"];
+
+function Cover({ entries }: { entries: readonly Numbered[] }) {
+  const years = entries.flatMap((c) => c.date.match(/\d{4}/g) ?? []).map(Number);
+  const span = `${Math.min(...years)} — ${Math.max(...years)}`;
+  const count = WORDS[entries.length] ?? String(entries.length);
+
   return (
     <div
-      className="cloth flex h-full flex-col justify-between p-[7%] text-white"
+      className="cloth flex h-full flex-col items-center justify-between p-[8%] text-center"
       style={{
+        color: FOIL,
         background:
-          "radial-gradient(90% 70% at 20% 10%, #245E95 0%, transparent 60%)," +
-          "linear-gradient(160deg, #133A5E 0%, #0E2438 60%, #0B1C2C 100%)",
+          "radial-gradient(80% 60% at 30% 12%, #1B4A78 0%, transparent 60%)," +
+          "linear-gradient(165deg, #143B61 0%, #0E2438 55%, #0A1A29 100%)",
       }}
     >
-      {/* A blind-tooled frame: a rule pressed into the cloth. */}
+      {/* Double rule, blind-tooled then foiled: the outer pressed into
+          the cloth, the inner a hairline of foil. */}
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-[4.5%] rounded-[2px] border border-white/15 shadow-[inset_0_1px_0_rgba(0,0,0,0.35),0_1px_0_rgba(255,255,255,0.08)]"
+        className="pointer-events-none absolute inset-[3.5%] rounded-[2px] border border-black/40 shadow-[0_1px_0_rgba(255,255,255,0.08)]"
       />
-      <div className="relative flex items-start justify-between">
-        <p className="meta text-white/70">03 / CERTIFICATIONS</p>
-        <p className="meta text-white/70">{site.initials}</p>
-      </div>
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-[5%] rounded-[1px] border opacity-70"
+        style={{ borderColor: FOIL }}
+      />
+
+      <p
+        className="meta relative opacity-90"
+        style={{ textShadow: EMBOSS }}
+      >
+        {site.name}
+      </p>
+
       <div className="relative">
-        <p
-          className="font-brand text-[clamp(1.6rem,7cqw,3.4rem)] italic leading-none tracking-[-0.01em]"
+        {/* The medallion. */}
+        <div
+          className="mx-auto grid size-[26cqw] place-items-center rounded-full border-2"
           style={{
-            textShadow:
-              "0 1px 0 rgba(255,255,255,0.18), 0 -1px 1px rgba(0,0,0,0.45)",
+            borderColor: FOIL,
+            boxShadow:
+              "inset 0 1px 0 rgba(255,255,255,0.12), inset 0 -1px 1px rgba(0,0,0,0.5), 0 1px 0 rgba(255,255,255,0.08)",
           }}
         >
-          Credentials
+          <div
+            className="grid size-[86%] place-items-center rounded-full border"
+            style={{ borderColor: FOIL, opacity: 0.85 }}
+          >
+            <span
+              className="font-brand text-[11cqw] italic leading-none"
+              style={{ textShadow: EMBOSS }}
+            >
+              {site.initials}
+            </span>
+          </div>
+        </div>
+
+        <p
+          className="font-brand mt-[7%] text-[clamp(1.6rem,9cqw,3.6rem)] italic leading-none tracking-[-0.01em]"
+          style={{ textShadow: EMBOSS }}
+        >
+          Certificates
         </p>
-        <p className="mt-[4%] max-w-[22ch] text-[clamp(0.7rem,2.1cqw,0.95rem)] leading-relaxed text-white/70">
-          A degree, a red-team credential, automation certifications and
-          community recognition — the documents themselves.
+        <p
+          className="meta mt-[5%] opacity-90"
+          style={{ textShadow: EMBOSS }}
+        >
+          {count} CREDENTIALS · {span}
         </p>
       </div>
-      <p className="meta relative text-white/70">{site.name}</p>
+
+      <p
+        className="meta relative opacity-90"
+        style={{ textShadow: EMBOSS }}
+      >
+        VOL. 03 · ANNABA
+      </p>
     </div>
   );
 }

@@ -654,11 +654,11 @@ export const experiences: readonly Experience[] = [
     organisation: "Badji Mokhtar University, Annaba",
     period: "2024",
     image: {
-      src: "/experience/podium.webp",
-      width: 403,
-      height: 535,
-      alt: "Achraf speaking into a microphone at a lectern beside the Algerian flag, an audience seated to the left.",
-      caption: "Presenting at Badji Mokhtar University",
+      src: "/experience/bsc-graduation.webp",
+      width: 1080,
+      height: 810,
+      alt: "Four graduates in gowns and “Yes I did it” sashes in front of the brick wall of Badji Mokhtar Annaba University, one holding his cap in the air.",
+      caption: "Graduation day, Badji Mokhtar University",
     },
     description:
       "Foundation in computer science, programming and system design.",

@@ -81,8 +81,16 @@ export default function HandControl({ className = "" }: { className?: string }) 
       {/* surface-2, not canvas: the webcam feed is typically a dim room, and a
           dark rectangle needs a recessed well to sit in on a light page rather
           than a hole punched in white. Full opacity too — the 70% that softened
-          it against black just washed it out here. */}
-      <div className="relative aspect-4/3 w-full bg-surface-2">
+          it against black just washed it out here.
+
+          On a phone the well only opens once there is a picture to put in it.
+          Held at 4:3 while idle it is 186px of empty grey in a hero that has
+          to fit a 640px screen, and it is the tallest thing there. */}
+      <div
+        className={`relative w-full bg-surface-2 ${
+          isLive ? "aspect-4/3" : "sm:aspect-4/3"
+        }`}
+      >
         {/* Tagged so the desktop's Settings app can start the same stream —
             it lives in drei's detached React root and cannot reach this ref. */}
         <video
@@ -98,7 +106,7 @@ export default function HandControl({ className = "" }: { className?: string }) 
         />
 
         {!isLive && (
-          <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 px-3 text-center">
+          <div className="flex flex-col items-center justify-center gap-2 px-3 py-6 text-center sm:absolute sm:inset-0 sm:py-0">
             {unavailable ? (
               <p className="text-[11px] leading-snug text-dim">
                 {status === "denied"

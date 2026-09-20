@@ -22,7 +22,7 @@ export default function Hero() {
   return (
     <>
       <section
-        className="relative flex min-h-dvh flex-col justify-center gap-6 overflow-hidden px-6 pb-12 pt-32 md:px-12 lg:gap-0 lg:pb-0 lg:pt-32"
+        className="relative flex min-h-dvh flex-col justify-center gap-5 overflow-hidden px-6 pb-10 pt-32 md:px-12 lg:gap-0 lg:pb-0 lg:pt-32"
         style={{
           /* The nav's blue, continued. The bar sits directly above this, so
              anything else would put a seam across the top of the page. The

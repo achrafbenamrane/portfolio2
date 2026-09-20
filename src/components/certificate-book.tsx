@@ -616,7 +616,10 @@ function CertificatePage({
   const tilt = page % 2 === 0 ? "rotate(0.5deg)" : "rotate(-0.6deg)";
 
   return (
-    <div className="paper flex h-full flex-col p-[6.5%]">
+    /* Narrower gutters on a phone: the certificate is what the page is for
+       and it is limited by the page's width, so every millimetre of margin
+       comes straight off it. */
+    <div className="paper flex h-full flex-col p-[5%] sm:p-[6.5%]">
       <div className="flex items-baseline justify-between">
         <p className="meta text-dim">
           {certificationKinds[certification.kind]}
@@ -624,9 +627,16 @@ function CertificatePage({
         <p className="meta text-accent">{certification.number}</p>
       </div>
 
+      {/* The certificate takes the space the page has left, centred in it,
+          so what is over stands as margin above and below rather than
+          collecting under the title as a hole in the paper. */}
+      <div className="mt-[5%] flex min-h-0 flex-1 items-center">
       <div
         ref={sheet}
-        className="relative mt-[5%] aspect-4/3 w-full bg-white shadow-[0_1px_2px_rgba(60,45,20,0.18),0_6px_14px_-6px_rgba(60,45,20,0.35)] ring-1 ring-[#e6dfd0]"
+        // max-h-full so a page whose text runs long shortens the mat rather
+        // than letting it push past the paper; the scan is object-contain,
+        // so what gives is white border, never the certificate.
+        className="relative aspect-4/3 max-h-full w-full bg-white shadow-[0_1px_2px_rgba(60,45,20,0.18),0_6px_14px_-6px_rgba(60,45,20,0.35)] ring-1 ring-[#e6dfd0]"
         style={{ transform: tilt }}
       >
         {certification.image ? (
@@ -663,19 +673,34 @@ function CertificatePage({
           </button>
         )}
       </div>
+      </div>
 
-      <div className="mt-[6%] min-h-0 flex-1">
-        <h3 className="text-[clamp(0.75rem,2.5cqw,1.15rem)] font-semibold leading-snug tracking-tight text-balance">
+      <div className="mt-[5%] shrink-0">
+        <h3 className="text-[clamp(0.8rem,2.8cqw,1.15rem)] font-semibold leading-snug tracking-tight text-balance">
           {certification.title}
         </h3>
         <p className="mt-1 text-[clamp(0.72rem,1.9cqw,0.85rem)] text-dim">
           {certification.issuer} · {certification.date}
         </p>
+
+        {/* What the credential is actually for. The index this book replaced
+            listed these and the book did not, which lost information and
+            left a page with a band of empty paper under two lines of type. */}
+        <ul className="mt-[3%] flex flex-wrap gap-1">
+          {certification.skills.map((skill) => (
+            <li
+              key={skill}
+              className="meta rounded-full border border-ink/15 px-2 py-0.5 text-[clamp(0.55rem,1.5cqw,0.6875rem)] text-dim"
+            >
+              {skill}
+            </li>
+          ))}
+        </ul>
       </div>
 
       {/* The folio, in the book's own serif. */}
       <p
-        className={`font-brand mt-auto text-[clamp(0.7rem,2.2cqw,1rem)] italic text-dim ${
+        className={`font-brand mt-[4%] shrink-0 text-[clamp(0.7rem,2.2cqw,1rem)] italic text-dim ${
           side === "front" ? "text-right" : "text-left"
         }`}
       >

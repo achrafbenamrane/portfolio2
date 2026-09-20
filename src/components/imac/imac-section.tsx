@@ -116,7 +116,9 @@ export default function ImacSection() {
     <section
       ref={sectionRef}
       id="desktop"
-      className="relative px-6 pb-24 pt-8 md:px-12"
+      /* Below md this section is two lines of type, and desk-sized padding
+         around two lines of type is a hole in the page. */
+      className="relative px-6 pb-12 pt-8 md:px-12 md:pb-24"
     >
       <div className="mx-auto max-w-350">
         <div className="flex flex-wrap items-baseline justify-between gap-4 border-b border-line pb-4">

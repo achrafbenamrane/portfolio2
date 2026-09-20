@@ -11,6 +11,11 @@ import { services, servicesIntro, type Service } from "@/content/site";
  * Each card links into the Work page rather than dead-ending on a claim. A
  * services list that cannot be checked is just adjectives; every one of these
  * has finished projects behind it, and the card is the way to them.
+ *
+ * Cards from sm up, where four sit in a row and read as a set. On a phone
+ * they stack, and four identical rounded boxes down a column is the one
+ * arrangement that says nothing — so there they become ruled rows, the
+ * same form as the section index further down the page.
  */
 export default function Services() {
   return (
@@ -52,24 +57,39 @@ export default function Services() {
           </div>
         </div>
 
-        <ul className="grid gap-5 pt-10 sm:grid-cols-2 lg:grid-cols-4">
+        <ul className="grid sm:grid-cols-2 sm:gap-5 sm:pt-10 lg:grid-cols-4">
           {services.map((service) => (
-            <li key={service.title}>
+            <li
+              key={service.title}
+              className="border-b border-line sm:border-b-0"
+            >
               <Link
                 href={service.href}
-                className="group flex h-full flex-col rounded-xl border border-line bg-surface-1 p-6 transition-colors hover:border-accent"
+                className="group flex h-full items-start gap-4 py-6 transition-colors sm:flex-col sm:gap-0 sm:rounded-xl sm:border sm:border-line sm:bg-surface-1 sm:p-6 sm:hover:border-accent"
               >
-                <span className="text-dim transition-colors group-hover:text-accent">
+                <span className="mt-0.5 shrink-0 text-dim transition-colors group-hover:text-accent sm:mt-0">
                   <Icon name={service.icon} />
                 </span>
 
-                <h3 className="mt-6 font-medium tracking-tight transition-colors group-hover:text-accent">
-                  {service.title}
-                </h3>
+                <span className="min-w-0 flex-1">
+                  <span className="flex items-baseline gap-3">
+                    <span className="font-medium tracking-tight transition-colors group-hover:text-accent sm:mt-6 sm:block">
+                      {service.title}
+                    </span>
+                    {/* The row is a link and has to look like one; the card
+                        already does, so the arrow would be noise there. */}
+                    <span
+                      aria-hidden
+                      className="ml-auto text-dim transition-transform duration-200 group-hover:translate-x-1 sm:hidden"
+                    >
+                      →
+                    </span>
+                  </span>
 
-                <p className="mt-2 text-sm leading-relaxed text-dim">
-                  {service.description}
-                </p>
+                  <span className="mt-2 block text-sm leading-relaxed text-dim">
+                    {service.description}
+                  </span>
+                </span>
               </Link>
             </li>
           ))}

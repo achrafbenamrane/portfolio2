@@ -45,10 +45,12 @@ export default function Experience() {
                     date for anyone not looking at the page. */}
                 <div className="md:col-span-3 md:row-span-2">
                   <p className="meta text-accent">{entry.period}</p>
+                  {/* A margin ornament, and a phone has no margin: there it
+                      sits directly under the period it repeats. */}
                   {newYear && (
                     <p
                       aria-hidden
-                      className="mt-3 text-[clamp(3rem,6vw,5.5rem)] font-semibold leading-none tracking-[-0.05em] text-ink/10 select-none"
+                      className="mt-3 hidden text-[clamp(3rem,6vw,5.5rem)] font-semibold leading-none tracking-[-0.05em] text-ink/10 select-none md:block"
                     >
                       {year}
                     </p>
@@ -80,7 +82,7 @@ export default function Experience() {
                 {entry.image && (
                   <ExperiencePhoto
                     image={entry.image}
-                    className="w-full max-w-[15rem] md:col-span-3 md:col-start-10 md:row-span-2 md:row-start-1 md:justify-self-end"
+                    className="w-full md:col-span-3 md:col-start-10 md:row-span-2 md:row-start-1 md:max-w-[15rem] md:justify-self-end"
                   />
                 )}
 

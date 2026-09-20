@@ -291,21 +291,30 @@ export default function CertificateBook({
           {open && (
             <div
               aria-hidden
-              className="cloth absolute -inset-x-[1.6%] -inset-y-[2.4%] rounded-md shadow-[0_50px_90px_-36px_rgba(24,38,49,0.65)]"
+              className={`cloth absolute rounded-md shadow-[0_50px_90px_-36px_rgba(24,38,49,0.65)] ${
+                spread
+                  ? "-inset-x-[1.6%] -inset-y-[2.4%]"
+                  : "-inset-y-[2%] -left-[9%] -right-[2.5%]"
+              }`}
               style={{
                 background:
                   "linear-gradient(160deg, #163F66 0%, #0E2438 55%, #0B1C2C 100%)",
               }}
             >
-              {/* The spine shows down the middle of an open spread; on a
-                  single page it is the left edge, where the page is bound. */}
-              <div
-                className={
-                  spread
-                    ? "absolute inset-y-0 left-1/2 w-[2.6%] -translate-x-1/2 bg-linear-to-r from-[#0B1C2C] via-[#091623] to-[#0B1C2C]"
-                    : "absolute inset-y-0 left-0 w-[3.4%] bg-linear-to-r from-[#091623] to-[#0B1C2C]"
-                }
-              />
+              {/* The spine shows down the middle of an open spread. On a
+                  single page it is the whole left side: the board wraps
+                  round the binding, so it runs darker than the cover and
+                  takes a line of light along its crown, and the page casts
+                  into it. Without that the page is a card with a border. */}
+              {spread ? (
+                <div className="absolute inset-y-0 left-1/2 w-[2.6%] -translate-x-1/2 bg-linear-to-r from-[#0B1C2C] via-[#091623] to-[#0B1C2C]" />
+              ) : (
+                <>
+                  <div className="absolute inset-y-0 left-0 w-[11%] rounded-l-md bg-linear-to-r from-[#0B1C2C] via-[#06101A] to-[#0A1B2B]" />
+                  <div className="absolute inset-y-[7%] left-[2.2%] w-px bg-white/15" />
+                  <div className="absolute inset-y-[7%] left-[8.5%] w-px bg-black/45" />
+                </>
+              )}
             </div>
           )}
 
@@ -313,8 +322,12 @@ export default function CertificateBook({
               sheet a leaf, so a stack grows as pages are turned onto it and
               thins as they leave. A single page has only the one stack, to
               its right — what is turned has gone off the left edge. */}
-          {spread && !closedFront && <Stack side="left" leaves={leftLeaves} />}
-          {!closedBack && <Stack side="right" leaves={rightLeaves} />}
+          {spread && !closedFront && (
+            <Stack side="left" leaves={leftLeaves} thick={!spread} />
+          )}
+          {!closedBack && (
+            <Stack side="right" leaves={rightLeaves} thick={!spread} />
+          )}
 
           {sheets.map((sheet, i) => {
             const isTurned = i < turned;
@@ -377,15 +390,29 @@ export default function CertificateBook({
  * The edge of a stack of leaves: a strip of hairlines at the fore-edge
  * and along the foot, one per sheet, stepped out from under the top page.
  */
-function Stack({ side, leaves }: { side: "left" | "right"; leaves: number }) {
+function Stack({
+  side,
+  leaves,
+  thick = false,
+}: {
+  side: "left" | "right";
+  leaves: number;
+  /** A single page shows one block edge and nothing else; at spread
+   *  thickness it reads as a hairline rather than as paper. */
+  thick?: boolean;
+}) {
   if (leaves === 0) return null;
-  const depth = leaves * LEAF_PX;
+  const depth = leaves * (thick ? LEAF_PX * 1.9 : LEAF_PX);
   const lines =
     "repeating-linear-gradient(var(--dir), #f4efe4 0 1px, #cfc6b4 1px 1.6px)";
   return (
     <div
       aria-hidden
-      className={`absolute inset-y-0 w-1/2 ${side === "left" ? "left-0" : "right-0"}`}
+      // A spread's block is half the book wide; a single page's is the whole
+      // of it, and at half width the foot stops under the middle of the page.
+      className={`absolute inset-y-0 ${
+        thick ? "inset-x-0" : `w-1/2 ${side === "left" ? "left-0" : "right-0"}`
+      }`}
     >
       {/* Fore-edge. */}
       <div
@@ -395,6 +422,13 @@ function Stack({ side, leaves }: { side: "left" | "right"; leaves: number }) {
           [side === "left" ? "left" : "right"]: -depth,
           background: lines,
           ["--dir" as string]: side === "left" ? "to left" : "to right",
+          // The block is rounded where thumbs have opened it, and the top
+          // page throws a little shade down its edge.
+          borderRadius: side === "left" ? "3px 0 0 3px" : "0 3px 3px 0",
+          boxShadow:
+            side === "left"
+              ? "inset -2px 0 3px -2px rgba(60,45,20,0.5)"
+              : "inset 2px 0 3px -2px rgba(60,45,20,0.5)",
         }}
       />
       {/* Foot. */}

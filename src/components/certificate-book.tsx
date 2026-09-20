@@ -294,7 +294,7 @@ export default function CertificateBook({
               className={`cloth absolute rounded-md shadow-[0_50px_90px_-36px_rgba(24,38,49,0.65)] ${
                 spread
                   ? "-inset-x-[1.6%] -inset-y-[2.4%]"
-                  : "-inset-y-[2%] -left-[9%] -right-[2.5%]"
+                  : "-top-[2%] -bottom-[5.5%] -left-[9%] -right-[7%]"
               }`}
               style={{
                 background:
@@ -402,7 +402,10 @@ function Stack({
   thick?: boolean;
 }) {
   if (leaves === 0) return null;
-  const depth = leaves * (thick ? LEAF_PX * 1.9 : LEAF_PX);
+  // Capped: the block's edge is a stylisation, and past about this much it
+  // stops reading as paper and starts reading as a second page. The cap is
+  // also what the cover's overhang is sized against.
+  const depth = Math.min(leaves * (thick ? LEAF_PX * 1.9 : LEAF_PX), 18);
   const lines =
     "repeating-linear-gradient(var(--dir), #f4efe4 0 1px, #cfc6b4 1px 1.6px)";
   return (
@@ -414,11 +417,12 @@ function Stack({
         thick ? "inset-x-0" : `w-1/2 ${side === "left" ? "left-0" : "right-0"}`
       }`}
     >
-      {/* Fore-edge. */}
+      {/* Fore-edge, run down to the foot so the two meet at the corner. */}
       <div
-        className="absolute top-[0.6%] bottom-0"
+        className="absolute top-[0.6%]"
         style={{
           width: depth,
+          bottom: -depth,
           [side === "left" ? "left" : "right"]: -depth,
           background: lines,
           ["--dir" as string]: side === "left" ? "to left" : "to right",
@@ -431,13 +435,14 @@ function Stack({
               : "inset 2px 0 3px -2px rgba(60,45,20,0.5)",
         }}
       />
-      {/* Foot. */}
+      {/* Foot, reaching under the fore-edge at both ends. */}
       <div
         className={`absolute ${side === "left" ? "left-0" : "right-0"}`}
         style={{
           height: depth,
           bottom: -depth,
-          width: `calc(100% + ${depth}px)`,
+          [side === "left" ? "left" : "right"]: -depth,
+          width: `calc(100% + ${depth * 2}px)`,
           background: lines,
           ["--dir" as string]: "to bottom",
         }}

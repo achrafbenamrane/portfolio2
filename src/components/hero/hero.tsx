@@ -10,12 +10,19 @@ import RoleRotator from "./role-rotator";
  * The control panel sits in normal flow rather than pinned to a corner, so it
  * cannot collide with the copy on a short viewport. The signal provider now
  * lives on the page, because the iMac section shares this one camera stream.
+ *
+ * Two arrangements, one markup. Wide: the portrait fills the right half and
+ * the copy sits clear of it. Narrow: there is no right half to sit in, so the
+ * three parts stack — copy, portrait, panel — and the flex order puts the
+ * portrait between them. Laid over the copy instead (which is what a
+ * full-width canvas does on a phone) it puts a face behind the paragraph and
+ * the panel over the mouth.
  */
 export default function Hero() {
   return (
     <>
       <section
-        className="relative flex min-h-dvh flex-col justify-center overflow-hidden px-6 pb-0 pt-40 md:px-12 md:pt-32"
+        className="relative flex min-h-dvh flex-col justify-center gap-8 overflow-hidden px-6 pb-12 pt-32 md:px-12 lg:gap-0 lg:pb-0 lg:pt-32"
         style={{
           /* The nav's blue, continued. The bar sits directly above this, so
              anything else would put a seam across the top of the page. The
@@ -27,7 +34,7 @@ export default function Hero() {
       >
         <HeroCanvas />
 
-        <div className="pointer-events-none relative z-10 max-w-2xl">
+        <div className="pointer-events-none relative z-10 order-1 max-w-2xl lg:order-none">
           <p className="meta text-white/60">{site.availability}</p>
 
           {/*
@@ -49,10 +56,12 @@ export default function Hero() {
           <RoleRotator roles={site.roles} />
 
           <p className="mt-4 max-w-md text-balance text-white/75">{site.tagline}</p>
+        </div>
 
-          <div className="pointer-events-auto mt-10">
-            <HandControl />
-          </div>
+        {/* Order 3: after the portrait on a phone, straight after the copy on
+            a wide screen, where the portrait is out of flow. */}
+        <div className="pointer-events-auto relative z-10 order-3 max-w-2xl lg:order-none lg:mt-10">
+          <HandControl />
         </div>
 
       </section>

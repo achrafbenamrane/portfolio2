@@ -1,16 +1,24 @@
 import { site } from "@/content/site";
 
+/** Split at the @, so a narrow column breaks the address where an address
+ *  is read as breaking — not mid-word, which is what `break-all` does to
+ *  "univ-annaba" on a phone. */
+const [MAILBOX, DOMAIN] = site.email.split("@");
+
 export default function Contact() {
   return (
-    <section className="px-6 pb-24 md:px-12">
+    /* Top padding of its own: the masthead's padding is inside the blue
+       band, so without this the first label sits on the band's edge. */
+    <section className="px-6 pb-24 pt-12 md:px-12 md:pt-16">
       <div className="mx-auto max-w-350">
         <h2 className="meta border-b border-line pb-4 text-dim">EMAIL</h2>
 
         <a
           href={`mailto:${site.email}`}
-          className="mt-10 inline-block break-all text-[clamp(1.25rem,3.5vw,2.75rem)] font-semibold tracking-[-0.03em] transition-colors hover:text-accent"
+          className="mt-8 inline-block text-[clamp(1.05rem,4.4vw,2.75rem)] font-semibold tracking-[-0.03em] transition-colors hover:text-accent md:mt-10"
         >
-          {site.email}
+          {MAILBOX}
+          <wbr />@{DOMAIN}
         </a>
 
         <dl className="mt-10 grid gap-px bg-line sm:grid-cols-3">

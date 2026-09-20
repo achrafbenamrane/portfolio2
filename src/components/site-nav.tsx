@@ -77,7 +77,9 @@ export default function SiteNav() {
       {/* The desktop links don't fit under ~768px, so small screens get a
           scrollable strip rather than a hamburger — four items don't justify
           hiding navigation behind a tap. */}
-      <div className="flex gap-5 overflow-x-auto border-t border-white/10 px-6 py-2.5 md:hidden">
+      {/* The links carry the padding rather than the strip, so each one is
+          a ~36px tap target instead of a 12px line of type. */}
+      <div className="flex gap-5 overflow-x-auto border-t border-white/10 px-6 md:hidden">
         {SECTIONS.map((section) => {
           const active = pathname.startsWith(section.href);
           return (
@@ -85,7 +87,7 @@ export default function SiteNav() {
               key={section.href}
               href={section.href}
               aria-current={active ? "page" : undefined}
-              className={`meta whitespace-nowrap transition-colors ${
+              className={`meta block whitespace-nowrap py-3 transition-colors ${
                 active ? "text-[#7CC4F0]" : "text-white/75"
               }`}
             >

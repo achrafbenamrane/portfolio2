@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 
 import { useLightbox } from "@/components/zoomable-image";
 import {
@@ -35,6 +35,12 @@ import {
  * the darkening of each page into the gutter, and the light that crosses
  * a page as it turns edge-on.
  *
+ * On a phone there is no room for two pages — a spread works out about
+ * 170px a side, which truncates every title and makes the certificates
+ * unreadable — so below `SPREAD` it binds one page to a sheet instead and
+ * shows them one at a time. Same sheets, same turn: the page still swings
+ * about its left edge, it just goes off to the left on its own.
+ *
  * No library. The page turn is a CSS transform, the drag sets that
  * transform directly, and the rest is bookkeeping about which sheet is
  * where.
@@ -48,7 +54,8 @@ type Face =
   | { kind: "certificate"; certification: Numbered; page: number }
   | { kind: "back" };
 
-type Sheet = { front: Face; back: Face };
+/** A leaf: one page on a phone, two — front and back — on a wide screen. */
+type Sheet = { front: Face; back: Face | null };
 
 const TURN_MS = 750;
 const TURN_EASE = "cubic-bezier(0.4, 0.05, 0.25, 1)";
@@ -61,9 +68,26 @@ const OPEN_AFTER_MS = 500;
 /** How much of the book must be on screen before it counts as seen. */
 const SEEN_RATIO = 0.6;
 
-/** Sheets from the pages: cover and contents first, then two certificates
- *  per sheet, and a back cover on the last sheet's reverse. */
-function bind(entries: readonly Numbered[]): Sheet[] {
+/** Wide enough for two pages side by side. */
+const SPREAD = "(min-width: 768px)";
+
+function subscribeSpread(onChange: () => void) {
+  const query = matchMedia(SPREAD);
+  query.addEventListener("change", onChange);
+  return () => query.removeEventListener("change", onChange);
+}
+
+const getSpread = () => matchMedia(SPREAD).matches;
+/** A phone is the safer guess before hydration: the wide layout laid out at
+ *  phone width is unreadable, where the narrow one at desk width is merely
+ *  small for the instant before it corrects. */
+const getServerSpread = () => false;
+
+/** Sheets from the pages: cover and contents first, then the certificates,
+ *  then a back cover. Two faces to a sheet in a spread, one on a phone —
+ *  where a turned sheet has gone off to the left, so its back is never
+ *  seen and would take half the book with it. */
+function bind(entries: readonly Numbered[], spread: boolean): Sheet[] {
   const faces: Face[] = [
     { kind: "cover", entries },
     { kind: "contents", entries },
@@ -73,6 +97,12 @@ function bind(entries: readonly Numbered[]): Sheet[] {
       page: i + 1,
     })),
   ];
+
+  if (!spread) {
+    const single: Face[] = [...faces, { kind: "back" }];
+    return single.map((front) => ({ front, back: null }));
+  }
+
   // The back cover must be a back face, so pad to an even count first.
   if (faces.length % 2 === 1) faces.push({ kind: "back" });
   else faces.push({ kind: "back" }, { kind: "back" });
@@ -89,7 +119,12 @@ export default function CertificateBook({
 }: {
   entries: readonly Numbered[];
 }) {
-  const sheets = bind(entries);
+  const spread = useSyncExternalStore(
+    subscribeSpread,
+    getSpread,
+    getServerSpread,
+  );
+  const sheets = bind(entries, spread);
   const count = sheets.length;
 
   const book = useRef<HTMLDivElement>(null);
@@ -142,7 +177,8 @@ export default function CertificateBook({
   const prev = () => turnTo(turned - 1);
 
   /** Sheet width in px, for turning pointer travel into degrees. */
-  const pageWidth = () => (book.current?.clientWidth ?? 0) / 2;
+  const pageWidth = () =>
+    (book.current?.clientWidth ?? 0) / (spread ? 2 : 1);
 
   const onPointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
     if (e.button !== 0) return;
@@ -152,8 +188,11 @@ export default function CertificateBook({
     if (!el) return;
     const spine = el.getBoundingClientRect().left + pageWidth();
     // Right of the spine turns the next sheet forward; left of it turns
-    // the last turned sheet back. A closed book's cover counts as right.
-    const forward = closedFront || (!closedBack && e.clientX >= spine);
+    // the last turned sheet back. A closed book's cover counts as right,
+    // and with a single page there is no left half to press: a press
+    // turns forward, and going back is the arrow's job or a drag right.
+    const forward =
+      closedFront || !spread || (!closedBack && e.clientX >= spine);
     if (forward && turned === count) return;
     if (!forward && turned === 0) return;
     gesture.current = {
@@ -211,8 +250,13 @@ export default function CertificateBook({
   return (
     <div className="mx-auto max-w-[54rem]">
       {/* The stage: room above and below for the turning page, which
-          swings out past the book's own box. */}
-      <div className="px-4 py-8 [perspective:2600px] sm:px-8">
+          swings out past the book's own box. A single page swings out
+          sideways instead, past the viewport, so that one is clipped. */}
+      <div
+        className={`px-4 py-8 [perspective:2600px] sm:px-8 ${
+          spread ? "" : "overflow-hidden"
+        }`}
+      >
         <div
           ref={book}
           role="group"
@@ -226,15 +270,19 @@ export default function CertificateBook({
           onKeyDown={onKeyDown}
           // pan-y: a finger dragging sideways turns the page instead of
           // being taken for a scroll; up and down still scrolls the page.
-          className="relative aspect-[5/3] w-full cursor-grab select-none outline-none [touch-action:pan-y] [transform-style:preserve-3d] focus-visible:[outline:2px_solid_var(--color-accent)] active:cursor-grabbing"
+          className={`relative w-full cursor-grab select-none outline-none [touch-action:pan-y] [transform-style:preserve-3d] focus-visible:[outline:2px_solid_var(--color-accent)] active:cursor-grabbing ${
+            spread ? "aspect-[5/3]" : "mx-auto aspect-[3/4] max-w-sm"
+          }`}
           style={{
-            // Closed on the cover: slide left so the cover is centred.
-            // Closed on the back: slide right for the same reason.
-            transform: closedFront
-              ? "translateX(-25%)"
-              : closedBack
-                ? "translateX(25%)"
-                : "translateX(0)",
+            // A spread closed on the cover slides left so the cover is
+            // centred, and right when closed on the back. A single page is
+            // already centred, whichever page it is.
+            transform:
+              spread && closedFront
+                ? "translateX(-25%)"
+                : spread && closedBack
+                  ? "translateX(25%)"
+                  : "translateX(0)",
             transition: `transform ${TURN_MS}ms ${TURN_EASE}`,
           }}
         >
@@ -249,14 +297,23 @@ export default function CertificateBook({
                   "linear-gradient(160deg, #163F66 0%, #0E2438 55%, #0B1C2C 100%)",
               }}
             >
-              <div className="absolute inset-y-0 left-1/2 w-[2.6%] -translate-x-1/2 bg-linear-to-r from-[#0B1C2C] via-[#091623] to-[#0B1C2C]" />
+              {/* The spine shows down the middle of an open spread; on a
+                  single page it is the left edge, where the page is bound. */}
+              <div
+                className={
+                  spread
+                    ? "absolute inset-y-0 left-1/2 w-[2.6%] -translate-x-1/2 bg-linear-to-r from-[#0B1C2C] via-[#091623] to-[#0B1C2C]"
+                    : "absolute inset-y-0 left-0 w-[3.4%] bg-linear-to-r from-[#091623] to-[#0B1C2C]"
+                }
+              />
             </div>
           )}
 
-          {/* The two stacks of pages, seen at the fore-edge and the foot:
-              each sheet a leaf, so a stack grows as pages are turned onto
-              it and thins as they leave. */}
-          {!closedFront && <Stack side="left" leaves={leftLeaves} />}
+          {/* The stacks of pages, seen at the fore-edge and the foot: each
+              sheet a leaf, so a stack grows as pages are turned onto it and
+              thins as they leave. A single page has only the one stack, to
+              its right — what is turned has gone off the left edge. */}
+          {spread && !closedFront && <Stack side="left" leaves={leftLeaves} />}
           {!closedBack && <Stack side="right" leaves={rightLeaves} />}
 
           {sheets.map((sheet, i) => {
@@ -273,7 +330,9 @@ export default function CertificateBook({
             return (
               <div
                 key={i}
-                className="absolute top-0 left-1/2 h-full w-1/2 origin-left [transform-style:preserve-3d]"
+                className={`absolute top-0 h-full origin-left [transform-style:preserve-3d] ${
+                  spread ? "left-1/2 w-1/2" : "left-0 w-full"
+                }`}
                 style={{
                   transform: `rotateY(${-angle}deg)`,
                   zIndex: z,
@@ -284,7 +343,9 @@ export default function CertificateBook({
                 }}
               >
                 <FaceView face={sheet.front} side="front" shade={shade} />
-                <FaceView face={sheet.back} side="back" shade={shade} />
+                {sheet.back && (
+                  <FaceView face={sheet.back} side="back" shade={shade} />
+                )}
               </div>
             );
           })}
@@ -294,10 +355,10 @@ export default function CertificateBook({
       <div className="mt-2 flex items-center justify-between gap-6 px-4 sm:px-8">
         <p className="meta text-dim" data-book-status>
           {closedFront
-            ? "CLICK THE COVER, OR DRAG IT, TO OPEN"
+            ? "TAP THE COVER, OR DRAG IT, TO OPEN"
             : closedBack
               ? "THE END · TURN BACK TO REOPEN"
-              : `SPREAD ${String(turned).padStart(2, "0")} / ${String(count - 1).padStart(2, "0")} · DRAG A PAGE, OR CLICK IT`}
+              : `${spread ? "SPREAD" : "PAGE"} ${String(turned).padStart(2, "0")} / ${String(count - 1).padStart(2, "0")}`}
         </p>
         <div className="flex gap-2">
           <ArrowButton label="Previous page" onClick={prev} disabled={closedFront}>
@@ -507,29 +568,32 @@ function Cover({ entries }: { entries: readonly Numbered[] }) {
 function Contents({ entries }: { entries: readonly Numbered[] }) {
   return (
     <div className="paper flex h-full flex-col p-[7%]">
-      <p className="font-brand text-[clamp(1.2rem,5cqw,2.2rem)] italic leading-none">
+      <p className="font-brand text-[clamp(1.05rem,5cqw,2.2rem)] italic leading-none">
         Contents
       </p>
-      <ol className="mt-[6%] space-y-[3%]">
+      {/* Ten entries with wrapped titles have to fit the shortest page the
+          book ever has — a spread page at the md breakpoint, about 304 by
+          365 — so the ramp is set by that and grows from there. Bounded and
+          clipped as well, so a future entry crowds nothing. */}
+      <ol className="mt-[4%] min-h-0 flex-1 space-y-[1.6%] overflow-hidden">
         {entries.map((certification, i) => (
           <li
             key={certification.title}
-            className="flex items-baseline gap-x-2 text-[clamp(0.6rem,2cqw,0.9rem)] leading-snug"
+            className="grid grid-cols-[2.25rem_1fr_1.25rem] items-baseline gap-x-1.5 text-[clamp(0.65rem,3.1cqw,0.9rem)] leading-[1.3]"
           >
-            <span className="meta shrink-0 text-accent">
-              {certification.number}
+            <span className="meta text-accent">{certification.number}</span>
+            {/* Wraps at every width. A contents page whose entries end in
+                an ellipsis is not much of one, and the dotted leaders this
+                replaced only worked while every title stayed on one line —
+                which stopped being true the moment the page narrowed. */}
+            <span className="font-medium">{certification.title}</span>
+            <span className="font-brand justify-self-end italic text-dim">
+              {i + 1}
             </span>
-            <span className="truncate font-medium">{certification.title}</span>
-            {/* Leaders: the dotted line that walks the eye to the folio. */}
-            <span
-              aria-hidden
-              className="mb-[0.2em] min-w-4 flex-1 border-b border-dotted border-ink/35"
-            />
-            <span className="font-brand shrink-0 italic text-dim">{i + 1}</span>
           </li>
         ))}
       </ol>
-      <p className="meta mt-auto text-dim">{site.name}</p>
+      <p className="meta shrink-0 pt-[3%] text-dim">{site.name}</p>
     </div>
   );
 }
@@ -604,7 +668,7 @@ function CertificatePage({
         <h3 className="text-[clamp(0.75rem,2.5cqw,1.15rem)] font-semibold leading-snug tracking-tight text-balance">
           {certification.title}
         </h3>
-        <p className="mt-1 text-[clamp(0.6rem,1.9cqw,0.85rem)] text-dim">
+        <p className="mt-1 text-[clamp(0.72rem,1.9cqw,0.85rem)] text-dim">
           {certification.issuer} · {certification.date}
         </p>
       </div>

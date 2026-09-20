@@ -121,7 +121,10 @@ export default function ImacSection() {
       <div className="mx-auto max-w-350">
         <div className="flex flex-wrap items-baseline justify-between gap-4 border-b border-line pb-4">
           <h2 className="meta text-dim">DESKTOP</h2>
-          <span className="meta text-dim">
+          {/* Only where the desktop itself is: below md this section is a
+              note saying to come back on a laptop, and a line about a mouse
+              under it reads as an instruction for a machine you are not on. */}
+          <span className="meta hidden text-dim md:inline">
             POINT · PINCH TO CLICK · OR JUST USE THE MOUSE
           </span>
         </div>

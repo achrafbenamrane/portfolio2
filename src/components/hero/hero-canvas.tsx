@@ -14,13 +14,17 @@ const Character = dynamic(() => import("./character"), { ssr: false });
 export default function HeroCanvas() {
   const signal = useHeroSignal();
 
-  // Full height, untransformed. The portrait's vertical placement is set in
-  // world space inside Character — see the mesh position there — because a
-  // CSS transform on this box was the kind of change a cached stylesheet can
-  // hide, and because shortening the box instead shrinks the render: the
-  // camera's field of view is vertical, so size follows canvas height.
+  // Wide: full height on the right, untransformed. The portrait's vertical
+  // placement is set in world space inside Character — see the mesh position
+  // there — because a CSS transform on this box was the kind of change a
+  // cached stylesheet can hide, and because shortening the box instead
+  // shrinks the render: the camera's field of view is vertical, so size
+  // follows canvas height.
+  //
+  // Narrow: in flow between the copy and the panel, full-bleed past the
+  // section's gutters, at a height that leaves room for both.
   return (
-    <div className="pointer-events-none absolute inset-y-0 right-0 w-full lg:w-[56%]">
+    <div className="pointer-events-none relative order-2 -mx-6 h-[38vh] min-h-52 w-full md:-mx-12 lg:absolute lg:inset-y-0 lg:right-0 lg:order-none lg:mx-0 lg:h-auto lg:w-[56%]">
       {/* A soft pool behind the subject. The portrait is a cut-out of a man in
           a black suit: on a white page it separated on its own, but against
           this blue the shoulders merge into the background. Lifting the area

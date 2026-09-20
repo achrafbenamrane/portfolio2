@@ -77,19 +77,26 @@ function PortraitMesh({ signal }: { signal: HeroSignal }) {
     material.uniforms.uTime.value = state.clock.elapsedTime;
   });
 
-  const scale = Math.min(1, Math.max(0.6, size.width / 640));
+  // Two canvases, two fits. On a wide screen it is a tall column beside the
+  // copy, and the portrait is held back from the edges so it does not crowd
+  // the text; on a phone it is a short full-width band of its own, where the
+  // same treatment leaves the subject small with a band of empty sky above
+  // it — which reads as a gap in the page rather than as breathing room.
+  const band = size.width > size.height;
+  const scale = band ? 1 : Math.min(1, Math.max(0.6, size.width / 640));
 
   // Sat lower in the frame so the head clears the nav bar. Done here, in
   // world space, rather than by translating the canvas with CSS: the camera's
   // visible height is 3.22 world units, so a fixed offset is a fixed FRACTION
   // of the viewport — about 126px on a 900px screen — and scales with it
-  // instead of being a pixel count that is right on one monitor.
+  // instead of being a pixel count that is right on one monitor. In the band
+  // there is nothing overhead to clear, so it sits nearly centred.
   return (
     <mesh
       geometry={geometry}
       material={material}
       scale={scale}
-      position={[0, -0.45, 0]}
+      position={[0, band ? -0.08 : -0.45, 0]}
     />
   );
 }

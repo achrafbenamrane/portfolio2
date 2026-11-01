@@ -1,20 +1,27 @@
 /* ── the website wardrobe on /work ───────────────────────────────────
  *
- * A white-lacquer wardrobe on the page. It arrives shut; once it is in view
- * its two doors swing open, the light strip along the top comes on, and the
- * sites are found standing on its shelves. Scrolled away from, it shuts and
- * the light goes off; it opens again on the way back. A site under the pointer lights
- * the strip it stands on — a line of blue neon — which throws its light up
- * onto the site and down the shelf.
+ * A navy-lacquer wardrobe with fluted glass doors on the white page. It
+ * arrives shut, the sites a soft blur behind the reeded glass, and the
+ * scroll works its doors: `--open`, written by the component as the page
+ * moves, runs from 0 (shut) to 1 (open), and everything that changes with
+ * the doors — their swing, their shading, the light strip, the dim inside,
+ * the blur behind the glass, the shadows they throw — is a function of it.
+ * A site under the pointer lights the strip it stands on — a line of blue
+ * neon — which throws its light up onto the site and down the shelf.
  *
- * Every colour is the site's own: lacquer and shadows from the page's
- * slate, the neon from the header's light blue (#7CC4F0) into the glacier
- * accent (#24689B).
+ * Every colour is the site's own: the lacquer is the header's navy
+ * (#0E2438 into #1B4A78), the glass and the light are its light blue
+ * (#7CC4F0), the inside a pale wash of the glacier accent (#24689B).
  */
 
 .wardrobe {
-  --frame: 16px;
-  --edge: rgb(24 38 49 / 0.1);
+  /* How open the doors are, 0 to 1; set by the scroll. */
+  --open: 0;
+  --frame: 14px;
+  --edge: rgb(10 26 41 / 0.55);
+  /* The header's own gradient, so the cabinet is cut from the same navy. */
+  --lacquer: linear-gradient(100deg, #0e2438 0%, #1b4a78 55%, #133a5e 100%);
+  --lacquer-solid: #143a5e;
   /* The neon, from its hot core out to its deepest blue. `--glow` is the
      light it throws, as channels so it can take any alpha. */
   --neon-hot: #e3f4ff;
@@ -23,7 +30,12 @@
   --neon-deep: #24689b;
   --glow: 61 143 209;
   --glow-deep: 36 104 155;
-  --door-ms: 1700ms;
+  /* The doors' frame: stiles and top rail, and a deeper bottom rail. */
+  --stile: clamp(11px, 1.4vw, 19px);
+  /* The doors' thickness, seen at their edge as they turn. */
+  --door-t: 10px;
+  /* How far a door swings at full open. */
+  --swing: 104deg;
   position: relative;
 }
 
@@ -34,35 +46,39 @@
   z-index: 3;
   display: grid;
   place-items: center;
-  height: 34px;
-  margin-inline: -12px;
+  height: 30px;
+  margin-inline: -10px;
   border-radius: 7px 7px 2px 2px;
-  background: linear-gradient(180deg, #ffffff 0%, #f1f5f8 70%, #e6ecf1 100%);
+  background: var(--lacquer);
   box-shadow:
-    inset 0 1px 0 #fff,
+    inset 0 1px 0 rgb(124 196 240 / 0.35),
     0 0 0 1px var(--edge),
-    0 12px 18px -12px rgb(14 36 56 / 0.4);
+    0 12px 18px -12px rgb(14 36 56 / 0.5);
 }
 
 .wardrobe-plate {
-  padding: 3px 10px;
+  padding: 4px 12px;
   border-radius: 3px;
-  border: 1px solid var(--edge);
-  background: linear-gradient(180deg, #ffffff, #eef2f5);
+  border: 1px solid rgb(124 196 240 / 0.7);
+  background: linear-gradient(180deg, #ffffff, #e8f3fb);
+  box-shadow: 0 0 14px rgb(124 196 240 / 0.35);
   font-family: var(--font-mono);
-  font-size: 9px;
-  letter-spacing: 0.2em;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: var(--color-dim);
+  white-space: nowrap;
+  color: #0e2438;
 }
 
 .wardrobe-body {
   position: relative;
   padding: var(--frame);
-  background: linear-gradient(90deg, #eef2f6, #fdfeff 10%, #fdfeff 90%, #eaf0f4);
+  background: var(--lacquer);
   box-shadow:
+    inset 0 0 0 1px rgb(124 196 240 / 0.12),
     0 0 0 1px var(--edge),
-    0 60px 80px -60px rgb(14 36 56 / 0.5);
+    0 60px 80px -50px rgb(14 36 56 / 0.6);
   perspective-origin: 50% 50%;
 }
 
@@ -70,24 +86,27 @@
   height: 22px;
   margin-inline: 10px;
   border-radius: 0 0 4px 4px;
-  background: linear-gradient(180deg, #e8edf2, #d6dfe6);
+  background: linear-gradient(180deg, #0e2438, #0a1a29);
   box-shadow:
     0 0 0 1px var(--edge),
-    0 26px 30px -18px rgb(14 36 56 / 0.45);
+    0 26px 30px -18px rgb(14 36 56 / 0.55);
 }
 
 /* ── inside ── */
 
 .interior-bg,
 .wardrobe-interior {
-  background: linear-gradient(180deg, #e7edf2 0%, #f3f6f9 30%, #e9eff4 100%);
+  background: linear-gradient(180deg, #dfecf7 0%, #f1f7fc 32%, #e2eef8 100%);
 }
 
 .wardrobe-interior {
+  /* Everything inside stays inside: the close-up and the light must sit
+     behind the doors, so the doors are seen closing over them. */
+  isolation: isolate;
   box-shadow:
-    inset 0 28px 36px -24px rgb(14 36 56 / 0.35),
-    inset 24px 0 30px -26px rgb(14 36 56 / 0.3),
-    inset -24px 0 30px -26px rgb(14 36 56 / 0.3);
+    inset 0 28px 36px -24px rgb(14 36 56 / 0.45),
+    inset 24px 0 30px -26px rgb(14 36 56 / 0.4),
+    inset -24px 0 30px -26px rgb(14 36 56 / 0.4);
 }
 
 /* The light strip under the top of the cabinet, and the wash it throws. */
@@ -103,8 +122,8 @@
   box-shadow:
     0 0 10px rgb(124 196 240 / 0.9),
     0 0 36px rgb(124 196 240 / 0.45);
-  opacity: 0;
-  transition: opacity 900ms ease 600ms;
+  /* Comes on once the doors are a third of the way open. */
+  opacity: clamp(0, calc((var(--open) - 0.3) * 2.5), 1);
   pointer-events: none;
 }
 
@@ -118,36 +137,54 @@
   background: radial-gradient(ellipse 60% 100% at 50% 0%, rgb(124 196 240 / 0.2), transparent 70%);
 }
 
-/* A shut cabinet is dark inside; the dark lifts as the light comes on. */
+/* A shut cabinet is dim inside — dim, not dark, so the sites still show
+   through the glass as a hint; the dim lifts as the light comes on. */
 .interior-shade {
   position: absolute;
   z-index: 2;
   inset: 0;
-  background: rgb(14 36 56 / 0.62);
+  background: rgb(14 36 56 / 0.32);
   pointer-events: none;
-  transition: opacity 1100ms ease 400ms;
+  opacity: calc(1 - var(--open));
 }
 
-.is-open .interior-led {
-  opacity: 1;
+/* The shadow each door throws into the cabinet as it turns: none while it
+   is shut flat against the opening, deepest half way, gone once it stands
+   clear of it. */
+.wardrobe-interior::before,
+.wardrobe-interior::after {
+  content: "";
+  position: absolute;
+  z-index: 2;
+  top: 0;
+  bottom: 0;
+  width: 34%;
+  pointer-events: none;
+  opacity: calc(min(var(--open), 1 - var(--open)) * 1.9);
 }
 
-.is-open .interior-shade {
-  opacity: 0;
+.wardrobe-interior::before {
+  left: 0;
+  background: linear-gradient(90deg, rgb(14 36 56 / 0.42), transparent);
 }
 
-/* A shelf board: a pale top face, then its front edge, then its shadow on
-   the back of the cabinet. */
+.wardrobe-interior::after {
+  right: 0;
+  background: linear-gradient(270deg, rgb(14 36 56 / 0.42), transparent);
+}
+
+/* A shelf board: a pale top face, then its front edge in the glacier blue,
+   then its shadow on the back of the cabinet. */
 .board {
   position: relative;
   height: 14px;
-  background: linear-gradient(180deg, #ffffff 0 34%, #e3e9ee 34%, #d3dce3 100%);
+  background: linear-gradient(180deg, #ffffff 0 34%, #cfe3f3 34%, #a9cbe6 100%);
   box-shadow:
     0 1px 0 rgb(24 38 49 / 0.06),
     0 18px 22px -14px rgb(14 36 56 / 0.4);
 }
 
-/* ── the doors ── */
+/* ── the doors: a lacquer frame round a pane of fluted glass ── */
 
 .wardrobe-door {
   position: absolute;
@@ -156,121 +193,170 @@
   bottom: var(--frame);
   width: calc(50% - var(--frame));
   transform-style: preserve-3d;
-  transition: transform var(--door-ms) cubic-bezier(0.6, 0.04, 0.22, 1);
   cursor: pointer;
 }
 
 .door-left {
   left: var(--frame);
   transform-origin: left center;
+  transform: rotateY(calc(var(--open) * var(--swing) * -1));
 }
 
+/* A beat behind the left, the way two hands never open a pair of doors in
+   perfect step. */
 .door-right {
   right: var(--frame);
   transform-origin: right center;
-  transition-delay: 90ms;
-}
-
-.is-open .door-left {
-  transform: rotateY(-100deg);
-}
-
-.is-open .door-right {
-  transform: rotateY(100deg);
-}
-
-.is-open .wardrobe-door {
-  pointer-events: none;
+  transform: rotateY(calc(clamp(0, calc(var(--open) * 1.08 - 0.08), 1) * var(--swing)));
 }
 
 .door-face {
   position: absolute;
   inset: 0;
   backface-visibility: hidden;
+  /* The frame is a border, so the middle stays open for the glass. */
+  border: var(--stile) solid var(--lacquer-solid);
+  border-bottom-width: calc(var(--stile) * 1.6);
+  box-shadow:
+    0 0 0 1px var(--edge),
+    inset 0 0 0 1px rgb(124 196 240 / 0.45);
 }
 
 .door-front {
-  background: linear-gradient(90deg, #f6f9fb, #ffffff 45%, #f3f6f9);
-  box-shadow: inset 0 0 0 1px rgb(24 38 49 / 0.09);
-}
-
-/* The raised panel of a shaker door. */
-.door-front::before {
-  content: "";
-  position: absolute;
-  inset: 6% 13%;
-  border-radius: 3px;
-  box-shadow:
-    inset 0 0 0 1px rgb(24 38 49 / 0.07),
-    inset 0 2px 8px rgb(14 36 56 / 0.06),
-    0 1px 0 #fff;
-}
-
-/* A door turning away from the light darkens as it goes. */
-.door-front::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(90deg, rgb(14 36 56 / 0.22), rgb(14 36 56 / 0.06));
-  opacity: 0;
-  transition: opacity var(--door-ms) ease;
-}
-
-.door-right .door-front::after {
-  background: linear-gradient(270deg, rgb(14 36 56 / 0.22), rgb(14 36 56 / 0.06));
-}
-
-.is-open .door-front::after {
-  opacity: 1;
+  transform: translateZ(calc(var(--door-t) / 2));
 }
 
 .door-back {
-  transform: rotateY(180deg);
-  background: linear-gradient(90deg, #e2e9ef, #eef3f7);
-  box-shadow: inset 0 0 0 1px rgb(24 38 49 / 0.09);
+  transform: rotateY(180deg) translateZ(calc(var(--door-t) / 2));
+  border-color: #102f4c;
 }
 
+/* The free edge of the door, square to its faces: invisible while it is
+   shut, a lit strip of lacquer as it swings. */
+.door-edge {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: var(--door-t);
+  background: linear-gradient(180deg, #2a5f8f, #143a5e 55%, #0e2438);
+  box-shadow: inset 0 0 0 1px rgb(124 196 240 / 0.25);
+}
+
+.door-left .door-edge {
+  right: calc(var(--door-t) / -2);
+  transform: rotateY(90deg);
+}
+
+.door-right .door-edge {
+  left: calc(var(--door-t) / -2);
+  transform: rotateY(-90deg);
+}
+
+/* Two steel hinge knuckles down the hinge side. */
+.door-hinge {
+  position: absolute;
+  width: 6px;
+  height: 7%;
+  border-radius: 3px;
+  background: linear-gradient(90deg, #8fa8bc, #f4f8fb 50%, #9fb5c7);
+  box-shadow: 0 1px 4px rgb(5 15 25 / 0.55);
+  transform: translateZ(calc(var(--door-t) / 2 + 1px));
+}
+
+.door-left .door-hinge {
+  left: -3px;
+}
+
+.door-right .door-hinge {
+  right: -3px;
+}
+
+.door-hinge-top {
+  top: 9%;
+}
+
+.door-hinge-bottom {
+  bottom: 9%;
+}
+
+/* Reeded glass: each rib bright along its crown and shaded at its edges,
+   over a cool frost, blurring whatever stands behind it. */
+.door-glass {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  background:
+    repeating-linear-gradient(
+      90deg,
+      rgb(255 255 255 / 0.5) 0px,
+      rgb(255 255 255 / 0.1) 5px,
+      rgb(14 36 56 / 0.1) 10px,
+      rgb(255 255 255 / 0.28) 13px,
+      rgb(255 255 255 / 0.5) 14px
+    ),
+    linear-gradient(180deg, rgb(178 220 246 / 0.55), rgb(124 196 240 / 0.42) 60%, rgb(61 143 209 / 0.4));
+  box-shadow: inset 0 2px 12px rgb(14 36 56 / 0.25);
+}
+
+/* What stands behind the glass is a blur until the doors open, and comes
+   into focus as they swing. The glass cannot do the blurring itself: a
+   backdrop filter is dropped inside the doors' 3D. */
+.wardrobe-shelves {
+  filter: blur(calc((1 - var(--open)) * 7px));
+}
+
+/* A sheen sliding across the pane. */
+.door-glass::before {
+  content: "";
+  position: absolute;
+  inset: -10% -40%;
+  background: linear-gradient(
+    115deg,
+    transparent 38%,
+    rgb(255 255 255 / 0.4) 47%,
+    rgb(255 255 255 / 0.08) 53%,
+    transparent 60%
+  );
+}
+
+/* A door turning away from the light darkens as it goes — frame and all,
+   so the shading reaches out over the border. */
+.door-front::after {
+  content: "";
+  position: absolute;
+  inset: calc(-1 * var(--stile)) calc(-1 * var(--stile)) calc(-1.6 * var(--stile));
+  background: linear-gradient(90deg, rgb(14 36 56 / 0.2), rgb(14 36 56 / 0.05));
+  opacity: var(--open);
+  pointer-events: none;
+}
+
+.door-right .door-front::after {
+  background: linear-gradient(270deg, rgb(14 36 56 / 0.2), rgb(14 36 56 / 0.05));
+}
+
+/* A slim steel bar on the stile where the doors meet. */
 .door-handle {
   position: absolute;
-  top: 38%;
-  height: 24%;
-  width: 7px;
-  border-radius: 4px;
-  background: linear-gradient(90deg, #8b98a3, #e8edf1 45%, #9aa7b2);
-  box-shadow: 0 2px 5px rgb(14 36 56 / 0.3);
+  z-index: 1;
+  top: 34%;
+  height: 32%;
+  width: 6px;
+  border-radius: 3px;
+  background: linear-gradient(90deg, #9fb7ca, #ffffff 45%, #b9cddc);
+  box-shadow:
+    0 2px 8px rgb(5 15 25 / 0.5),
+    0 0 10px rgb(124 196 240 / 0.35);
 }
 
 .door-left .door-handle {
-  right: 18px;
+  right: calc(var(--stile) / -2 - 3px);
 }
 
 .door-right .door-handle {
-  left: 18px;
+  left: calc(var(--stile) / -2 - 3px);
 }
 
 /* ── a site and the strip it stands on ── */
-
-/* Found on the shelves once the light is first on, one after another, and
-   left standing there while the doors shut over them. */
-.shelf-spot {
-  opacity: 0;
-}
-
-.is-revealed .shelf-spot {
-  animation: shelf-in 700ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
-  animation-delay: calc(900ms + var(--i, 0) * 80ms);
-}
-
-@keyframes shelf-in {
-  from {
-    opacity: 0;
-    translate: 0 14px;
-  }
-  to {
-    opacity: 1;
-    translate: 0;
-  }
-}
 
 .wall-card {
   transition:
@@ -302,6 +388,7 @@
 }
 
 .shelf-lit,
+.is-zoomed .is-picked .shelf,
 .shelf-spot:is(:hover, :has(:focus-visible)) .shelf {
   background: linear-gradient(
     180deg,
@@ -362,12 +449,79 @@
 
 /* ── the close-up ── */
 
+/* Laid out to fit the wardrobe as it is. On a phone it stacks: the way
+   back, the site, its write-up. Wider, the site takes the left and the way
+   back sits above the write-up on the right, on its left edge. */
+.closeup-grid {
+  display: grid;
+  gap: 10px;
+  grid-template-areas: "back" "card" "copy";
+}
+
+@media (min-width: 768px) {
+  .closeup-grid {
+    grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+    grid-template-areas: "card back" "card copy";
+    column-gap: 32px;
+    row-gap: 14px;
+  }
+}
+
+.closeup-back {
+  grid-area: back;
+  justify-self: start;
+  align-self: end;
+}
+
+/* A little narrower when stacked, so a site with a long write-up still fits
+   the phone's wardrobe. */
+.closeup-card {
+  grid-area: card;
+  align-self: center;
+  justify-self: center;
+  width: 80%;
+}
+
+@media (min-width: 768px) {
+  .closeup-card {
+    justify-self: stretch;
+    width: auto;
+  }
+}
+
+/* Shorter under the close-up, so its glow does not hang past the content
+   and give the fitted close-up something to scroll. */
+.closeup-card .shelf-spill {
+  height: 56px;
+}
+
+.closeup-copy {
+  grid-area: copy;
+  align-self: start;
+}
+
+/* While a site is out, the rest of the shelves step back — dimmer, a
+   touch smaller, softer — rather than vanishing at once; the inside of the
+   wardrobe then fades up over them, after the site is on its way. */
+.shelf-spot {
+  transition:
+    opacity 550ms ease,
+    scale 550ms cubic-bezier(0.2, 0.8, 0.2, 1),
+    filter 550ms ease;
+}
+
+.is-zoomed .shelf-spot:not(.is-picked) {
+  opacity: 0.45;
+  scale: 0.95;
+  filter: blur(1.5px) saturate(0.85);
+}
+
 .wall-zoom-backdrop {
-  animation: wall-fade 450ms ease both;
+  animation: wall-fade 650ms ease 300ms both;
 }
 
 [data-closing] .wall-zoom-backdrop {
-  animation: wall-fade-out 450ms ease both;
+  animation: wall-fade-out 500ms ease both;
 }
 
 @keyframes wall-fade {
@@ -384,7 +538,7 @@
 
 /* The strip under the close-up switches on once the site has landed. */
 .wall-zoom-shelf {
-  animation: wall-fade 500ms ease 450ms both;
+  animation: wall-fade 500ms ease 850ms both;
 }
 
 [data-closing] .wall-zoom-shelf,

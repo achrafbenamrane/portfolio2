@@ -11,17 +11,18 @@ import {
   useSyncExternalStore,
 } from "react";
 
+import BackButton from "@/components/back-button";
 import Badges from "@/components/badges";
 import type { Project } from "@/content/site";
 
 /**
  * The websites, kept in a wardrobe.
  *
- * The section arrives as a closed cabinet. Once it is properly in view the
- * two doors swing open, the light along the top comes on, and the sites
- * turn out to be standing on its shelves, one after another; scrolled away
- * from, it shuts again, and opens again on the way back. A site under
- * the pointer lights the strip it stands on. Clicking one lifts it off its
+ * The section arrives as a closed cabinet, the sites a soft blur behind its
+ * fluted glass doors. The doors are worked by the scroll itself: they swing
+ * open as the wardrobe rises to the middle of the screen, stand open while
+ * it is there, and swing shut as it leaves — and wherever the scrolling
+ * stops, they stop. A site under the pointer lights the strip it stands on. Clicking one lifts it off its
  * shelf and carries it, in one continuous move, to a close-up inside the
  * wardrobe — its name on one side, what it is and the way through to it on
  * the other — where its screen recording plays, or its screens turn over
@@ -33,11 +34,28 @@ import type { Project } from "@/content/site";
  * width, so scaling it is exact.
  */
 
-const ZOOM_MS = 700;
-const ZOOM_EASE = "cubic-bezier(0.2, 0.8, 0.2, 1)";
+/** The flight off the shelf: a lift, then the glide to the close-up. */
+const ZOOM_MS = 950;
+/** The way back is quicker — returning a thing is not an event. */
+const ZOOM_BACK_MS = 780;
+/** The lift: how much larger, and how far up, before it sets off. */
+const LIFT_SCALE = 1.06;
+const LIFT_RISE = 10;
 
 /** Below this interior width the shelves hold two sites, not three. */
-const THREE_FROM = 760;
+const THREE_FROM = 720;
+
+/**
+ * How far the wardrobe's centre is from the screen's, as a share of the
+ * distance at which it leaves the screen entirely: inside OPEN_WITHIN the
+ * doors stand fully open, beyond SHUT_FROM they are shut.
+ */
+const OPEN_WITHIN = 0.22;
+const SHUT_FROM = 0.82;
+
+/** How much of the remaining way the doors cover each frame — a little
+ *  weight, so they settle rather than stop dead when the scroll does. */
+const DOOR_FOLLOW = 0.24;
 
 const REDUCED_MOTION = "(prefers-reduced-motion: reduce)";
 
@@ -74,16 +92,12 @@ export default function SiteWall({ sites }: { sites: readonly Project[] }) {
   const wallRef = useRef<HTMLDivElement>(null);
   const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
   const buttonRefs = useRef<(HTMLButtonElement | null)[]>([]);
-  const [opened, setOpened] = useState(false);
-  // Latches: the sites are found on the shelves once, and stay there while
-  // the doors close over them and open on them again.
-  const [revealed, setRevealed] = useState(false);
+  // How open the doors are, 0 to 1. Kept off React state: it changes every
+  // frame of a scroll, and only the CSS needs it.
+  const openness = useRef(0);
   const [width, setWidth] = useState(0);
   const [zoom, setZoom] = useState<{ index: number; from: Box } | null>(null);
   const [closing, setClosing] = useState(false);
-  // The close-up can be taller than the shelves on a narrow screen; the
-  // wardrobe grows to hold it.
-  const [zoomHeight, setZoomHeight] = useState(0);
   // The shelf a closed close-up came from, to hand focus back to once the
   // shelves are live again — they are inert until the close-up has gone.
   const returnTo = useRef<number | null>(null);
@@ -93,26 +107,69 @@ export default function SiteWall({ sites }: { sites: readonly Project[] }) {
     getServerMotion,
   );
 
-  // Opens once enough of the wardrobe is in view for the opening to be
-  // watched rather than missed, and shuts only once it is nearly out of view
-  // — the gap between the two keeps it from flapping at the edge.
+  // The doors follow the scroll. Each scroll reads where the wardrobe sits
+  // and sets a target openness; a frame loop eases the doors towards it and
+  // stops as soon as they arrive, so nothing runs while the page is still.
+  // Everything that moves with the doors — the light, the shade, the blur
+  // behind the glass — reads the one `--open` variable this writes.
   useEffect(() => {
     const el = wardrobeRef.current;
     if (!el) return;
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.intersectionRatio >= 0.35) {
-          setOpened(true);
-          setRevealed(true);
-        } else if (entry.intersectionRatio < 0.15) {
-          setOpened(false);
-        }
-      },
-      { threshold: [0, 0.15, 0.35] },
-    );
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, []);
+    const write = (value: number) => {
+      openness.current = value;
+      el.style.setProperty("--open", value.toFixed(4));
+    };
+    if (reduced) {
+      write(1);
+      return;
+    }
+
+    let target = 0;
+    let frame = 0;
+    const measure = () => {
+      const r = el.getBoundingClientRect();
+      const half = innerHeight / 2;
+      const off = Math.abs(r.top + r.height / 2 - half) / (half + r.height / 2);
+      const t = Math.min(1, Math.max(0, (SHUT_FROM - off) / (SHUT_FROM - OPEN_WITHIN)));
+      // Eased at both ends: slow off the catch, slow into the stop.
+      target = t * t * (3 - 2 * t);
+    };
+    const tick = () => {
+      const now = openness.current;
+      const next =
+        Math.abs(target - now) < 0.0008 ? target : now + (target - now) * DOOR_FOLLOW;
+      write(next);
+      frame = next === target ? 0 : requestAnimationFrame(tick);
+    };
+    const onScroll = () => {
+      measure();
+      if (!frame) frame = requestAnimationFrame(tick);
+    };
+
+    // Arrive in the right state, without swinging into it on load.
+    measure();
+    write(target);
+    addEventListener("scroll", onScroll, { passive: true });
+    addEventListener("resize", onScroll);
+    return () => {
+      removeEventListener("scroll", onScroll);
+      removeEventListener("resize", onScroll);
+      cancelAnimationFrame(frame);
+    };
+  }, [reduced]);
+
+  // The doors open by scrolling, so a click on a shut door — or a keyboard
+  // reaching a site behind one — scrolls the wardrobe to the middle, which
+  // is what opens them.
+  const bringToMiddle = () => {
+    const el = wardrobeRef.current;
+    if (!el || openness.current > 0.95) return;
+    const r = el.getBoundingClientRect();
+    window.scrollBy({
+      top: r.top + r.height / 2 - innerHeight / 2,
+      behavior: reduced ? "auto" : "smooth",
+    });
+  };
 
   useEffect(() => {
     const el = wallRef.current;
@@ -136,10 +193,15 @@ export default function SiteWall({ sites }: { sites: readonly Project[] }) {
     if (!wall || !card || zoom) return;
     setClosing(false);
     setZoom({ index, from: boxIn(card, wall) });
-    // The close-up fills the wardrobe; bring the top of it into view.
-    const top = wall.getBoundingClientRect().top;
-    if (top < 72) {
-      window.scrollBy({ top: top - 96, behavior: reduced ? "auto" : "smooth" });
+    // The close-up fills the wardrobe: centre it, which also swings the
+    // doors fully open if they were part way.
+    const el = wardrobeRef.current;
+    if (el) {
+      const r = el.getBoundingClientRect();
+      const off = r.top + r.height / 2 - innerHeight / 2;
+      if (Math.abs(off) > 40) {
+        window.scrollBy({ top: off, behavior: reduced ? "auto" : "smooth" });
+      }
     }
   };
 
@@ -174,12 +236,10 @@ export default function SiteWall({ sites }: { sites: readonly Project[] }) {
     <div className="-mx-6 overflow-x-clip px-6 pt-16 md:-mx-12 md:px-12">
       <div
         ref={wardrobeRef}
-        className={`wardrobe mx-auto max-w-[1000px] ${opened ? "is-open" : ""} ${
-          revealed ? "is-revealed" : ""
-        }`}
+        className="wardrobe mx-auto max-w-[820px]"
       >
         <div className="wardrobe-crown">
-          <span className="wardrobe-plate">Web · {pad(sites.length)} sites</span>
+          <span className="wardrobe-plate">My websites — I built them</span>
         </div>
 
         <div
@@ -190,22 +250,22 @@ export default function SiteWall({ sites }: { sites: readonly Project[] }) {
         >
           <div
             ref={wallRef}
-            // A keyboard reaching a site behind closed doors opens them.
-            onFocus={() => {
-              setOpened(true);
-              setRevealed(true);
-            }}
+            onFocus={bringToMiddle}
             onKeyDown={(e) => {
               if (e.key === "Escape") close();
             }}
             className="wardrobe-interior site-wall relative overflow-hidden"
-            style={{ minHeight: zoom ? zoomHeight : undefined }}
           >
             <span aria-hidden className="interior-led" />
 
-            <div inert={zoom !== null} className="pt-4">
+            <div
+              inert={zoom !== null}
+              // While a site is out, the rest step back; they come forward
+              // again as it is carried home.
+              className={`wardrobe-shelves pt-4 ${zoom && !closing ? "is-zoomed" : ""}`}
+            >
               {rows.map((row, r) => (
-                <div key={r} className="pt-9">
+                <div key={r} className="pt-7">
                   <ul
                     aria-label={r === 0 ? "Websites" : undefined}
                     className="grid gap-x-[5%] px-[5%]"
@@ -216,8 +276,9 @@ export default function SiteWall({ sites }: { sites: readonly Project[] }) {
                       return (
                         <li
                           key={site.slug}
-                          className="shelf-spot relative flex flex-col items-center"
-                          style={{ "--i": i } as React.CSSProperties}
+                          className={`shelf-spot relative flex flex-col items-center ${
+                            zoom?.index === i ? "is-picked" : ""
+                          }`}
                         >
                           <button
                             ref={(el) => {
@@ -238,7 +299,7 @@ export default function SiteWall({ sites }: { sites: readonly Project[] }) {
                             >
                               <SiteCard
                                 site={site}
-                                sizes="(min-width: 768px) 280px, 42vw"
+                                sizes="(min-width: 768px) 230px, 42vw"
                               />
                             </div>
                           </button>
@@ -263,7 +324,7 @@ export default function SiteWall({ sites }: { sites: readonly Project[] }) {
                       );
                     })}
                   </ul>
-                  <div aria-hidden className="board mb-16" />
+                  <div aria-hidden className="board mb-14" />
                 </div>
               ))}
             </div>
@@ -284,7 +345,6 @@ export default function SiteWall({ sites }: { sites: readonly Project[] }) {
                 originOf={originOf}
                 onClose={close}
                 onClosed={closed}
-                onHeight={setZoomHeight}
               />
             )}
           </div>
@@ -293,16 +353,20 @@ export default function SiteWall({ sites }: { sites: readonly Project[] }) {
             <div
               key={side}
               aria-hidden
-              onClick={() => {
-                setOpened(true);
-                setRevealed(true);
-              }}
+              onClick={bringToMiddle}
               className={`wardrobe-door door-${side}`}
             >
               <span className="door-face door-front">
+                <span className="door-glass" />
                 <span className="door-handle" />
               </span>
-              <span className="door-face door-back" />
+              <span className="door-face door-back">
+                <span className="door-glass" />
+              </span>
+              {/* The door's own thickness, seen as it turns. */}
+              <span className="door-edge" />
+              <span className="door-hinge door-hinge-top" />
+              <span className="door-hinge door-hinge-bottom" />
             </div>
           ))}
         </div>
@@ -328,7 +392,6 @@ function CloseUp({
   originOf,
   onClose,
   onClosed,
-  onHeight,
 }: {
   site: Project;
   index: number;
@@ -340,27 +403,48 @@ function CloseUp({
   originOf: (index: number) => Box | null;
   onClose: () => void;
   onClosed: () => void;
-  onHeight: (height: number) => void;
 }) {
-  const contentRef = useRef<HTMLDivElement>(null);
   const cardRef = useRef<HTMLDivElement>(null);
   const backRef = useRef<HTMLButtonElement>(null);
 
-  // Off the shelf: start the card exactly over its place on the wall, then
-  // let it travel to where the close-up lays it out.
+  // Off the shelf: the card starts exactly over its place on the wall, lifts
+  // a little — larger, and up off the strip — then glides to where the
+  // close-up lays it out, slowing all the way in.
   useLayoutEffect(() => {
     const wall = wallRef.current;
     const card = cardRef.current;
+    let flight: Animation | undefined;
     if (wall && card && !reduced) {
       const to = boxIn(card, wall);
-      card.style.transition = "none";
+      const s = from.w / to.w;
+      const dx = from.x - to.x;
+      const dy = from.y - to.y;
+      const w = card.offsetWidth * s;
+      const h = card.offsetHeight * s;
+      // The lift grows the card about its own centre, not its corner.
+      const grow = (LIFT_SCALE - 1) / 2;
       card.style.transformOrigin = "0 0";
-      card.style.transform = `translate(${from.x - to.x}px, ${from.y - to.y}px) scale(${from.w / to.w})`;
-      void card.offsetWidth;
-      card.style.transition = `transform ${ZOOM_MS}ms ${ZOOM_EASE}`;
-      card.style.transform = "";
+      flight = card.animate(
+        [
+          {
+            transform: `translate(${dx}px, ${dy}px) scale(${s})`,
+            easing: "cubic-bezier(0.3, 0, 0.2, 1)",
+          },
+          {
+            transform: `translate(${dx - w * grow}px, ${dy - h * grow - LIFT_RISE}px) scale(${s * LIFT_SCALE})`,
+            offset: 0.22,
+            easing: "cubic-bezier(0.45, 0, 0.12, 1)",
+          },
+          { transform: "none" },
+        ],
+        { duration: ZOOM_MS },
+      );
     }
     backRef.current?.focus({ preventScroll: true });
+    // Cancelled on cleanup, so a second run of this effect (React runs it
+    // twice in development) measures the card where it really is, not where
+    // a flight still in progress has put it.
+    return () => flight?.cancel();
   }, [from, reduced, wallRef]);
 
   // And back onto it, measured again in case the page has reflowed since.
@@ -374,94 +458,96 @@ function CloseUp({
       return () => clearTimeout(id);
     }
     const to = boxIn(card, wall);
-    card.style.transition = `transform ${ZOOM_MS}ms ${ZOOM_EASE}`;
     card.style.transformOrigin = "0 0";
-    card.style.transform = `translate(${origin.x - to.x}px, ${origin.y - to.y}px) scale(${origin.w / to.w})`;
-    const id = setTimeout(onClosed, ZOOM_MS);
-    return () => clearTimeout(id);
+    const flight = card.animate(
+      [
+        { transform: "none" },
+        {
+          transform: `translate(${origin.x - to.x}px, ${origin.y - to.y}px) scale(${origin.w / to.w})`,
+        },
+      ],
+      {
+        duration: ZOOM_BACK_MS,
+        easing: "cubic-bezier(0.65, 0, 0.35, 1)",
+        fill: "forwards",
+      },
+    );
+    const id = setTimeout(onClosed, ZOOM_BACK_MS);
+    return () => {
+      clearTimeout(id);
+      flight.cancel();
+    };
   }, [closing, index, originOf, onClosed, reduced, wallRef]);
-
-  useEffect(() => {
-    const content = contentRef.current;
-    if (!content) return;
-    const observer = new ResizeObserver(() => onHeight(content.offsetHeight));
-    observer.observe(content);
-    return () => observer.disconnect();
-  }, [onHeight]);
 
   // The copy waits for the card to land on the way in, and must not wait on
   // the way out: an inline delay would hold its fade-out back too.
   const copyDelay = closing
     ? undefined
-    : { animationDelay: `${reduced ? 0 : ZOOM_MS - 250}ms` };
+    : { animationDelay: `${reduced ? 0 : ZOOM_MS - 200}ms` };
 
   return (
     <div
       role="region"
       aria-label={site.title}
       data-closing={closing || undefined}
-      className="absolute inset-0 z-10 flex items-center"
+      className="absolute inset-0 z-10 flex items-center overflow-y-auto"
     >
       <div aria-hidden className="wall-zoom-backdrop interior-bg absolute inset-0" />
 
-      <div
-        ref={contentRef}
-        className="relative grid w-full gap-8 px-5 pb-14 pt-10 md:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)] md:items-center md:gap-12 md:px-12 md:py-16"
-      >
-        <div className="relative">
+      <div className="closeup-grid relative w-full px-5 py-3 md:px-8 md:py-4">
+        {/* Above the name, on its left edge — where the apps keep theirs. */}
+        <BackButton
+          ref={backRef}
+          label="Back to all sites"
+          onClick={onClose}
+          style={copyDelay}
+          className="closeup-back wall-zoom-copy lift-in transition-colors"
+        />
+
+        <div className="closeup-card relative">
           <div ref={cardRef} className="relative will-change-transform">
-            <SiteCard site={site} sizes="(min-width: 768px) 34rem, 92vw" live />
+            <SiteCard site={site} sizes="(min-width: 768px) 26rem, 88vw" live />
           </div>
           <div aria-hidden className="wall-zoom-shelf shelf shelf-lit -mx-[4%]">
             <span className="shelf-spill" />
           </div>
         </div>
 
-        <div className="wall-zoom-copy lift-in" style={copyDelay}>
+        <div className="closeup-copy wall-zoom-copy lift-in" style={copyDelay}>
           <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-dim">
             {pad(index + 1)} / {pad(total)} · {site.category} · {site.year}
           </p>
-          <h3 className="mt-4 text-[clamp(2rem,3.2vw,3rem)] font-extrabold leading-[0.98] tracking-[-0.04em] text-balance text-ink">
+          <h3 className="mt-2 text-[clamp(1.5rem,2.2vw,2.1rem)] font-extrabold leading-[0.98] tracking-[-0.04em] text-balance text-ink">
             {site.title}
           </h3>
-          <p className="mt-3 font-mono text-[11px] tracking-[0.1em] text-dim">
+          <p className="mt-1.5 font-mono text-[11px] tracking-[0.1em] text-dim">
             {hostOf(site.href)}
           </p>
 
           {site.description && (
-            <p className="mt-6 text-[1.0625rem] leading-[1.7] text-dim">
+            <p className="mt-3 line-clamp-4 text-[0.9375rem] leading-[1.6] text-dim md:line-clamp-5">
               {site.description}
             </p>
           )}
 
-          <Badges tags={site.tags} brand={site.brand} className="mt-6" />
+          <Badges tags={site.tags} brand={site.brand} className="mt-4" />
 
-          <div className="mt-8 flex flex-wrap items-center gap-x-7 gap-y-4">
-            {site.href && (
-              <Link
-                href={site.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="group/link inline-flex items-center gap-2 rounded-full bg-accent px-5 py-2.5 text-sm font-semibold text-canvas shadow-[0_8px_24px_-6px_rgba(36,104,155,0.55)] transition-colors hover:bg-ink"
-              >
-                Visit site
-                <span
-                  aria-hidden
-                  className="transition-transform duration-200 group-hover/link:translate-x-1"
-                >
-                  →
-                </span>
-              </Link>
-            )}
-            <button
-              ref={backRef}
-              type="button"
-              onClick={onClose}
-              className="font-mono text-[11px] uppercase tracking-[0.14em] text-dim transition-colors hover:text-accent"
+          {site.href && (
+            <Link
+              href={site.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group/link mt-3.5 inline-flex items-center gap-2 rounded-full bg-accent px-4 py-2 md:mt-5 text-[13px] font-semibold text-canvas shadow-[0_8px_24px_-6px_rgba(36,104,155,0.55)] transition-colors hover:bg-ink"
             >
-              ← Back to the wall
-            </button>
-          </div>
+              Visit site
+              <span
+                aria-hidden
+                className="transition-transform duration-200 group-hover/link:translate-x-1"
+              >
+                →
+              </span>
+            </Link>
+          )}
         </div>
       </div>
     </div>

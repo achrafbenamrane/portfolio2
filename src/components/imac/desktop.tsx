@@ -361,22 +361,37 @@ function FolderIcon({
       ref={ref}
       type="button"
       className="folder"
+      aria-label={`${folder.label}, ${folder.count} ${folder.hint}`}
       onClick={(event) => onOpen(folder, event.currentTarget)}
     >
-      <span className="folder-tile">
-        <span className="folder-preview">
-          {Array.from({ length: 6 }).map((_, index) => (
-            <i key={index} />
-          ))}
+      <span className="folder-icon" aria-hidden>
+        <span className="folder-back" />
+        <span className="folder-sheet folder-sheet-c" />
+        <span className="folder-sheet folder-sheet-b" />
+        <span className="folder-sheet folder-sheet-a" />
+        <span
+          className="folder-front"
+          style={{ clipPath: `path("${FLAP_PATH}")` }}
+        >
+          <svg className="folder-rim" viewBox="0 0 112 76">
+            <path d={FLAP_PATH} />
+          </svg>
+          <span className="folder-tag">#{folder.hint}</span>
+          <span className="folder-num">
+            {String(folder.count).padStart(2, "0")}
+          </span>
         </span>
       </span>
       <span className="folder-label">{folder.label}</span>
-      <span className="folder-count">
-        {folder.count} {folder.hint}
-      </span>
     </button>
   );
 }
+
+/** The front flap's outline, in its own 112×76 px box: a raised tab on the
+ *  left that steps down to the lip on the right. Shared by the clip (which
+ *  frosts only inside the shape) and the rim stroke, so they cannot drift. */
+const FLAP_PATH =
+  "M0 7Q0 0 7 0H46C56 0 57 16 67 16H105Q112 16 112 23V69Q112 76 105 76H7Q0 76 0 69Z";
 
 function GithubGlyph() {
   return (

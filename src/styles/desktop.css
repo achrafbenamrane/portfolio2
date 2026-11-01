@@ -84,16 +84,16 @@
 
 .folder-grid {
   display: grid;
-  grid-template-columns: repeat(4, 116px);
-  gap: 14px;
-  padding: 26px 0 0 26px;
+  grid-template-columns: repeat(4, 132px);
+  gap: 12px;
+  padding: 22px 0 0 22px;
 }
 
 .folder {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 10px;
+  gap: 9px;
   padding: 10px 6px 12px;
   border: 0;
   border-radius: 16px;
@@ -116,36 +116,193 @@
   transform: scale(0.96);
 }
 
-.folder-tile {
-  display: grid;
-  place-items: center;
-  width: 66px;
-  height: 66px;
-  border-radius: 17px;
-  background: rgba(255, 255, 255, 0.22);
+/* A real folder, built in layers: a dark glass back, three sheets fanned out
+   of it, and a frosted front flap. Every size is a literal pixel in the
+   112×105 icon box — the flap's clip path is authored against these numbers. */
+.folder-icon {
+  position: relative;
+  display: block;
+  width: 112px;
+  height: 105px;
+}
+
+.folder-back {
+  position: absolute;
+  left: 4px;
+  top: 8px;
+  width: 104px;
+  height: 95px;
+  border-radius: 9px;
+  background: linear-gradient(180deg, #3a5878 0%, #1d3350 100%);
   border: 1px solid rgba(255, 255, 255, 0.28);
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.4),
-    0 10px 26px rgba(0, 0, 0, 0.32);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
+    inset 0 1px 0 rgba(255, 255, 255, 0.22),
+    0 12px 24px rgba(0, 0, 0, 0.4);
 }
 
-/* The mini previews inside a closed folder. */
-.folder-preview {
-  display: grid;
-  grid-template-columns: repeat(3, 13px);
-  grid-auto-rows: 13px;
-  gap: 4px;
-}
-
-.folder-preview i {
+.folder-sheet {
+  position: absolute;
   border-radius: 6px;
-  background: rgba(255, 255, 255, 0.55);
+  background: linear-gradient(180deg, #f4f7fb 0%, #d9e2ec 100%);
+  box-shadow:
+    inset 0 1px 0 #fff,
+    0 3px 8px rgba(4, 14, 28, 0.32);
+  transform-origin: 50% 100%;
+  transition: transform 320ms cubic-bezier(0.32, 0.72, 0, 1);
 }
 
-.folder-preview i:nth-child(2n) {
-  background: rgba(255, 255, 255, 0.34);
+/* The heading bar, then the body lines, as on a printed page. */
+.folder-sheet::before,
+.folder-sheet::after {
+  content: "";
+  position: absolute;
+  border-radius: 2px;
+}
+
+.folder-sheet::before {
+  height: 5px;
+  background: #a3b3c5;
+}
+
+.folder-sheet::after {
+  height: 20px;
+  background: repeating-linear-gradient(
+    180deg,
+    #bac6d4 0 2.5px,
+    transparent 2.5px 7px
+  );
+}
+
+.folder-sheet-a {
+  left: 12px;
+  top: 3px;
+  width: 60px;
+  height: 50px;
+  transform: rotate(-9deg);
+}
+
+.folder-sheet-a::before {
+  left: 9px;
+  top: 12px;
+  width: 38px;
+}
+
+.folder-sheet-a::after {
+  left: 24px;
+  right: 9px;
+  top: 23px;
+}
+
+.folder-sheet-b {
+  left: 50px;
+  top: 9px;
+  width: 42px;
+  height: 46px;
+  transform: rotate(4deg);
+}
+
+.folder-sheet-c {
+  left: 66px;
+  top: 16px;
+  width: 36px;
+  height: 40px;
+  transform: rotate(8deg);
+}
+
+.folder-sheet-b::before,
+.folder-sheet-c::before {
+  left: 18px;
+  right: 6px;
+  top: 10px;
+}
+
+.folder-sheet-b::after,
+.folder-sheet-c::after {
+  left: 18px;
+  right: 7px;
+  top: 21px;
+}
+
+/* Frosted glass: lighter where the sheets sit behind it, so it still reads as
+   glass if the backdrop blur is unavailable inside the CSS3D transform. */
+.folder-front {
+  position: absolute;
+  left: 0;
+  top: 29px;
+  width: 112px;
+  height: 76px;
+  background: linear-gradient(
+    180deg,
+    rgba(196, 215, 236, 0.66) 0%,
+    rgba(138, 165, 196, 0.56) 42%,
+    rgba(104, 133, 166, 0.6) 100%
+  );
+  /* Unprefixed LAST: the CSS pipeline folds the pair into whichever comes
+     second, and Chrome and Firefox ignore the -webkit- one. */
+  -webkit-backdrop-filter: blur(5px) saturate(140%);
+  backdrop-filter: blur(5px) saturate(140%);
+  transform-origin: 50% 100%;
+  transition: transform 320ms cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+/* Stroked at 2 px and clipped by the flap, so 1 px of rim shows inside. */
+.folder-rim {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.8);
+  stroke-width: 2;
+  -webkit-mask-image: linear-gradient(180deg, #000 0%, rgba(0, 0, 0, 0.3) 100%);
+  mask-image: linear-gradient(180deg, #000 0%, rgba(0, 0, 0, 0.3) 100%);
+}
+
+.folder-tag {
+  position: absolute;
+  left: 9px;
+  top: 18px;
+  font-size: 8.5px;
+  font-weight: 500;
+  line-height: 1;
+  color: rgba(255, 255, 255, 0.94);
+  text-shadow: 0 1px 2px rgba(10, 30, 55, 0.25);
+}
+
+.folder-num {
+  position: absolute;
+  left: 7px;
+  bottom: 4px;
+  font-family: var(--font-sans);
+  font-size: 46px;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.05em;
+  background: linear-gradient(180deg, #eef6fe 8%, #a9cdf0 45%, #4b8bd3 92%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Under the pointer the flap drops open towards you and the sheets lift. */
+.folder:hover .folder-front,
+.folder.aimed .folder-front {
+  transform: perspective(260px) rotateX(-16deg);
+}
+
+.folder:hover .folder-sheet-a,
+.folder.aimed .folder-sheet-a {
+  transform: translateY(-5px) rotate(-12deg);
+}
+
+.folder:hover .folder-sheet-b,
+.folder.aimed .folder-sheet-b {
+  transform: translateY(-6px) rotate(5deg);
+}
+
+.folder:hover .folder-sheet-c,
+.folder.aimed .folder-sheet-c {
+  transform: translateY(-4px) rotate(11deg);
 }
 
 .folder-label {
@@ -153,11 +310,6 @@
   font-size: 12px;
   font-weight: 600;
   letter-spacing: 0.1em;
-}
-
-.folder-count {
-  font-size: 11px;
-  color: rgba(255, 255, 255, 0.62);
 }
 
 /* The tray is a size interpolation from the folder's grid footprint, not a
@@ -601,7 +753,9 @@
   .desktop-wall,
   .icon-layer,
   .open-tray-panel,
-  .folder {
+  .folder,
+  .folder-sheet,
+  .folder-front {
     transition: none;
   }
 }

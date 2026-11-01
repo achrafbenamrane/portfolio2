@@ -201,6 +201,11 @@ export interface Project {
    */
   brand?: string;
   /**
+   * Where the app can be installed — its App Store and Google Play pages.
+   * Each one given gets its store's button under the app's write-up.
+   */
+  stores?: { appStore?: string; googlePlay?: string };
+  /**
    * Screen recording that plays inside the app's phone on /work —
    * e.g. "/apps/neemafood.mp4", produced by `npm run app:video`. Takes
    * precedence over the screenshot gallery: a recording shows the app being
@@ -287,6 +292,11 @@ export const projects: readonly Project[] = [
     tags: ["iOS", "Android", "Sports recruiting"],
     year: "—",
     href: "https://getdraft.net/",
+    // Both listed on getdraft.net, and both checked: they open GetDraft.
+    stores: {
+      appStore: "https://apps.apple.com/us/app/getdraft/id6802070784",
+      googlePlay: "https://play.google.com/store/apps/details?id=com.getdraft.app",
+    },
     icon: "/apps/getdraft.png",
     brand: "#0C0C0C",
     images: ["/apps/getdraft.png"],

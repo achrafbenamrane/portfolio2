@@ -11,7 +11,12 @@ import {
   useSyncExternalStore,
 } from "react";
 
+import BackButton from "@/components/back-button";
 import Badges from "@/components/badges";
+import StoreButtons, {
+  ACTION_BUTTON,
+  ACTION_ICON,
+} from "@/components/store-buttons";
 import type { Project } from "@/content/site";
 
 /**
@@ -23,7 +28,7 @@ import type { Project } from "@/content/site";
  * rises from below, the app launches on it (its screen recording if it has
  * one, its screenshots if not, its launch screen if it has neither yet), and
  * its name and write-up rise in on the left. From there the bubbles switch
- * apps, and "All apps" lets them spread out again.
+ * apps, and the back button above the name lets them spread out again.
  *
  * Every position is computed from the stage's measured width, so the same
  * choreography lays out beside the phone on a wide screen and around it on a
@@ -200,7 +205,6 @@ export default function PhoneShowcase({
   const close = useCallback(() => setIsOpen(false), []);
 
   const layout = width > 0 ? layoutFor(width, apps.length) : null;
-  const index = current ? apps.findIndex((a) => a.slug === current.slug) : -1;
 
   return (
     <div>
@@ -265,8 +269,6 @@ export default function PhoneShowcase({
                 <AppDetails
                   key={`${current.slug}-${opens}`}
                   app={current}
-                  index={index}
-                  total={apps.length}
                   onClose={close}
                 />
               </div>
@@ -322,8 +324,6 @@ export default function PhoneShowcase({
           <AppDetails
             key={`${current.slug}-${opens}`}
             app={current}
-            index={index}
-            total={apps.length}
             onClose={close}
           />
         </div>
@@ -413,43 +413,30 @@ function Bubble({
   );
 }
 
-/** The app's name and write-up, with where it sits in the set and the way
- *  back to all the bubbles. The name rises a word at a time out of its own
- *  line, then the rest lifts in under it. */
+/** The app's name and write-up, with the way back to all the bubbles
+ *  above them, on the same left edge. The name rises a word at a time out
+ *  of its own line, then the rest lifts in under it. */
 function AppDetails({
   app,
-  index,
-  total,
   onClose,
 }: {
   app: Project;
-  index: number;
-  total: number;
   onClose: () => void;
 }) {
   const words = app.title.split(" ");
   const start = PHONE_DELAY + 150;
   const after = start + words.length * 70 + 200;
-  const pad = (n: number) => n.toString().padStart(2, "0");
 
   return (
     <div>
-      <p
-        className="meta lift-in text-dim"
-        style={{ animationDelay: `${start}ms` }}
-      >
-        {pad(index + 1)} / {pad(total)} · {showing(app)}
-      </p>
+      <BackButton
+        label="Back to all apps"
+        onClick={onClose}
+        className="lift-in mb-8 transition-colors"
+        style={{ animationDelay: `${start - 100}ms` }}
+      />
 
-      <p
-        className="meta lift-in mt-2 text-accent"
-        style={{ animationDelay: `${start + 60}ms` }}
-      >
-        {app.category}
-        {app.year !== "—" && ` · ${app.year}`}
-      </p>
-
-      <h3 className="mt-4 text-[clamp(2.25rem,3.6vw,3.25rem)] font-extrabold leading-[0.98] tracking-[-0.04em] text-balance">
+      <h3 className="text-[clamp(2.25rem,3.6vw,3.25rem)] font-extrabold leading-[0.98] tracking-[-0.04em] text-balance">
         {words.map((word, i) => (
           <Fragment key={i}>
             <span className="inline-block overflow-hidden pb-[0.08em] align-bottom">
@@ -482,35 +469,53 @@ function AppDetails({
         style={{ animationDelay: `${after + 120}ms` }}
       />
 
-      <div
-        className="lift-in mt-8 flex items-center gap-8"
-        style={{ animationDelay: `${after + 240}ms` }}
-      >
-        {app.href && (
-          <Link
-            href={app.href}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="group/link inline-flex items-center gap-2 border-b border-line pb-0.5 text-sm font-medium transition-colors hover:border-accent hover:text-accent"
-          >
-            Visit
-            <span
-              aria-hidden
-              className="transition-transform duration-200 group-hover/link:translate-x-1"
-            >
-              →
-            </span>
-          </Link>
-        )}
-        <button
-          type="button"
-          onClick={onClose}
-          className="meta text-dim transition-colors hover:text-accent"
+      {/* The way through, in one row: the app's site, then the stores it
+          can be installed from. */}
+      {(app.href || app.stores) && (
+        <div
+          className="lift-in @container mt-8"
+          style={{ animationDelay: `${after + 240}ms` }}
         >
-          ← ALL APPS
-        </button>
-      </div>
+          <div className="flex flex-wrap items-center gap-2 @max-[28rem]:gap-1.5">
+          {app.href && (
+            <Link
+              href={app.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={`group/link ${ACTION_BUTTON} gap-2 pl-2.5 pr-4 text-sm font-semibold hover:text-accent @max-[28rem]:gap-1.5 @max-[28rem]:px-2 @max-[28rem]:text-[12.5px]`}
+            >
+              <GlobeIcon />
+              Visit site
+              <span
+                aria-hidden
+                className="transition-transform duration-200 group-hover/link:translate-x-1 @max-[28rem]:hidden"
+              >
+                →
+              </span>
+            </Link>
+          )}
+          <StoreButtons app={app.title} stores={app.stores} />
+          </div>
+        </div>
+      )}
     </div>
+  );
+}
+
+/** The site's mark in the row of ways through, in the glacier accent. */
+function GlobeIcon() {
+  return (
+    <svg
+      aria-hidden
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      className={`${ACTION_ICON} text-accent`}
+    >
+      <circle cx="12" cy="12" r="9.2" />
+      <path d="M2.8 12h18.4M12 2.8c2.6 2.6 3.9 5.7 3.9 9.2s-1.3 6.6-3.9 9.2c-2.6-2.6-3.9-5.7-3.9-9.2S9.4 5.4 12 2.8Z" />
+    </svg>
   );
 }
 
@@ -518,13 +523,6 @@ function AppDetails({
  *  `images`; it is not a screen and must not be shown as one. */
 const screensOf = (app: Project) =>
   app.images.filter((src) => src !== app.icon);
-
-function showing(app: Project) {
-  const shots = screensOf(app).length;
-  if (app.video) return "SCREEN RECORDING";
-  if (shots > 0) return `${shots} SCREEN${shots === 1 ? "" : "S"}`;
-  return "SCREENS COMING SOON";
-}
 
 function Phone({ app }: { app: Project | null }) {
   const shots = app ? screensOf(app) : [];

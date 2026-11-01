@@ -188,18 +188,31 @@ export interface Project {
   /** Leads the Work page in a device mockup. Keep this to a handful. */
   featured?: boolean;
   /**
-   * Square app icon, for the phone's home screen — e.g. "/apps/neemafood.png".
-   * Without one the home screen draws a tinted tile with the app's initials,
-   * so a missing logo looks deliberate rather than broken.
+   * Square app icon, for the app's launch screen and its name under the
+   * phone on /work — e.g. "/apps/neemafood.png". Without one they draw a
+   * tinted tile with the app's initials, so a missing logo looks deliberate
+   * rather than broken.
    */
   icon?: string;
   /**
-   * Screen recording that plays inside the phone when the app is opened —
+   * The app's brand colour, as six-digit hex — e.g. "#249CA8". Its badges
+   * are drawn in it. Sample it from the icon, or from the app's own screens
+   * when the icon is mostly black or white.
+   */
+  brand?: string;
+  /**
+   * Screen recording that plays inside the app's phone on /work —
    * e.g. "/apps/neemafood.mp4", produced by `npm run app:video`. Takes
    * precedence over the screenshot gallery: a recording shows the app being
    * used, which no set of stills can.
    */
   video?: string;
+  /**
+   * The recording had no status bar of its own and went through
+   * `npm run app:video -- --bare`, which leaves an empty strip of the app's
+   * colour at the top. The phone draws its own clock there.
+   */
+  videoBare?: boolean;
 }
 
 export const projects: readonly Project[] = [
@@ -214,6 +227,7 @@ export const projects: readonly Project[] = [
     year: "2026",
     href: "https://neemafood.vercel.app/",
     icon: "/apps/neemafood.png",
+    brand: "#0CB478",
     images: [
       "https://res.cloudinary.com/dwvgbojw0/image/upload/v1769250138/logo_fnhfo9.png",
       "https://res.cloudinary.com/dwvgbojw0/image/upload/v1769250156/Screenshot_20260124-111331_yaqa13.jpg",
@@ -228,9 +242,11 @@ export const projects: readonly Project[] = [
     ],
   },
   /*
-   * The rest of the phone. Icons are real; everything else below is a
-   * placeholder until the details arrive — title, description, year and
-   * stack are still to be confirmed, and each `video` lands once its screen
+   * The rest of the apps. Icons are real. Descriptions are taken from each
+   * app's own public page — La Casa da Pizza's from its fivex write-up,
+   * Getdraft's and Linky's from their sites — and say only what those say.
+   * Wave and M are still placeholders until their details arrive, and
+   * years are unconfirmed throughout. Each `video` lands once its screen
    * recording has been through `npm run app:video`. An empty description
    * keeps the entry out of the voice assistant's knowledge, so it cannot be
    * asked about an app nobody has described yet.
@@ -238,13 +254,18 @@ export const projects: readonly Project[] = [
   {
     slug: "la-casa",
     title: "La Casa da Pizza",
-    description: "",
+    description:
+      "An Android app for building a pizza on a dial and tracking the loyalty stamp it earns. Every order counts toward a free pizza, and delivery is booked on a clock-face dial down to the half hour.",
     category: "Mobile Development",
-    tags: [],
+    tags: ["Android", "Food delivery"],
     year: "—",
     href: "https://la-casa-da-pizza.vercel.app/",
     icon: "/apps/la-casa.png",
+    // The icon is mostly black; this is the red of the app's own header.
+    brand: "#D20612",
     images: ["/apps/la-casa.png"],
+    video: "/apps/la-casa.mp4",
+    videoBare: true,
   },
   {
     slug: "wave",
@@ -254,29 +275,33 @@ export const projects: readonly Project[] = [
     tags: [],
     year: "—",
     icon: "/apps/wave.png",
+    brand: "#249CA8",
     images: ["/apps/wave.png"],
   },
   {
     slug: "getdraft",
     title: "Getdraft",
     description:
-      "Get discovered. It's a Draft! Athletes, coaches and recruiters connect with a single Draft — when it's mutual, chat unlocks.",
+      "Get discovered. It's a Draft! A sports recruiting app where athletes, coaches and recruiters swipe to pass or Draft — when it's mutual, chat unlocks. A talent map, world rankings and a highlights feed put athletes in front of scouts, every adult is ID-verified, and under-18s go live only once a parent approves.",
     category: "Mobile Development",
-    tags: [],
+    tags: ["iOS", "Android", "Sports recruiting"],
     year: "—",
     href: "https://getdraft.net/",
     icon: "/apps/getdraft.png",
+    brand: "#0C0C0C",
     images: ["/apps/getdraft.png"],
   },
   {
     slug: "linky",
     title: "Linky",
-    description: "",
+    description:
+      "A marketplace and real-estate app for Guinea, built in Conakry. Buy from verified local sellers or browse homes in a swipeable feed, pay with Orange Money, MTN Mobile Money or card, and every payment is held in escrow until the buyer confirms delivery. Guineans abroad can pay in euros and book video visits of a home.",
     category: "Mobile Development",
-    tags: [],
+    tags: ["Android", "Marketplace", "Real estate"],
     year: "—",
     href: "https://linkygroup.com/",
     icon: "/apps/linky.png",
+    brand: "#006C54",
     images: ["/apps/linky.png"],
   },
   {
@@ -287,6 +312,7 @@ export const projects: readonly Project[] = [
     tags: [],
     year: "—",
     icon: "/apps/m.png",
+    brand: "#C00C24",
     images: ["/apps/m.png"],
   },
   {
@@ -299,6 +325,7 @@ export const projects: readonly Project[] = [
     tags: ["Full-Stack", "Healthcare", "Innovation"],
     year: "2024",
     href: "https://smiley.vercel.app",
+    brand: "#28C8AA",
     images: [
       "/projects/smiley/1.webp",
       "/projects/smiley/2.webp",
@@ -317,6 +344,7 @@ export const projects: readonly Project[] = [
     tags: ["Python", "Security", "Network", "Desktop App"],
     year: "2025",
     href: "https://desktop-ids.vercel.app/",
+    brand: "#1E6EDC",
     images: [
       "/projects/ids/1.webp",
       "/projects/ids/2.webp",
@@ -333,6 +361,7 @@ export const projects: readonly Project[] = [
     tags: ["E-commerce", "Next.js", "Stripe"],
     year: "2025",
     href: "https://oneframe.me",
+    brand: "#0088B8",
     images: ["/projects/ONEFRAME.webp"],
   },
   {
@@ -345,6 +374,7 @@ export const projects: readonly Project[] = [
     tags: ["Next.js", "TypeScript", "Interactive", "Digital Publishing"],
     year: "2025",
     href: "https://manliness-smart-book.vercel.app",
+    brand: "#D2AA82",
     images: [
       "/projects/ebook/1.webp",
       "/projects/ebook/2.webp",
@@ -361,6 +391,7 @@ export const projects: readonly Project[] = [
     tags: ["Web App", "Telegram Bot", "Automation", "Issue Tracking"],
     year: "2025",
     href: "https://student-reclamation-portal.vercel.app/",
+    brand: "#4A46DC",
     images: ["/projects/student/1.webp"],
   },
   {
@@ -372,6 +403,7 @@ export const projects: readonly Project[] = [
     tags: ["React", "Education", "Grade Calculator"],
     year: "2024",
     href: "https://rsi-calculator-m2.vercel.app/",
+    brand: "#5A60F2",
     images: ["/projects/calculator/calculator.png"],
   },
   {

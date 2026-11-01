@@ -3,9 +3,10 @@
 import Link from "next/link";
 import { useState } from "react";
 
-import LaptopShowcase from "@/components/showcase/laptop-showcase";
+import Badges from "@/components/badges";
 import PhoneShowcase from "@/components/showcase/phone-showcase";
 import PlateCarousel from "@/components/showcase/plate-carousel";
+import SiteWall from "@/components/showcase/site-wall";
 import { projects, type Project } from "@/content/site";
 
 /**
@@ -20,9 +21,10 @@ import { projects, type Project } from "@/content/site";
  *
  * Every band has the same anatomy: its title centred over everything, then
  * the showcase on the right with a panel on the left that describes
- * whatever is currently chosen in it — the open tab, the launched app, the
- * clicked plate. The description belongs beside the thing, not under it,
- * so it can be read while the thing is looked at.
+ * whatever is currently chosen in it — the clicked plate. The description
+ * belongs beside the thing, not under it, so it can be read while the thing
+ * is looked at. The apps and the websites are the exception: their stage and
+ * their wall lay out their own write-ups, so those bands are only a shell.
  */
 
 const APPS = projects.filter((p) => p.category === "Mobile Development");
@@ -51,28 +53,29 @@ export default function WorkGallery() {
   return (
     <div className="pb-24">
       {APPS.length > 0 && (
-        <Band
+        <BandShell
           label="APPS"
           title="Built for the phone"
-          blurb="Tap an icon to open the app and watch it run."
+          blurb="Pick an app and it opens on the phone — its real screens, running."
           count={APPS.length}
-          initial={null}
-          hint="Open an app on the phone and what it does is described here."
         >
-          {(select) => <PhoneShowcase apps={APPS} onSelect={select} />}
-        </Band>
+          <div className="pt-10 md:pt-14">
+            <PhoneShowcase apps={APPS} />
+          </div>
+        </BandShell>
       )}
 
       {SITES.length > 0 && (
-        <Band
+        <BandShell
           label="WEB"
           title="Built for the browser"
-          blurb="Pick a tab to load the site. Visit opens the real thing."
+          blurb="Every site on its own shelf. Hover one to light it up, click it to step closer."
           count={SITES.length}
-          initial={SITES[0]}
         >
-          {(select) => <LaptopShowcase sites={SITES} onSelect={select} />}
-        </Band>
+          <div className="pt-10 md:pt-14">
+            <SiteWall sites={SITES} />
+          </div>
+        </BandShell>
       )}
 
       {AUTOMATIONS.length > 0 && (
@@ -122,7 +125,6 @@ function Band({
   blurb,
   count,
   initial,
-  hint,
   children,
 }: {
   label: string;
@@ -131,8 +133,6 @@ function Band({
   count: number;
   /** What the panel describes before anything is chosen. */
   initial: Project | null;
-  /** What the panel says when nothing is chosen. */
-  hint?: string;
   children: (
     select: (project: Project | null) => void,
     selected: Project | null,
@@ -140,6 +140,36 @@ function Band({
 }) {
   const [selected, setSelected] = useState<Project | null>(initial);
 
+  return (
+    <BandShell label={label} title={title} blurb={blurb} count={count}>
+      {/* On a phone the showcase comes first and the panel under it, so a
+          tap on the device puts its description just below the thumb. */}
+      <div className="grid gap-10 pt-12 md:grid-cols-[minmax(0,20rem)_1fr] md:gap-16 md:pt-16">
+        <div className="order-2 md:order-1">
+          <Details project={selected} />
+        </div>
+        <div className="order-1 min-w-0 md:order-2">
+          {children(setSelected, selected)}
+        </div>
+      </div>
+    </BandShell>
+  );
+}
+
+/** A band's frame: its rule, label and count, and its title centred. */
+function BandShell({
+  label,
+  title,
+  blurb,
+  count,
+  children,
+}: {
+  label: string;
+  title: string;
+  blurb?: string;
+  count: number;
+  children: React.ReactNode;
+}) {
   return (
     <section className="border-b border-line px-6 py-16 last:border-0 md:px-12 md:py-24">
       <div className="mx-auto max-w-350">
@@ -161,16 +191,7 @@ function Band({
           )}
         </div>
 
-        {/* On a phone the showcase comes first and the panel under it, so a
-            tap on the device puts its description just below the thumb. */}
-        <div className="grid gap-10 pt-12 md:grid-cols-[minmax(0,20rem)_1fr] md:gap-16 md:pt-16">
-          <div className="order-2 md:order-1">
-            <Details project={selected} hint={hint} />
-          </div>
-          <div className="order-1 min-w-0 md:order-2">
-            {children(setSelected, selected)}
-          </div>
-        </div>
+        {children}
       </div>
     </section>
   );
@@ -182,17 +203,11 @@ function Band({
  * beside the words, rather than on the thumbnail — a click on the thumbnail
  * chooses; this is where you go through.
  */
-function Details({
-  project,
-  hint,
-}: {
-  project: Project | null;
-  hint?: string;
-}) {
+function Details({ project }: { project: Project | null }) {
   if (!project) {
     return (
       <p className="max-w-prose text-balance leading-relaxed text-dim md:sticky md:top-28">
-        {hint ?? "Choose something to read about it."}
+        Choose something to read about it.
       </p>
     );
   }
@@ -211,18 +226,7 @@ function Details({
         </p>
       )}
 
-      {project.tags.length > 0 && (
-        <ul className="mt-5 flex flex-wrap gap-1.5">
-          {project.tags.map((tag) => (
-            <li
-              key={tag}
-              className="meta rounded-full border border-line px-2 py-1 text-dim"
-            >
-              {tag}
-            </li>
-          ))}
-        </ul>
-      )}
+      <Badges tags={project.tags} brand={project.brand} className="mt-5" />
 
       {project.href && (
         <Link

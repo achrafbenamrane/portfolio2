@@ -97,9 +97,16 @@ function shelfLayout(width: number, count: number) {
  * How far the wardrobe's centre is from the screen's, as a share of the
  * distance at which it leaves the screen entirely: inside OPEN_WITHIN the
  * doors stand fully open, beyond SHUT_FROM they are shut.
+ *
+ * On a screen shorter than the wardrobe — a phone held sideways — its
+ * centre is never near the screen's while any one shelf is being looked
+ * at, so there the doors also stand open for as long as the wardrobe fills
+ * the screen below the fixed nav, plus FILL_MARGIN of the screen's height
+ * either side.
  */
 const OPEN_WITHIN = 0.22;
 const SHUT_FROM = 0.82;
+const FILL_MARGIN = 0.15;
 
 /** How much of the remaining way the doors cover each frame — a little
  *  weight, so they settle rather than stop dead when the scroll does. */
@@ -131,6 +138,16 @@ function hostOf(href?: string) {
   } catch {
     return "";
   }
+}
+
+/** A domain that may wrap after its dots: on the narrowest shelf one with
+ *  no hyphen in it — boutiqueamine.com — has nowhere else to break, and
+ *  ran past the wardrobe's side. */
+function wrappableHost(href?: string) {
+  const parts = hostOf(href).split(".");
+  return parts.flatMap((part, i) =>
+    i < parts.length - 1 ? [`${part}.`, <wbr key={i} />] : [part],
+  );
 }
 
 const pad = (n: number) => n.toString().padStart(2, "0");
@@ -177,8 +194,17 @@ export default function SiteWall({ sites }: { sites: readonly Project[] }) {
     const measure = () => {
       const r = el.getBoundingClientRect();
       const half = innerHeight / 2;
-      const off = Math.abs(r.top + r.height / 2 - half) / (half + r.height / 2);
-      const t = Math.min(1, Math.max(0, (SHUT_FROM - off) / (SHUT_FROM - OPEN_WITHIN)));
+      const span = half + r.height / 2;
+      const off = Math.abs(r.top + r.height / 2 - half);
+      // The site nav is fixed over the top of the screen; a shelf just
+      // under it is in full view.
+      const nav = document.querySelector("body > header")?.getBoundingClientRect().bottom ?? 0;
+      const openR = Math.max(
+        OPEN_WITHIN * span,
+        (r.height - innerHeight) / 2 + nav + FILL_MARGIN * innerHeight,
+      );
+      const shutR = Math.max(SHUT_FROM * span, openR + 1);
+      const t = Math.min(1, Math.max(0, (shutR - off) / (shutR - openR)));
       // Eased at both ends: slow off the catch, slow into the stop.
       target = t * t * (3 - 2 * t);
     };
@@ -288,7 +314,10 @@ export default function SiteWall({ sites }: { sites: readonly Project[] }) {
         className="wardrobe mx-auto max-w-[820px]"
       >
         <div className="wardrobe-crown">
-          <span className="wardrobe-plate">My websites — I built them</span>
+          <span className="wardrobe-plate">
+            My websites <span className="wardrobe-plate-dash">—</span>{" "}
+            <span className="accent-sheen">I built them</span>
+          </span>
         </div>
 
         <div
@@ -372,7 +401,7 @@ export default function SiteWall({ sites }: { sites: readonly Project[] }) {
                               {site.title}
                             </p>
                             <p className="mt-1 font-mono text-[9px] tracking-[0.1em] text-dim">
-                              {hostOf(site.href)}
+                              {wrappableHost(site.href)}
                             </p>
                           </div>
                         </li>
@@ -606,12 +635,19 @@ function CloseUp({
             </p>
 
             {site.description && (
-              <p className="mt-3 line-clamp-5 text-[0.9375rem] leading-[1.6] text-dim md:line-clamp-7">
+              <p className="mt-3 line-clamp-5 text-[0.9375rem] leading-[1.6] text-dim max-[339px]:line-clamp-4 md:line-clamp-7">
                 {site.description}
               </p>
             )}
 
-            <Badges tags={site.tags} brand={site.brand} className="mt-4" />
+            {/* Under 300px — a folded phone — the tags stack a pill a line
+                and push the close-up out of its wardrobe; the write-up
+                matters more, so the tags give way. */}
+            <Badges
+              tags={site.tags}
+              brand={site.brand}
+              className="mt-4 max-[299px]:hidden"
+            />
           </div>
         </div>
       </div>

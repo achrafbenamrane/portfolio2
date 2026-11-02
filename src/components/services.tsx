@@ -27,7 +27,9 @@ export default function Services() {
       aria-label="Services"
     >
       <div className="mx-auto max-w-350">
-        <div className="grid gap-8 border-b border-line pb-10 md:grid-cols-[minmax(0,1fr)_minmax(0,26rem)] md:items-end md:gap-16">
+        {/* Side by side from lg: below it the paragraph's 26rem left the
+            heading a 192px column on a tablet, four lines for eight words. */}
+        <div className="grid gap-8 border-b border-line pb-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,26rem)] lg:items-end lg:gap-16">
           <div>
             <p className="meta text-dim">{servicesIntro.label}</p>
             <h2 className="mt-5 text-[clamp(1.9rem,4vw,3rem)] font-bold leading-[1.05] tracking-tight">

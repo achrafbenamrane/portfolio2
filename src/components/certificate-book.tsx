@@ -365,8 +365,13 @@ export default function CertificateBook({
         </div>
       </div>
 
-      <div className="mt-2 flex items-center justify-between gap-6 px-4 sm:px-8">
-        <p className="meta text-dim" data-book-status>
+      <div className="mt-2 flex items-center justify-between gap-3 px-4 sm:gap-6 sm:px-8">
+        {/* The page count never breaks — "PAGE 01 /" over "12" read as two
+            things on a 280px screen; the longer status lines may wrap. */}
+        <p
+          className={`meta text-dim ${closedFront || closedBack ? "" : "whitespace-nowrap"}`}
+          data-book-status
+        >
           {closedFront
             ? "TAP THE COVER, OR DRAG IT, TO OPEN"
             : closedBack

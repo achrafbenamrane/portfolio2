@@ -33,7 +33,9 @@ export default function Testimonials() {
   return (
     <section className="px-6 pb-24 md:px-12" aria-label="Testimonials">
       <div className="mx-auto max-w-350 rounded-2xl bg-canvas px-7 py-10 text-ink md:px-12 md:py-14">
-        <div className="grid gap-10 md:grid-cols-[minmax(0,22rem)_1fr] md:gap-16">
+        {/* Side by side from lg: on a tablet the heading's 22rem left the
+            quote a 160px column. */}
+        <div className="grid gap-10 lg:grid-cols-[minmax(0,22rem)_1fr] lg:gap-16">
           <div>
             <p className="meta text-dim">TESTIMONIALS</p>
             <h2 className="mt-5 text-[clamp(1.75rem,3.4vw,2.75rem)] font-bold leading-[1.05] tracking-tight">
@@ -42,14 +44,19 @@ export default function Testimonials() {
               clients say
             </h2>
 
+            {/* The count sits with the arrows it answers to — beside the
+                author it squeezed the name to a word a line on a phone. */}
             {total > 1 && (
-              <div className="mt-8 flex gap-3">
+              <div className="mt-8 flex items-center gap-3">
                 <ArrowButton label="Previous testimonial" onClick={() => go(-1)}>
                   ←
                 </ArrowButton>
                 <ArrowButton label="Next testimonial" onClick={() => go(1)}>
                   →
                 </ArrowButton>
+                <span className="meta ml-2 text-dim tabular-nums">
+                  {String(index + 1).padStart(2, "0")} / {String(total).padStart(2, "0")}
+                </span>
               </div>
             )}
           </div>
@@ -71,34 +78,26 @@ export default function Testimonials() {
                 &ldquo;{current.quote}&rdquo;
               </p>
 
-              <footer className="mt-8 flex items-center justify-between gap-6">
-                <div className="flex items-center gap-3.5">
-                  {current.avatar ? (
-                    <Image
-                      src={current.avatar}
-                      alt=""
-                      width={44}
-                      height={44}
-                      className="size-11 rounded-full object-cover"
-                    />
-                  ) : (
-                    <span className="meta grid size-11 place-items-center rounded-full bg-surface-2 text-dim">
-                      {initials(current.name)}
-                    </span>
-                  )}
-                  <div>
-                    <p className="font-medium leading-tight">{current.name}</p>
-                    <p className="text-sm leading-tight text-dim">
-                      {current.role}
-                    </p>
-                  </div>
-                </div>
-
-                {total > 1 && (
-                  <span className="meta shrink-0 text-dim tabular-nums">
-                    {String(index + 1).padStart(2, "0")} / {String(total).padStart(2, "0")}
+              <footer className="mt-8 flex items-center gap-3.5">
+                {current.avatar ? (
+                  <Image
+                    src={current.avatar}
+                    alt=""
+                    width={44}
+                    height={44}
+                    className="size-11 shrink-0 rounded-full object-cover"
+                  />
+                ) : (
+                  <span className="meta grid size-11 shrink-0 place-items-center rounded-full bg-surface-2 text-dim">
+                    {initials(current.name)}
                   </span>
                 )}
+                <div className="min-w-0">
+                  <p className="font-medium leading-tight">{current.name}</p>
+                  <p className="text-sm leading-tight text-dim">
+                    {current.role}
+                  </p>
+                </div>
               </footer>
             </blockquote>
           </div>

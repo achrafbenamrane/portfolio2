@@ -22,7 +22,11 @@ export default function Hero() {
   return (
     <>
       <section
-        className="relative flex min-h-dvh flex-col justify-center gap-5 overflow-hidden px-6 pb-10 pt-32 md:px-12 lg:gap-0 lg:pb-0 lg:pt-32"
+        /* From lg the copy's left edge follows the site's column — the
+           1400px one the nav and every section sit in — so on a 1920 or
+           2560 screen it lines up under the wordmark instead of hugging the
+           window's edge. The portrait is out of flow and stays full-bleed. */
+        className="relative flex min-h-dvh flex-col justify-center gap-5 overflow-hidden px-6 pb-10 pt-32 md:px-12 lg:gap-0 lg:pb-0 lg:pl-[max(3rem,calc((100%_-_87.5rem)/2_+_3rem))] lg:pt-32"
         style={{
           /* The nav's blue, continued. The bar sits directly above this, so
              anything else would put a seam across the top of the page. The

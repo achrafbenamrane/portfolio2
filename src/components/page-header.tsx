@@ -36,7 +36,9 @@ export default function PageHeader({
     >
       <div className="mx-auto max-w-350">
         <p className="meta text-white">{index}</p>
-        <h1 className="mt-4 text-[clamp(2.25rem,7vw,5rem)] font-semibold uppercase leading-[0.9] tracking-[-0.04em] text-white">
+        {/* The floor gives way below a 320px screen, where "CERTIFICATIONS"
+            at 36px is wider than the column: one long word cannot wrap. */}
+        <h1 className="mt-4 text-[length:clamp(min(2.25rem,calc((100vw_-_3rem)/7)),7vw,5rem)] font-semibold uppercase leading-[0.9] tracking-[-0.04em] text-white">
           {title}
         </h1>
         <p className="mt-5 max-w-md text-balance text-white">{description}</p>

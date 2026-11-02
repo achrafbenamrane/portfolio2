@@ -25,7 +25,9 @@ export default function CtaBanner() {
             "linear-gradient(135deg, #0E2438 0%, #133A5E 55%, #0B1C2C 100%)",
         }}
       >
-        <div className="relative grid gap-10 md:grid-cols-[1fr_auto] md:items-end md:gap-16">
+        {/* Side by side from lg: on a tablet the right column's 20rem left
+            the headline a 176px column, four lines for seven words. */}
+        <div className="relative grid gap-10 lg:grid-cols-[1fr_auto] lg:items-end lg:gap-16">
           <div>
             <p className="meta text-white/55">LET&rsquo;S CREATE TOGETHER</p>
             <h2 className="mt-5 max-w-xl text-balance text-[clamp(1.9rem,4.4vw,3.4rem)] font-bold leading-[1.03] tracking-tight text-white">
@@ -33,7 +35,7 @@ export default function CtaBanner() {
             </h2>
           </div>
 
-          <div className="md:max-w-xs md:text-right">
+          <div className="lg:max-w-xs lg:text-right">
             <p className="text-balance leading-relaxed text-white/70">
               Tell me what you are building. I work across development, design
               and security, so the whole thing can come from one place.

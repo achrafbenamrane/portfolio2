@@ -62,18 +62,53 @@ const PACKED = { top: 14, bottom: 30 };
 const CARD_FILL = 0.92;
 const CARD_RATIO = 11 / 16;
 
+/**
+ * The cabinet's height with HOLDS sites at full size, as a line in the
+ * interior's width: `fixed` px, plus `perWidth` px for every px of width.
+ * It is linear because every part of it is either a fixed gap or a card
+ * whose height follows its width — which is what lets CSS draw it before
+ * anything has been measured.
+ */
+function cabinet(cols: number) {
+  const rows = Math.ceil(HOLDS / cols);
+  // A card's width per px of interior: the 90% inside the grid's side
+  // padding, less the gaps between columns, shared out, CARD_FILL of each.
+  const card = ((0.9 * (1 - 0.05 * (cols - 1))) / cols) * CARD_FILL;
+  return {
+    fixed: SHELVES_TOP + rows * (ROW.top + ROW.strip + ROW.board + ROW.bottom),
+    perWidth: rows * card * CARD_RATIO,
+  };
+}
+
+/** The same height in CSS, for the interior's own width (`cqw`). */
+function cabinetCss(cols: number) {
+  const { fixed, perWidth } = cabinet(cols);
+  return `calc(${fixed}px + ${+(perWidth * 100).toFixed(4)}cqw)`;
+}
+
+/**
+ * The shelves' height before the interior has been measured — on the
+ * server, and for the first frames in the browser. The stylesheet picks one
+ * by the interior's width, as shelfLayout does. Without it the shelves stood
+ * at whatever three columns of cards come to and then, on a phone, grew to
+ * the height of two, pushing everything below down the page after a link
+ * to it had already scrolled there.
+ */
+const CABINET_CSS = {
+  "--cabinet-two": cabinetCss(2),
+  "--cabinet-three": cabinetCss(3),
+} as React.CSSProperties;
+
 function shelfLayout(width: number, count: number) {
   // The grid's side padding is 5% of the interior's width; its gaps are 5%
   // of what is left inside that padding.
   const inner = width * 0.9;
   const colWidth = (cols: number) => (inner - (cols - 1) * inner * 0.05) / cols;
-  const rowHeight = (cardW: number, gaps: { top: number; bottom: number }) =>
-    gaps.top + cardW * CARD_RATIO + ROW.strip + ROW.board + gaps.bottom;
 
   const fullCols = width >= THREE_FROM ? 3 : 2;
   const fullCard = colWidth(fullCols) * CARD_FILL;
-  const height =
-    SHELVES_TOP + Math.ceil(HOLDS / fullCols) * rowHeight(fullCard, ROW);
+  const { fixed, perWidth } = cabinet(fullCols);
+  const height = fixed + perWidth * width;
 
   if (count <= HOLDS) {
     return { cols: fullCols, card: fullCard, gaps: ROW, height };
@@ -341,7 +376,7 @@ export default function SiteWall({ sites }: { sites: readonly Project[] }) {
               // While a site is out, the rest step back; they come forward
               // again as it is carried home.
               className={`wardrobe-shelves pt-4 ${zoom && !closing ? "is-zoomed" : ""}`}
-              style={{ height: layout?.height }}
+              style={{ ...CABINET_CSS, height: layout?.height }}
             >
               {rows.map((row, r) => (
                 <div key={r} style={{ paddingTop: layout?.gaps.top ?? ROW.top }}>

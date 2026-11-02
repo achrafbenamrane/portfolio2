@@ -2,28 +2,18 @@ import Link from "next/link";
 
 import CtaBanner from "@/components/cta-banner";
 import Hero from "@/components/hero/hero";
-import { HeroSignalProvider } from "@/components/hero/hero-signal-context";
-import ImacSection from "@/components/imac/imac-section";
 import Services from "@/components/services";
 import Testimonials from "@/components/testimonials";
 import { SECTIONS } from "@/content/nav";
 
 export default function Home() {
   return (
-    /* One provider for both sections: the hero's morph and the iMac's finger
-       cursor read the same sensor, so the page opens one camera stream and
-       downloads the hand model once. */
-    <HeroSignalProvider>
+    <>
       <Hero />
 
-      {/* Before the desktop: it says what the work is, so the machine that
-          follows reads as a demonstration rather than a novelty. */}
       <Services />
 
-      <ImacSection />
-
-      {/* The 3D desktop needs a camera and a pointer. This is the plain-text
-          route to the same four pages, and the only one on a phone. */}
+      {/* The plain-text route to the four pages. */}
       <nav aria-label="Sections" className="px-6 pb-24 md:px-12">
         <ul className="mx-auto max-w-350 border-t border-line">
           {SECTIONS.map((section, index) => (
@@ -56,6 +46,6 @@ export default function Home() {
       <Testimonials />
 
       <CtaBanner />
-    </HeroSignalProvider>
+    </>
   );
 }

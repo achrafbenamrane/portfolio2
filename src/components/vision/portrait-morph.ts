@@ -229,7 +229,7 @@ export function createMorphMaterial(): THREE.ShaderMaterial {
   });
 }
 
-export interface HeroTextures {
+export interface PortraitTextures {
   portrait: THREE.Texture;
   origami: THREE.Texture;
 }
@@ -243,8 +243,8 @@ export interface HeroTextures {
  * purpose: with both omitted the photographs render exactly as authored.
  * Enabling one without the other is the usual cause of a washed-out result.
  */
-export function loadHeroTextures(
-  onLoad: (textures: HeroTextures) => void,
+export function loadPortraitTextures(
+  onLoad: (textures: PortraitTextures) => void,
 ): void {
   const loader = new THREE.TextureLoader();
 

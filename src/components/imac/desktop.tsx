@@ -16,7 +16,7 @@ import {
   site,
 } from "@/content/site";
 import type { VoiceAction } from "@/content/voice";
-import type { HeroSignal } from "@/lib/vision/hero-signal";
+import type { VisionSignal } from "@/lib/vision/signal";
 import { ContactApp, QuranApp, SettingsApp } from "./apps";
 import {
   DesktopPointerProvider,
@@ -26,6 +26,7 @@ import {
 import Dock, { type DockApp } from "./dock";
 import FolderWindow, { type FolderSpec } from "./folder-windows";
 import SiriApp from "./siri-app";
+import VisionApp from "./vision-app";
 import { DESKTOP_CSS } from "./geometry";
 
 const getServerVersion = () => 0;
@@ -66,7 +67,7 @@ const FOLDERS: readonly FolderSpec[] = [
   },
 ];
 
-type AppId = "quran" | "settings" | "phone" | "siri" | null;
+type AppId = "vision" | "quran" | "settings" | "phone" | "siri" | null;
 
 interface Opening {
   folder: FolderSpec;
@@ -78,7 +79,7 @@ export default function Desktop({
   onNavigate,
   reducedMotion,
 }: {
-  signal: HeroSignal;
+  signal: VisionSignal;
   onNavigate: (href: string) => void;
   reducedMotion: boolean;
 }) {
@@ -92,11 +93,14 @@ export default function Desktop({
   const [opening, setOpening] = useState<Opening | null>(null);
   const [openPhase, setOpenPhase] = useState(false);
   const [opened, setOpened] = useState<FolderSpec | null>(null);
-  const [app, setApp] = useState<AppId>(null);
+  // The machine boots into the Vision app: this desktop is the computer-
+  // vision project's showcase, and the live portrait is what it is for.
+  // Closing the window shows the rest of the desktop around it.
+  const [app, setApp] = useState<AppId>("vision");
   // Off until asked for. The camera is often already running because the
-  // visitor enabled it up in the hero, and inheriting that would hand them a
-  // finger cursor on a screen they have only just scrolled to — control they
-  // never asked for over a machine they are still working out.
+  // visitor turned it on in the Vision app to fold the portrait, and
+  // inheriting that would hand them a finger cursor they never asked for —
+  // closing the hand to fold would start pinching things.
   const [handControl, setHandControl] = useState(false);
   const [clock, setClock] = useState("");
 
@@ -165,13 +169,17 @@ export default function Desktop({
   }, []);
 
   const enableCamera = useCallback(() => {
-    const video = document.querySelector<HTMLVideoElement>(
-      "[data-hero-video]",
-    );
-    if (video) void signal.enableCamera(video);
+    void signal.enableCamera();
   }, [signal]);
 
   const dockApps: readonly DockApp[] = [
+    {
+      id: "vision",
+      label: "Vision",
+      tint: "linear-gradient(160deg,#3D8FD1,#0E2438)",
+      icon: <VisionGlyph />,
+      onOpen: () => setApp("vision"),
+    },
     {
       id: "github",
       label: "GitHub",
@@ -308,6 +316,17 @@ export default function Desktop({
 
         {app && (
           <div className="app-layer">
+            {app === "vision" && (
+              <VisionApp
+                signal={signal}
+                pointing={handControl}
+                onPoint={() => {
+                  setHandControl(true);
+                  setApp(null);
+                }}
+                onClose={() => setApp(null)}
+              />
+            )}
             {app === "quran" && <QuranApp onClose={() => setApp(null)} />}
             {app === "phone" && <ContactApp onClose={() => setApp(null)} />}
             {app === "siri" && (
@@ -392,6 +411,17 @@ function FolderIcon({
  *  frosts only inside the shape) and the rim stroke, so they cannot drift. */
 const FLAP_PATH =
   "M0 7Q0 0 7 0H46C56 0 57 16 67 16H105Q112 16 112 23V69Q112 76 105 76H7Q0 76 0 69Z";
+
+/** An eye inside a viewfinder's corners: what the camera sees. */
+function VisionGlyph() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" aria-hidden>
+      <path d="M3 8V5.5A2.5 2.5 0 0 1 5.5 3H8M16 3h2.5A2.5 2.5 0 0 1 21 5.5V8M21 16v2.5a2.5 2.5 0 0 1-2.5 2.5H16M8 21H5.5A2.5 2.5 0 0 1 3 18.5V16" />
+      <path d="M5.5 12s2.4-4.2 6.5-4.2 6.5 4.2 6.5 4.2-2.4 4.2-6.5 4.2S5.5 12 5.5 12Z" />
+      <circle cx="12" cy="12" r="1.9" fill="currentColor" stroke="none" />
+    </svg>
+  );
+}
 
 function GithubGlyph() {
   return (

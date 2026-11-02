@@ -506,6 +506,103 @@
   overflow-y: auto;
 }
 
+/* ── the Vision app: the computer-vision demo ──
+ * The live portrait on the left, in the navy it had as the home page's
+ * hero; on the right the instrument reading the hand. Wider than tall on
+ * purpose: the portrait fits itself to a wide well at full size and holds
+ * back in a tall one. */
+
+.vision-app {
+  display: grid;
+  grid-template-columns: 330px minmax(0, 1fr);
+  gap: 16px;
+  align-items: start;
+}
+
+.vision-portrait {
+  height: 300px;
+  border-radius: 10px;
+  overflow: hidden;
+  background:
+    radial-gradient(70% 90% at 60% 40%, #1b4a78 0%, transparent 62%),
+    linear-gradient(160deg, #0e2438 0%, #133a5e 55%, #0b1c2c 100%);
+}
+
+.vision-side {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+
+/* A shade wider than the camera's 4:3, cropped by object-fit: at 4:3 the
+   live column, with its button, came out a few pixels taller than the
+   window may be. */
+.vision-feed {
+  position: relative;
+  aspect-ratio: 7 / 5;
+  overflow: hidden;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  /* Opaque: the window is faintly see-through, and a folder on the desktop
+     behind it ghosting through an empty camera well reads as a picture. */
+  background: #0d1822;
+}
+
+/* Mirrored, so a raised right hand reads as one on screen. */
+.vision-feed canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: scaleX(-1);
+}
+
+.vision-cta {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 12px;
+  text-align: center;
+  font-size: 11px;
+  line-height: 1.45;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.vision-readout {
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.vision-percent {
+  color: #7cc4f0;
+  font-variant-numeric: tabular-nums;
+}
+
+.vision-hint {
+  font-size: 12px;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.78);
+}
+
+.vision-point {
+  align-self: flex-start;
+  padding: 6px 13px;
+  font-size: 12px;
+}
+
+.vision-privacy {
+  font-family: var(--font-mono);
+  font-size: 8.5px;
+  letter-spacing: 0.1em;
+  color: rgba(255, 255, 255, 0.45);
+}
+
 .app-lead {
   font-family: var(--font-mono);
   font-size: 24px;

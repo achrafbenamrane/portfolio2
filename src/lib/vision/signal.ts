@@ -1,7 +1,7 @@
 import { HandSensor, type SensorStatus } from "./hand-sensor";
 
 /**
- * The single openness signal the hero renders from, 0..1.
+ * The single openness signal the portrait renders from, 0..1.
  *
  * The portrait is the resting state and nothing else disturbs it — no idle
  * loop, no scroll coupling. The image holds still until a hand closes in front
@@ -22,7 +22,7 @@ const DAMPING = 11;
 /** Below this, the signal counts as settled and the renderer can stop. */
 const SETTLE_EPSILON = 1e-4;
 
-export class HeroSignal {
+export class VisionSignal {
   readonly sensor = new HandSensor();
 
   /** Damped output. Read this every frame; never read `target` directly. */
@@ -31,6 +31,13 @@ export class HeroSignal {
 
   /** Freezes the fold entirely. Tracking still runs. */
   reducedMotion = false;
+
+  /**
+   * The one video element the camera plays into, mounted by the provider for
+   * as long as the page section lives. Every preview draws from it, so no
+   * window that shows the feed can take the stream down when it closes.
+   */
+  video: HTMLVideoElement | null = null;
 
   private target = 1;
   private lastTick = 0;
@@ -94,8 +101,13 @@ export class HeroSignal {
     this.sensor.stop();
   }
 
-  async enableCamera(video: HTMLVideoElement): Promise<void> {
-    await this.sensor.start(video);
+  /** The provider's ref callback: the element as it mounts, null as it goes. */
+  attachVideo(video: HTMLVideoElement | null): void {
+    this.video = video;
+  }
+
+  async enableCamera(video = this.video): Promise<void> {
+    if (video) await this.sensor.start(video);
   }
 
   private readonly onSensorChange = (): void => {

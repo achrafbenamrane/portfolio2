@@ -4,9 +4,11 @@ import Link from "next/link";
 import { useState } from "react";
 
 import Badges from "@/components/badges";
+import ImacStage from "@/components/imac/imac-stage";
 import PhoneShowcase from "@/components/showcase/phone-showcase";
 import PlateCarousel from "@/components/showcase/plate-carousel";
 import SiteWall from "@/components/showcase/site-wall";
+import { VisionSignalProvider } from "@/components/vision/vision-signal";
 import { projects, type Project } from "@/content/site";
 
 /**
@@ -25,6 +27,7 @@ import { projects, type Project } from "@/content/site";
  * belongs beside the thing, not under it, so it can be read while the thing
  * is looked at. The apps and the websites are the exception: their stage and
  * their wall lay out their own write-ups, so those bands are only a shell.
+ * So is computer vision, whose showcase is the work itself, running.
  */
 
 const APPS = projects.filter((p) => p.category === "Mobile Development");
@@ -48,6 +51,8 @@ const AUTOMATIONS = projects.filter(
 );
 
 const DESIGN = projects.filter((p) => p.category === "Graphic Design");
+
+const VISION = projects.filter((p) => p.category === "Computer Vision");
 
 export default function WorkGallery() {
   return (
@@ -75,6 +80,25 @@ export default function WorkGallery() {
           <div className="pt-10 md:pt-14">
             <SiteWall sites={SITES} />
           </div>
+        </BandShell>
+      )}
+
+      {VISION.length > 0 && (
+        <BandShell
+          id="computer-vision"
+          label="COMPUTER VISION"
+          title="Built to see"
+          blurb="Hand tracking that runs in the browser. Close your hand and the portrait folds into paper; point to move the cursor, pinch to click. The video never leaves your machine."
+          count={VISION.length}
+        >
+          {/* The provider is scoped to the band: the camera is asked for
+              here, and the page only downloads the hand model once someone
+              turns it on. */}
+          <VisionSignalProvider>
+            <div className="pt-10 md:pt-14">
+              <ImacStage />
+            </div>
+          </VisionSignalProvider>
         </BandShell>
       )}
 
@@ -158,12 +182,15 @@ function Band({
 
 /** A band's frame: its rule, label and count, and its title centred. */
 function BandShell({
+  id,
   label,
   title,
   blurb,
   count,
   children,
 }: {
+  /** Makes the band a link target. Scroll margin clears the fixed nav. */
+  id?: string;
   label: string;
   title: string;
   blurb?: string;
@@ -171,7 +198,10 @@ function BandShell({
   children: React.ReactNode;
 }) {
   return (
-    <section className="border-b border-line px-6 py-16 last:border-0 md:px-12 md:py-24">
+    <section
+      id={id}
+      className="scroll-mt-16 border-b border-line px-6 py-16 last:border-0 md:px-12 md:py-24"
+    >
       <div className="mx-auto max-w-350">
         <div className="flex flex-wrap items-baseline justify-between gap-4 border-b border-line pb-4">
           <span className="meta text-dim">{label}</span>

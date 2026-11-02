@@ -86,12 +86,14 @@ SKILLS:
 ${skillLines()}
 
 ABOUT THIS WEBSITE:
-Built with Next.js, React, TypeScript, Tailwind and Three.js. The hero is
-driven by webcam hand tracking that runs entirely on-device with MediaPipe —
-opening and closing your hand folds a photo of Achraf into a paper ball. Below
-it is a 3D monitor whose screen is real DOM: you can point with your index
+Built with Next.js, React, TypeScript, Tailwind and Three.js. The Work page
+has a computer vision section: a 3D monitor whose screen is real DOM, which
+opens on a Vision app driven by webcam hand tracking that runs entirely
+on-device with MediaPipe — opening and closing your hand folds a photo of
+Achraf into a paper ball. With hand control on you can point with your index
 finger and pinch to click, open folders, play Quran recitations, and talk to
-this assistant.
+this assistant. On a phone the portrait and its camera panel are shown on
+their own.
 `.trim();
 }
 

@@ -5,7 +5,7 @@
  * model — they read its body as running during render and flag every uniform
  * write. Mutating uniforms per frame is exactly how R3F is meant to be driven,
  * and routing them through React instead would put a 60 Hz signal back into the
- * render path, which is the one thing this hero must not do. Scoped to this
+ * render path, which is the one thing this portrait must not do. Scoped to this
  * file; nothing else in the codebase gets the exemption.
  */
 /* eslint-disable react-hooks/immutability */
@@ -14,14 +14,14 @@ import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { useEffect, useMemo } from "react";
 import * as THREE from "three";
 
-import type { HeroSignal } from "@/lib/vision/hero-signal";
+import type { VisionSignal } from "@/lib/vision/signal";
 import {
   buildPortraitGeometry,
   createMorphMaterial,
-  loadHeroTextures,
+  loadPortraitTextures,
 } from "./portrait-morph";
 
-function PortraitMesh({ signal }: { signal: HeroSignal }) {
+function PortraitMesh({ signal }: { signal: VisionSignal }) {
   "use no memo";
 
   const geometry = useMemo(() => buildPortraitGeometry(), []);
@@ -33,7 +33,7 @@ function PortraitMesh({ signal }: { signal: HeroSignal }) {
     let disposed = false;
     let loaded: THREE.Texture[] = [];
 
-    loadHeroTextures(({ portrait, origami }) => {
+    loadPortraitTextures(({ portrait, origami }) => {
       // The load is async and the component can unmount first — without this
       // guard a fast navigation leaks the textures and writes to dead uniforms.
       if (disposed) {
@@ -101,12 +101,16 @@ function PortraitMesh({ signal }: { signal: HeroSignal }) {
   );
 }
 
-export default function Character({ signal }: { signal: HeroSignal }) {
+export default function Character({ signal }: { signal: VisionSignal }) {
   return (
     <Canvas
       // Capping DPR at 1.75 costs almost nothing on flat-shaded facets and
       // saves roughly 40% of the fill rate on a 3× phone.
       dpr={[1, 1.75]}
+      // Measured by layout size, not by the on-screen box: inside the iMac
+      // the whole desktop is scaled onto the glass, and a scaled box would
+      // size the canvas to the scaled width and leave it short of its well.
+      resize={{ offsetSize: true }}
       // On-demand: frames are drawn only while the fold is actually moving.
       frameloop="demand"
       gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}

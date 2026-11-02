@@ -1,22 +1,15 @@
+import Link from "next/link";
+
 import { site } from "@/content/site";
-import HandControl from "./hand-control";
-import HeroCanvas from "./hero-canvas";
 import RoleRotator from "./role-rotator";
 
 /**
  * Server component. The headline, role line and tagline are in the initial HTML
- * — the LCP element never waits on JavaScript, let alone on WebGL.
+ * — the LCP element never waits on JavaScript.
  *
- * The control panel sits in normal flow rather than pinned to a corner, so it
- * cannot collide with the copy on a short viewport. The signal provider now
- * lives on the page, because the iMac section shares this one camera stream.
- *
- * Two arrangements, one markup. Wide: the portrait fills the right half and
- * the copy sits clear of it. Narrow: there is no right half to sit in, so the
- * three parts stack — copy, portrait, panel — and the flex order puts the
- * portrait between them. Laid over the copy instead (which is what a
- * full-width canvas does on a phone) it puts a face behind the paragraph and
- * the panel over the mouth.
+ * The live portrait and its hand control moved to the Work page, where they
+ * run on the iMac's desktop as the computer-vision project; the hero links
+ * to them rather than hosting them.
  */
 export default function Hero() {
   return (
@@ -25,20 +18,17 @@ export default function Hero() {
         /* From lg the copy's left edge follows the site's column — the
            1400px one the nav and every section sit in — so on a 1920 or
            2560 screen it lines up under the wordmark instead of hugging the
-           window's edge. The portrait is out of flow and stays full-bleed. */
+           window's edge. */
         className="relative flex min-h-dvh flex-col justify-center gap-5 overflow-hidden px-6 pb-10 pt-32 md:px-12 lg:gap-0 lg:pb-0 lg:pl-[max(3rem,calc((100%_-_87.5rem)/2_+_3rem))] lg:pt-32"
         style={{
           /* The nav's blue, continued. The bar sits directly above this, so
-             anything else would put a seam across the top of the page. The
-             radial lifts the right side, where the portrait sits. */
+             anything else would put a seam across the top of the page. */
           background:
             "radial-gradient(70% 90% at 72% 40%, #1B4A78 0%, transparent 62%)," +
             "linear-gradient(160deg, #0E2438 0%, #133A5E 55%, #0B1C2C 100%)",
         }}
       >
-        <HeroCanvas />
-
-        <div className="pointer-events-none relative z-10 order-1 max-w-2xl lg:order-none">
+        <div className="relative z-10 max-w-2xl">
           <p className="meta text-white/60">{site.availability}</p>
 
           {/*
@@ -62,10 +52,19 @@ export default function Hero() {
           <p className="mt-4 max-w-md text-balance text-white/75">{site.tagline}</p>
         </div>
 
-        {/* Order 3: after the portrait on a phone, straight after the copy on
-            a wide screen, where the portrait is out of flow. */}
-        <div className="pointer-events-auto relative z-10 order-3 max-w-2xl lg:order-none lg:mt-10">
-          <HandControl />
+        <div className="relative z-10 max-w-2xl lg:mt-10">
+          <Link
+            href="/work#computer-vision"
+            className="group inline-flex items-center gap-2 rounded-full border border-white/25 px-4 py-2 text-sm font-medium text-white transition-colors hover:border-[#7CC4F0] hover:text-[#7CC4F0]"
+          >
+            Try the hand-tracking demo
+            <span
+              aria-hidden
+              className="transition-transform duration-200 group-hover:translate-x-1"
+            >
+              →
+            </span>
+          </Link>
         </div>
 
       </section>

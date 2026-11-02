@@ -112,6 +112,8 @@
   /* Everything inside stays inside: the close-up and the light must sit
      behind the doors, so the doors are seen closing over them. */
   isolation: isolate;
+  /* Measured by the shelves' height below, before the script has. */
+  container-type: inline-size;
   box-shadow:
     inset 0 28px 36px -24px rgb(14 36 56 / 0.45),
     inset 24px 0 30px -26px rgb(14 36 56 / 0.4),
@@ -312,6 +314,16 @@
    backdrop filter is dropped inside the doors' 3D. */
 .wardrobe-shelves {
   filter: blur(calc((1 - var(--open)) * 7px));
+  /* Until the script measures the interior and sets the height itself:
+     the same height, from site-wall.tsx's numbers. 720px is THREE_FROM
+     there, where the shelves go from two sites a row to three. */
+  height: var(--cabinet-two);
+}
+
+@container (min-width: 720px) {
+  .wardrobe-shelves {
+    height: var(--cabinet-three);
+  }
 }
 
 /* A sheen sliding across the pane. */

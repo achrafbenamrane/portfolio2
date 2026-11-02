@@ -173,6 +173,7 @@ export type ProjectCategory =
   | "Mobile Development"
   | "Desktop Development"
   | "AI Automation"
+  | "Computer Vision"
   | "Graphic Design";
 
 export interface Project {
@@ -425,6 +426,28 @@ export const projects: readonly Project[] = [
     ],
   },
   {
+    slug: "origami-portrait",
+    title: "Origami Portrait",
+    description:
+      "A portrait that folds into paper as a hand closes in front of the camera. MediaPipe reads the hand in the browser, and a vertex shader creases the photograph — no video leaves the device.",
+    category: "Computer Vision",
+    tags: ["MediaPipe", "Hand Tracking", "Three.js", "WebGL Shaders"],
+    year: "2026",
+    brand: "#24689B",
+    images: ["/portrait.webp"],
+  },
+  {
+    slug: "point-and-pinch-desktop",
+    title: "Point & Pinch Desktop",
+    description:
+      "A desktop driven by the hand instead of a mouse: the index finger steers the cursor and a pinch clicks, filtered so it holds steady on small targets and freezes for the instant of the pinch, so a click lands where it was aimed.",
+    category: "Computer Vision",
+    tags: ["MediaPipe", "Gesture Control", "React Three Fiber", "TypeScript"],
+    year: "2026",
+    brand: "#24689B",
+    images: ["/origami.webp"],
+  },
+  {
     slug: "ecommerce-automation",
     title: "E-commerce Workflow Automation",
     description:
@@ -601,6 +624,7 @@ export const projectCategories = [
   "Mobile Development",
   "Desktop Development",
   "AI Automation",
+  "Computer Vision",
   "Graphic Design",
 ] as const;
 

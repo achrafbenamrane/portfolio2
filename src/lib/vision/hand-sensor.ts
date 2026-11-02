@@ -28,7 +28,7 @@ export type SensorStatus =
  * Mutated in place, every frame. Consumers read fields directly inside their
  * own animation loop — this object is deliberately NOT React state. Pushing a
  * 60 Hz signal through `useState` costs 60 re-renders a second and produces a
- * stuttering hero on a site whose entire pitch is real-time performance.
+ * stuttering portrait on a site whose entire pitch is real-time performance.
  */
 export interface HandFrame {
   /** Calibrated, smoothed, 0..1. This is the one the renderer consumes. */

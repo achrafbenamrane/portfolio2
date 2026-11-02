@@ -10,7 +10,7 @@ import {
   type ReactNode,
 } from "react";
 
-import type { HeroSignal } from "@/lib/vision/hero-signal";
+import type { VisionSignal } from "@/lib/vision/signal";
 import { DESKTOP_CSS } from "./geometry";
 
 /**
@@ -68,7 +68,7 @@ export function DesktopPointerProvider({
   enabled,
   children,
 }: {
-  signal: HeroSignal;
+  signal: VisionSignal;
   rootRef: React.RefObject<HTMLDivElement | null>;
   cursorRef: React.RefObject<HTMLDivElement | null>;
   enabled: boolean;

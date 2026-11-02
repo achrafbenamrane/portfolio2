@@ -6,7 +6,7 @@ import { projects } from "@/content/site";
 
 export const metadata: Metadata = {
   title: "Work",
-  description: `${projects.length} selected projects across web, mobile, desktop, automation and design.`,
+  description: `${projects.length} selected projects across web, mobile, computer vision, automation and design.`,
 };
 
 export default function WorkPage() {
@@ -15,7 +15,7 @@ export default function WorkPage() {
       <PageHeader
         index="01 / WORK"
         title="Work"
-        description="Web, mobile, desktop, automation and design — filtered by discipline."
+        description="Web, mobile, computer vision, automation and design — grouped by what they run on."
       />
       <WorkGallery />
     </>

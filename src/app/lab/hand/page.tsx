@@ -40,7 +40,8 @@ const STATUS_LABEL: Record<SensorStatus, string> = {
 /**
  * Not part of the site. This is the bench for tuning the openness constants —
  * unlinked from the nav and 404s in production, but worth keeping, because
- * re-deriving `curlMax` and the filter parameters by eye against a live hero is
+ * re-deriving `curlMax` and the filter parameters by eye against the live
+ * portrait is
  * miserable.
  */
 export default function HandLabPage() {

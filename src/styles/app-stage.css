@@ -66,6 +66,82 @@
   }
 }
 
+/* ── the tap demonstration ──
+ * A hand comes in from the lower right, presses the bubble (which gives
+ * under it — animated from the component), two rings of the glacier
+ * accent ring out from the press, and the hand lifts away. One tap is
+ * 2600ms, HINT_MS in the component. */
+
+.bubble-hint {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.bubble-ripple {
+  position: absolute;
+  inset: 0;
+  border-radius: 9999px;
+  border: 2px solid rgb(36 104 155 / 0.55);
+  opacity: 0;
+  animation: bubble-ripple 1300ms cubic-bezier(0.2, 0.7, 0.3, 1) 800ms both;
+}
+
+.bubble-ripple-late {
+  animation-delay: 1060ms;
+}
+
+@keyframes bubble-ripple {
+  from {
+    opacity: 0.85;
+    scale: 1;
+  }
+  to {
+    opacity: 0;
+    scale: 1.6;
+  }
+}
+
+/* The fingertip, at 40% across and 7% down the hand, lands just right of
+   the icon's centre; the hand turns about it. */
+.bubble-hand {
+  position: absolute;
+  left: 44%;
+  top: 50%;
+  width: 46%;
+  height: auto;
+  rotate: -14deg;
+  transform-origin: 40% 7%;
+  filter: drop-shadow(0 4px 5px rgb(14 36 56 / 0.35));
+  animation: bubble-hand 2600ms cubic-bezier(0.3, 0.7, 0.3, 1) both;
+}
+
+@keyframes bubble-hand {
+  0% {
+    opacity: 0;
+    translate: 18px 22px;
+  }
+  22% {
+    opacity: 1;
+    translate: 0 0;
+    scale: 1;
+  }
+  30% {
+    scale: 0.86;
+  }
+  38% {
+    scale: 1;
+  }
+  72% {
+    opacity: 1;
+    translate: 0 0;
+  }
+  100% {
+    opacity: 0;
+    translate: 10px 14px;
+  }
+}
+
 /* The glass: a highlight up and to the left, a tint pooling at the bottom. */
 .bubble-glass::after {
   content: "";
@@ -125,11 +201,44 @@
   }
 }
 
+/* ── the invitation in the middle of the stage ── */
+
+/* The second line, in the glacier accent; a band of the header's light
+   blue passes across it every few seconds, then it rests in plain accent —
+   the same colour at both ends of the pass, so it never jumps. */
+.tap-sheen {
+  background-image: linear-gradient(
+    100deg,
+    #24689b 0%,
+    #24689b 40%,
+    #7cc4f0 50%,
+    #24689b 60%,
+    #24689b 100%
+  );
+  background-size: 250% 100%;
+  background-position: 100% 0;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: tap-sheen 5.5s ease-in-out 1.8s infinite;
+}
+
+@keyframes tap-sheen {
+  0% {
+    background-position: 100% 0;
+  }
+  45%,
+  100% {
+    background-position: 0% 0;
+  }
+}
+
 /* The site-wide reduced-motion rule shortens every animation to nothing, but
    an infinite one at 0.01ms flickers through its keyframes instead of
    stopping. */
 @media (prefers-reduced-motion: reduce) {
-  .swim {
+  .swim,
+  .tap-sheen {
     animation: none;
   }
 }

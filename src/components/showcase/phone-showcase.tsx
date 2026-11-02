@@ -83,6 +83,15 @@ const phoneHeight = (width: number) => 24 + (width - 24) * 2.16;
 /** Milliseconds between the bubbles setting off and the phone following. */
 const PHONE_DELAY = 380;
 
+/**
+ * The tap demonstration a first-time visitor is shown: a hand taps one
+ * bubble after another, each tap ringing out, until the visitor hovers,
+ * focuses or opens one themselves. One tap every HINT_MS, starting
+ * HINT_START after the bubbles have surfaced.
+ */
+const HINT_MS = 2600;
+const HINT_START = 1400;
+
 function layoutFor(width: number, count: number) {
   const wide = width >= WIDE_FROM;
   const s = wide ? SIZES.wide : SIZES.narrow;
@@ -160,6 +169,15 @@ export default function PhoneShowcase({
   // Bumped on every open, so the details replay their entrance even when
   // the same app is opened again.
   const [opens, setOpens] = useState(0);
+  // Whether the visitor has found out the bubbles open — the tap
+  // demonstration stops for good once they have.
+  const [discovered, setDiscovered] = useState(false);
+  // Unlike `inView`, this follows the stage on and off the screen, so the
+  // demonstration pauses while nobody can see it.
+  const [onScreen, setOnScreen] = useState(false);
+  const [hint, setHint] = useState<{ index: number; tick: number } | null>(
+    null,
+  );
   const reduced = useSyncExternalStore(
     subscribeMotion,
     getMotion,
@@ -192,8 +210,48 @@ export default function PhoneShowcase({
     return () => observer.disconnect();
   }, []);
 
+  useEffect(() => {
+    const el = stageRef.current;
+    if (!el) return;
+    // By how much of it is showing, not merely whether any of it is: a
+    // sliver of the stage at the screen's edge is not somewhere to watch.
+    const observer = new IntersectionObserver(
+      ([entry]) => setOnScreen(entry.intersectionRatio >= 0.3),
+      { threshold: [0, 0.3] },
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
+  const hinting = inView && onScreen && !isOpen && !discovered && !reduced;
+
+  useEffect(() => {
+    if (!hinting) return;
+    // Every other bubble, then the ones between, so each tap lands
+    // somewhere new rather than marching along a row.
+    const half = Math.ceil(apps.length / 2);
+    const order = apps.map((_, i) => (i % 2 === 0 ? i / 2 : half + (i - 1) / 2));
+    let tick = 0;
+    let loop: ReturnType<typeof setInterval> | undefined;
+    const tap = () => {
+      setHint({ index: order[tick % order.length], tick });
+      tick += 1;
+    };
+    const start = setTimeout(() => {
+      tap();
+      loop = setInterval(tap, HINT_MS);
+    }, HINT_START);
+    return () => {
+      clearTimeout(start);
+      clearInterval(loop);
+    };
+  }, [hinting, apps]);
+
+  const discover = useCallback(() => setDiscovered(true), []);
+
   const open = useCallback(
     (app: Project) => {
+      setDiscovered(true);
       if (isOpen && current?.slug === app.slug) return;
       setCurrent(app);
       setIsOpen(true);
@@ -220,15 +278,31 @@ export default function PhoneShowcase({
       >
         {layout && (
           <>
-            {layout.wide && (
-              <p
+            {/* The invitation, set like the apps' own names, in the page's
+                display weight — its second half in the glacier accent with a
+                light passing over it. It mounts as the bubbles surface, so
+                its lines rise with them. */}
+            {layout.wide && inView && (
+              <div
                 aria-hidden
-                className={`pointer-events-none absolute inset-x-0 top-1/2 -translate-y-1/2 text-center font-mono text-sm font-bold uppercase tracking-[0.14em] text-ink transition-opacity duration-300 ${
-                  inView && !isOpen ? "opacity-100 delay-700" : "opacity-0"
+                className={`pointer-events-none absolute inset-x-0 top-1/2 -translate-y-1/2 text-center transition-opacity duration-300 ${
+                  isOpen ? "opacity-0" : "opacity-100"
                 }`}
               >
-                TAP AN APP TO OPEN IT
-              </p>
+                <p className="text-[clamp(1.75rem,2.7vw,2.6rem)] font-extrabold uppercase leading-[0.98] tracking-[-0.035em] text-ink">
+                  <span className="inline-block overflow-hidden pb-[0.06em] align-bottom">
+                    <span className="word-up" style={{ animationDelay: "550ms" }}>
+                      Tap an app
+                    </span>
+                  </span>
+                  <br />
+                  <span className="inline-block overflow-hidden pb-[0.06em] align-bottom">
+                    <span className="word-up" style={{ animationDelay: "680ms" }}>
+                      <span className="tap-sheen">to open it.</span>
+                    </span>
+                  </span>
+                </p>
+              </div>
             )}
 
             {/* The phone waits below the stage's edge, clipped, and rises
@@ -310,6 +384,8 @@ export default function PhoneShowcase({
                   chosen={chosen}
                   visible={inView}
                   reduced={reduced}
+                  hint={hinting && hint?.index === i ? hint.tick : null}
+                  onDiscover={discover}
                   onOpen={() => open(app)}
                 />
               );
@@ -344,6 +420,8 @@ function Bubble({
   chosen,
   visible,
   reduced,
+  hint,
+  onDiscover,
   onOpen,
 }: {
   app: Project;
@@ -358,16 +436,43 @@ function Bubble({
   chosen: boolean;
   visible: boolean;
   reduced: boolean;
+  /** Set while the hand is tapping this bubble — a new number each tap, so
+   *  the tap plays again even on the same bubble. */
+  hint: number | null;
+  /** The visitor has hovered or focused a bubble: no more demonstration. */
+  onDiscover: () => void;
   onOpen: () => void;
 }) {
+  const glassRef = useRef<HTMLSpanElement>(null);
+
+  // The bubble gives under the hand's press, and springs back.
+  useEffect(() => {
+    const glass = glassRef.current;
+    if (hint === null || !glass) return;
+    const press = glass.animate(
+      [
+        { scale: 1 },
+        { scale: 1, offset: 0.27 },
+        { scale: 0.92, offset: 0.32 },
+        { scale: 1.04, offset: 0.42 },
+        { scale: 1, offset: 0.52 },
+        { scale: 1 },
+      ],
+      { duration: HINT_MS, easing: "ease-out" },
+    );
+    return () => press.cancel();
+  }, [hint]);
+
   return (
     <button
       type="button"
       onClick={onOpen}
+      onPointerEnter={onDiscover}
+      onFocus={onDiscover}
       aria-label={app.title}
       aria-pressed={chosen}
       title={docked ? app.title : undefined}
-      className="group absolute left-0 top-0 z-10 rounded-full"
+      className="group absolute left-0 top-0 z-10 cursor-pointer rounded-full"
       style={{
         width: size,
         height: size,
@@ -393,12 +498,21 @@ function Bubble({
           style={{ animationDelay: `${index * 90}ms` }}
         >
           <span
+            ref={glassRef}
             className={`bubble-glass relative grid size-full place-items-center rounded-full bg-white/75 shadow-[0_18px_40px_-14px_rgba(18,48,74,0.45),inset_0_-6px_14px_rgba(18,48,74,0.08)] ring-1 backdrop-blur-sm transition-[scale,box-shadow] duration-300 ${
               chosen ? "ring-2 ring-accent" : "ring-white"
             } ${docked ? "" : "group-hover:scale-110"}`}
           >
             <AppIcon app={app} className="size-[62%]" sizes={`${size}px`} />
           </span>
+
+          {hint !== null && (
+            <span key={hint} aria-hidden className="bubble-hint">
+              <span className="bubble-ripple" />
+              <span className="bubble-ripple bubble-ripple-late" />
+              <TapHand />
+            </span>
+          )}
 
           <span
             className={`absolute left-1/2 top-full mt-2 -translate-x-1/2 whitespace-nowrap text-xs font-medium transition-[opacity,color] duration-300 ${
@@ -410,6 +524,37 @@ function Bubble({
         </span>
       </span>
     </button>
+  );
+}
+
+/** The hand of the tap demonstration: a white pointing hand, outlined in
+ *  ink. Drawn as overlapping rounded parts — first outlined, then filled
+ *  white over the top, so only the outer edge of the whole hand shows. */
+function TapHand() {
+  const parts = (
+    <>
+      <rect x="8" y="1.6" width="3.4" height="12.4" rx="1.7" />
+      <rect x="11.4" y="7.4" width="3.2" height="7.2" rx="1.6" />
+      <rect x="14.6" y="8.5" width="3.1" height="6.6" rx="1.55" />
+      <rect x="17.6" y="9.9" width="2.8" height="5.8" rx="1.4" />
+      <rect x="8" y="11.6" width="12.4" height="9.2" rx="3.6" />
+      <rect x="3.6" y="12.2" width="6.8" height="3.1" rx="1.55" transform="rotate(40 7 13.75)" />
+    </>
+  );
+  return (
+    <svg viewBox="0 0 24 24" className="bubble-hand">
+      <g fill="none" stroke="#182631" strokeWidth="2.6" strokeLinejoin="round">
+        {parts}
+      </g>
+      <g fill="#fff">{parts}</g>
+      <path
+        d="M11.4 11.2v2.2M14.6 12v1.8M17.6 12.6v1.4"
+        stroke="#182631"
+        strokeWidth="0.9"
+        strokeLinecap="round"
+        opacity="0.55"
+      />
+    </svg>
   );
 }
 

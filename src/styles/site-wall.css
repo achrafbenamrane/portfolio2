@@ -387,7 +387,6 @@
     box-shadow 350ms ease;
 }
 
-.shelf-lit,
 .is-zoomed .is-picked .shelf,
 .shelf-spot:is(:hover, :has(:focus-visible)) .shelf {
   background: linear-gradient(
@@ -421,10 +420,6 @@
   transition: opacity 400ms ease;
 }
 
-.shelf-lit .shelf-spill {
-  opacity: 1;
-}
-
 .shelf-label {
   opacity: 0;
   translate: -50% -4px;
@@ -449,37 +444,79 @@
 
 /* ── the close-up ── */
 
-/* Laid out to fit the wardrobe as it is. On a phone it stacks: the way
-   back, the site, its write-up. Wider, the site takes the left and the way
-   back sits above the write-up on the right, on its left edge. */
-.closeup-grid {
+/* Laid out to fit the wardrobe as it is, from the top down. A bar first,
+   with everything to act on: the way back, the site's name, the way
+   through to it — in that order down a phone, where there is no room for
+   them side by side. Under the bar, the site and its write-up —
+   side by side when there is room, stacked when there is not. */
+.closeup-head {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-areas: "back" "title" "visit";
+  align-items: center;
   gap: 10px;
-  grid-template-areas: "back" "card" "copy";
 }
 
+/* The name sits in the middle of the bar, not just between the buttons:
+   the two side columns are kept the same width — at least the wider
+   button's — so the narrower "Visit site" does not pull it off centre. */
 @media (min-width: 768px) {
-  .closeup-grid {
-    grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
-    grid-template-areas: "card back" "card copy";
-    column-gap: 32px;
-    row-gap: 14px;
+  .closeup-head {
+    grid-template-columns: minmax(11.75rem, 1fr) auto minmax(11.75rem, 1fr);
+    grid-template-areas: "back title visit";
+    column-gap: 18px;
+  }
+
+  .closeup-title {
+    text-align: center;
   }
 }
 
 .closeup-back {
   grid-area: back;
   justify-self: start;
-  align-self: end;
+}
+
+.closeup-title {
+  grid-area: title;
+}
+
+.closeup-visit {
+  grid-area: visit;
+  justify-self: start;
+}
+
+@media (min-width: 768px) {
+  .closeup-visit {
+    justify-self: end;
+  }
+}
+
+.closeup-body {
+  display: grid;
+  gap: 12px;
+  margin-top: 16px;
+  grid-template-areas: "card" "copy";
+}
+
+/* The site takes two thirds: it is what the close-up is for, and the
+   write-up beside it reads fine at a third. */
+@media (min-width: 768px) {
+  .closeup-body {
+    grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+    grid-template-areas: "card copy";
+    column-gap: 28px;
+    margin-top: 20px;
+  }
 }
 
 /* A little narrower when stacked, so a site with a long write-up still fits
    the phone's wardrobe. */
 .closeup-card {
   grid-area: card;
-  align-self: center;
+  align-self: start;
   justify-self: center;
-  width: 80%;
+  width: 74%;
 }
 
 @media (min-width: 768px) {
@@ -487,12 +524,6 @@
     justify-self: stretch;
     width: auto;
   }
-}
-
-/* Shorter under the close-up, so its glow does not hang past the content
-   and give the fitted close-up something to scroll. */
-.closeup-card .shelf-spill {
-  height: 56px;
 }
 
 .closeup-copy {
@@ -536,12 +567,6 @@
   }
 }
 
-/* The strip under the close-up switches on once the site has landed. */
-.wall-zoom-shelf {
-  animation: wall-fade 500ms ease 850ms both;
-}
-
-[data-closing] .wall-zoom-shelf,
 [data-closing] .wall-zoom-copy {
   animation: wall-fade-out 250ms ease both;
 }

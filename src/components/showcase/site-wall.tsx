@@ -46,6 +46,54 @@ const LIFT_RISE = 10;
 const THREE_FROM = 720;
 
 /**
+ * The wardrobe is a fixed piece of furniture: its height is set by what six
+ * sites take at full size, and never changes with how many it holds. More
+ * than that and the shelves draw closer together and the sites stand
+ * smaller, so everything still fits inside the same cabinet.
+ */
+const HOLDS = 6;
+/** Fixed parts of the shelves, in px: above the first row; above, under
+ *  and below each row at full size; and the tighter spacing used once the
+ *  shelves are packed. */
+const SHELVES_TOP = 16;
+const ROW = { top: 28, strip: 3, board: 14, bottom: 56 };
+const PACKED = { top: 14, bottom: 30 };
+/** A card is the share of its column it fills, and 16 wide by 11 tall. */
+const CARD_FILL = 0.92;
+const CARD_RATIO = 11 / 16;
+
+function shelfLayout(width: number, count: number) {
+  // The grid's side padding is 5% of the interior's width; its gaps are 5%
+  // of what is left inside that padding.
+  const inner = width * 0.9;
+  const colWidth = (cols: number) => (inner - (cols - 1) * inner * 0.05) / cols;
+  const rowHeight = (cardW: number, gaps: { top: number; bottom: number }) =>
+    gaps.top + cardW * CARD_RATIO + ROW.strip + ROW.board + gaps.bottom;
+
+  const fullCols = width >= THREE_FROM ? 3 : 2;
+  const fullCard = colWidth(fullCols) * CARD_FILL;
+  const height =
+    SHELVES_TOP + Math.ceil(HOLDS / fullCols) * rowHeight(fullCard, ROW);
+
+  if (count <= HOLDS) {
+    return { cols: fullCols, card: fullCard, gaps: ROW, height };
+  }
+
+  // Packed: the column count that leaves the sites standing largest, each
+  // card as big as both its column and its share of the height allow.
+  let best = { cols: fullCols, card: 0, gaps: PACKED as typeof ROW | typeof PACKED, height };
+  for (const cols of [2, 3, 4, 5]) {
+    const rows = Math.ceil(count / cols);
+    const perRow = (height - SHELVES_TOP) / rows;
+    const byHeight =
+      (perRow - PACKED.top - ROW.strip - ROW.board - PACKED.bottom) / CARD_RATIO;
+    const card = Math.min(colWidth(cols) * CARD_FILL, byHeight);
+    if (card > best.card) best = { cols, card, gaps: PACKED, height };
+  }
+  return best;
+}
+
+/**
  * How far the wardrobe's centre is from the screen's, as a share of the
  * distance at which it leaves the screen entirely: inside OPEN_WITHIN the
  * doors stand fully open, beyond SHUT_FROM they are shut.
@@ -181,7 +229,8 @@ export default function SiteWall({ sites }: { sites: readonly Project[] }) {
     return () => observer.disconnect();
   }, []);
 
-  const cols = width === 0 || width >= THREE_FROM ? 3 : 2;
+  const layout = width > 0 ? shelfLayout(width, sites.length) : null;
+  const cols = layout?.cols ?? 3;
   const rows: Project[][] = [];
   for (let i = 0; i < sites.length; i += cols) {
     rows.push(sites.slice(i, i + cols));
@@ -263,9 +312,10 @@ export default function SiteWall({ sites }: { sites: readonly Project[] }) {
               // While a site is out, the rest step back; they come forward
               // again as it is carried home.
               className={`wardrobe-shelves pt-4 ${zoom && !closing ? "is-zoomed" : ""}`}
+              style={{ height: layout?.height }}
             >
               {rows.map((row, r) => (
-                <div key={r} className="pt-7">
+                <div key={r} style={{ paddingTop: layout?.gaps.top ?? ROW.top }}>
                   <ul
                     aria-label={r === 0 ? "Websites" : undefined}
                     className="grid gap-x-[5%] px-[5%]"
@@ -288,6 +338,7 @@ export default function SiteWall({ sites }: { sites: readonly Project[] }) {
                             onClick={() => open(i)}
                             aria-label={`Open ${site.title}`}
                             className="block w-[92%] cursor-zoom-in"
+                            style={layout ? { width: layout.card } : undefined}
                           >
                             <div
                               ref={(el) => {
@@ -308,10 +359,14 @@ export default function SiteWall({ sites }: { sites: readonly Project[] }) {
                             <span className="shelf-spill" />
                           </div>
 
-                          {/* Hangs under the shelf board, like a price tag. */}
+                          {/* Hangs under the shelf board, like a price tag —
+                              closer under it once the shelves are packed. */}
                           <div
                             aria-hidden
-                            className="shelf-label absolute left-1/2 top-[calc(100%+26px)] w-max max-w-[110%] text-center"
+                            className="shelf-label absolute left-1/2 w-max max-w-[110%] text-center"
+                            style={{
+                              top: `calc(100% + ${layout?.gaps === PACKED ? 18 : 26}px)`,
+                            }}
                           >
                             <p className="font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-ink">
                               {site.title}
@@ -324,7 +379,11 @@ export default function SiteWall({ sites }: { sites: readonly Project[] }) {
                       );
                     })}
                   </ul>
-                  <div aria-hidden className="board mb-14" />
+                  <div
+                    aria-hidden
+                    className="board"
+                    style={{ marginBottom: layout?.gaps.bottom ?? ROW.bottom }}
+                  />
                 </div>
               ))}
             </div>
@@ -490,54 +549,38 @@ function CloseUp({
       role="region"
       aria-label={site.title}
       data-closing={closing || undefined}
-      className="absolute inset-0 z-10 flex items-center overflow-y-auto"
+      className="absolute inset-0 z-10 overflow-y-auto"
     >
       <div aria-hidden className="wall-zoom-backdrop interior-bg absolute inset-0" />
 
-      <div className="closeup-grid relative w-full px-5 py-3 md:px-8 md:py-4">
-        {/* Above the name, on its left edge — where the apps keep theirs. */}
-        <BackButton
-          ref={backRef}
-          label="Back to all sites"
-          onClick={onClose}
-          style={copyDelay}
-          className="closeup-back wall-zoom-copy lift-in transition-colors"
-        />
+      <div className="relative w-full px-5 py-4 md:px-6 md:py-5">
+        {/* Everything to act on, along the top: the way back, what this is,
+            and the way through to it. */}
+        <div className="closeup-head wall-zoom-copy lift-in" style={copyDelay}>
+          <BackButton
+            ref={backRef}
+            label="Back to all sites"
+            onClick={onClose}
+            size="small"
+            tone="accent"
+            className="closeup-back transition-colors"
+          />
 
-        <div className="closeup-card relative">
-          <div ref={cardRef} className="relative will-change-transform">
-            <SiteCard site={site} sizes="(min-width: 768px) 26rem, 88vw" live />
-          </div>
-          <div aria-hidden className="wall-zoom-shelf shelf shelf-lit -mx-[4%]">
-            <span className="shelf-spill" />
-          </div>
-        </div>
-
-        <div className="closeup-copy wall-zoom-copy lift-in" style={copyDelay}>
-          <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-dim">
-            {pad(index + 1)} / {pad(total)} · {site.category} · {site.year}
-          </p>
-          <h3 className="mt-2 text-[clamp(1.5rem,2.2vw,2.1rem)] font-extrabold leading-[0.98] tracking-[-0.04em] text-balance text-ink">
-            {site.title}
-          </h3>
-          <p className="mt-1.5 font-mono text-[11px] tracking-[0.1em] text-dim">
-            {hostOf(site.href)}
-          </p>
-
-          {site.description && (
-            <p className="mt-3 line-clamp-4 text-[0.9375rem] leading-[1.6] text-dim md:line-clamp-5">
-              {site.description}
+          <div className="closeup-title min-w-0">
+            <h3 className="text-[clamp(1.4rem,2vw,1.9rem)] font-extrabold leading-[1] tracking-[-0.04em] text-balance text-ink">
+              {site.title}
+            </h3>
+            <p className="mt-1 font-mono text-[11px] tracking-[0.1em] text-dim">
+              {hostOf(site.href)}
             </p>
-          )}
-
-          <Badges tags={site.tags} brand={site.brand} className="mt-4" />
+          </div>
 
           {site.href && (
             <Link
               href={site.href}
               target="_blank"
               rel="noopener noreferrer"
-              className="group/link mt-3.5 inline-flex items-center gap-2 rounded-full bg-accent px-4 py-2 md:mt-5 text-[13px] font-semibold text-canvas shadow-[0_8px_24px_-6px_rgba(36,104,155,0.55)] transition-colors hover:bg-ink"
+              className="closeup-visit group/link inline-flex h-9 items-center gap-2 rounded-full bg-accent px-4 text-[13px] font-semibold text-canvas shadow-[0_8px_24px_-6px_rgba(36,104,155,0.55)] transition-colors hover:bg-ink"
             >
               Visit site
               <span
@@ -548,6 +591,28 @@ function CloseUp({
               </span>
             </Link>
           )}
+        </div>
+
+        <div className="closeup-body">
+          <div className="closeup-card relative">
+            <div ref={cardRef} className="relative will-change-transform">
+              <SiteCard site={site} sizes="(min-width: 768px) 30rem, 88vw" live />
+            </div>
+          </div>
+
+          <div className="closeup-copy wall-zoom-copy lift-in" style={copyDelay}>
+            <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-dim">
+              {pad(index + 1)} / {pad(total)} · {site.category} · {site.year}
+            </p>
+
+            {site.description && (
+              <p className="mt-3 line-clamp-5 text-[0.9375rem] leading-[1.6] text-dim md:line-clamp-7">
+                {site.description}
+              </p>
+            )}
+
+            <Badges tags={site.tags} brand={site.brand} className="mt-4" />
+          </div>
         </div>
       </div>
     </div>

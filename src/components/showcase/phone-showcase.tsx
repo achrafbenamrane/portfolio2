@@ -84,13 +84,17 @@ const phoneHeight = (width: number) => 24 + (width - 24) * 2.16;
 const PHONE_DELAY = 380;
 
 /**
- * The tap demonstration a first-time visitor is shown: a hand taps one
- * bubble after another, each tap ringing out, until the visitor hovers,
- * focuses or opens one themselves. One tap every HINT_MS, starting
- * HINT_START after the bubbles have surfaced.
+ * The tap demonstration: a hand taps one bubble, over and over, each tap
+ * ringing out, whenever the stage is idle on screen. It holds while the
+ * pointer or focus is on a bubble — so it never fights the visitor's own
+ * hand — and while an app is open, and picks up again after. One tap every
+ * HINT_MS, starting HINT_START after it is free to.
  */
 const HINT_MS = 2600;
 const HINT_START = 1400;
+/** The bubble it taps: Getdraft's, the app shown most fully — its site
+ *  and both stores. The first bubble stands in if it is ever missing. */
+const HINT_APP = "getdraft";
 
 function layoutFor(width: number, count: number) {
   const wide = width >= WIDE_FROM;
@@ -169,9 +173,8 @@ export default function PhoneShowcase({
   // Bumped on every open, so the details replay their entrance even when
   // the same app is opened again.
   const [opens, setOpens] = useState(0);
-  // Whether the visitor has found out the bubbles open — the tap
-  // demonstration stops for good once they have.
-  const [discovered, setDiscovered] = useState(false);
+  // The pointer or focus is on a bubble: the tap demonstration holds.
+  const [holding, setHolding] = useState(false);
   // Unlike `inView`, this follows the stage on and off the screen, so the
   // demonstration pauses while nobody can see it.
   const [onScreen, setOnScreen] = useState(false);
@@ -223,18 +226,15 @@ export default function PhoneShowcase({
     return () => observer.disconnect();
   }, []);
 
-  const hinting = inView && onScreen && !isOpen && !discovered && !reduced;
+  const hinting = inView && onScreen && !isOpen && !holding && !reduced;
 
   useEffect(() => {
     if (!hinting) return;
-    // Every other bubble, then the ones between, so each tap lands
-    // somewhere new rather than marching along a row.
-    const half = Math.ceil(apps.length / 2);
-    const order = apps.map((_, i) => (i % 2 === 0 ? i / 2 : half + (i - 1) / 2));
+    const index = Math.max(0, apps.findIndex((a) => a.slug === HINT_APP));
     let tick = 0;
     let loop: ReturnType<typeof setInterval> | undefined;
     const tap = () => {
-      setHint({ index: order[tick % order.length], tick });
+      setHint({ index, tick });
       tick += 1;
     };
     const start = setTimeout(() => {
@@ -244,14 +244,14 @@ export default function PhoneShowcase({
     return () => {
       clearTimeout(start);
       clearInterval(loop);
+      // So that picking up again starts on a fresh tap, not the end of the
+      // one that was interrupted.
+      setHint(null);
     };
   }, [hinting, apps]);
 
-  const discover = useCallback(() => setDiscovered(true), []);
-
   const open = useCallback(
     (app: Project) => {
-      setDiscovered(true);
       if (isOpen && current?.slug === app.slug) return;
       setCurrent(app);
       setIsOpen(true);
@@ -298,7 +298,7 @@ export default function PhoneShowcase({
                   <br />
                   <span className="inline-block overflow-hidden pb-[0.06em] align-bottom">
                     <span className="word-up" style={{ animationDelay: "680ms" }}>
-                      <span className="tap-sheen">to open it.</span>
+                      <span className="accent-sheen">to open it.</span>
                     </span>
                   </span>
                 </p>
@@ -385,7 +385,7 @@ export default function PhoneShowcase({
                   visible={inView}
                   reduced={reduced}
                   hint={hinting && hint?.index === i ? hint.tick : null}
-                  onDiscover={discover}
+                  onHold={setHolding}
                   onOpen={() => open(app)}
                 />
               );
@@ -421,7 +421,7 @@ function Bubble({
   visible,
   reduced,
   hint,
-  onDiscover,
+  onHold,
   onOpen,
 }: {
   app: Project;
@@ -439,8 +439,8 @@ function Bubble({
   /** Set while the hand is tapping this bubble — a new number each tap, so
    *  the tap plays again even on the same bubble. */
   hint: number | null;
-  /** The visitor has hovered or focused a bubble: no more demonstration. */
-  onDiscover: () => void;
+  /** The pointer or focus has come onto a bubble (true) or left it. */
+  onHold: (held: boolean) => void;
   onOpen: () => void;
 }) {
   const glassRef = useRef<HTMLSpanElement>(null);
@@ -467,8 +467,10 @@ function Bubble({
     <button
       type="button"
       onClick={onOpen}
-      onPointerEnter={onDiscover}
-      onFocus={onDiscover}
+      onPointerEnter={() => onHold(true)}
+      onPointerLeave={() => onHold(false)}
+      onFocus={() => onHold(true)}
+      onBlur={() => onHold(false)}
       aria-label={app.title}
       aria-pressed={chosen}
       title={docked ? app.title : undefined}

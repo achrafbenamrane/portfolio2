@@ -201,12 +201,12 @@
   }
 }
 
-/* ── the invitation in the middle of the stage ── */
-
-/* The second line, in the glacier accent; a band of the header's light
-   blue passes across it every few seconds, then it rests in plain accent —
-   the same colour at both ends of the pass, so it never jumps. */
-.tap-sheen {
+/* ── the accent sheen ──
+ * Words in the glacier accent with a band of the header's light blue
+ * passing across them every few seconds, then resting in plain accent —
+ * the same colour at both ends of the pass, so it never jumps. The apps'
+ * "to open it." and the wardrobe's "I built them" wear it. */
+.accent-sheen {
   background-image: linear-gradient(
     100deg,
     #24689b 0%,
@@ -220,10 +220,10 @@
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
-  animation: tap-sheen 5.5s ease-in-out 1.8s infinite;
+  animation: accent-sheen 5.5s ease-in-out 1.8s infinite;
 }
 
-@keyframes tap-sheen {
+@keyframes accent-sheen {
   0% {
     background-position: 100% 0;
   }
@@ -238,7 +238,7 @@
    stopping. */
 @media (prefers-reduced-motion: reduce) {
   .swim,
-  .tap-sheen {
+  .accent-sheen {
     animation: none;
   }
 }

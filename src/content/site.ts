@@ -306,7 +306,15 @@ export const projects: readonly Project[] = [
     },
     icon: "/apps/getdraft.png",
     brand: "#0C0C0C",
-    images: ["/apps/getdraft.png"],
+    // The app's own screens, in the order a recruiter meets them.
+    images: [
+      "/apps/getdraft.png",
+      "/projects/getdraft-app/discover.webp",
+      "/projects/getdraft-app/screen-1.webp",
+      "/projects/getdraft-app/screen-2.webp",
+      "/projects/getdraft-app/screen-3.webp",
+      "/projects/getdraft-app/screen-4.webp",
+    ],
   },
   {
     slug: "linky",

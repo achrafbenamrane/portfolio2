@@ -55,7 +55,7 @@ const WIDE_FROM = 900;
 
 const SIZES = {
   wide: { phone: 260, bubble: 88, dock: 68, gap: 12, top: 40, gutter: 56 },
-  narrow: { phone: 228, bubble: 72, dock: 44, gap: 10, top: 16, gutter: 16 },
+  narrow: { phone: 228, bubble: 72, dock: 44, gap: 8, top: 16, gutter: 16 },
 } as const;
 
 /** Where the bubbles drift before anything is chosen, as fractions of the
@@ -76,6 +76,9 @@ const SCATTER = {
     [0.18, 0.74], [0.62, 0.84], [0.92, 0.06], [0.94, 0.86],
   ],
 } as const;
+
+/** How far each bubble sits off its row on a narrow screen, in pixels. */
+const NUDGE = [-6, -16, 6, 10, -4, 16, -12, 6, 0];
 
 /** Rail and bezel around a 9 : 19.5 screen. */
 const phoneHeight = (width: number) => 24 + (width - 24) * 2.16;
@@ -134,16 +137,28 @@ function layoutFor(width: number, count: number) {
         width: Math.min(440, aside - 8),
         height: phoneH,
       },
+      closed: null,
     };
   }
 
   const cols = Math.max(1, Math.floor((width + s.gap) / pitch));
   const rows = Math.ceil(count / cols);
   const phoneY = s.top + rows * pitch + 14;
+  // Until an app is chosen, a phone needs no room for one: the bubbles sit
+  // three to a row, each nudged off the line so they still read as loose,
+  // and the stage grows to take the phone when one is opened.
+  const closedRows = Math.ceil(count / 3);
   return {
     wide,
     s,
     height: phoneY + phoneH + 72,
+    closed: {
+      height: 64 + (closedRows - 1) * 136 + 90,
+      at: (i: number) => ({
+        x: (0.18 + 0.32 * (i % 3)) * width,
+        y: 64 + Math.floor(i / 3) * 136 + NUDGE[i % NUDGE.length],
+      }),
+    },
     phone: { x: width / 2 - s.phone / 2, y: phoneY },
     dock: (i: number) => {
       const row = Math.floor(i / cols);
@@ -274,7 +289,14 @@ export default function PhoneShowcase({
           if (e.key === "Escape" && isOpen) close();
         }}
         className="stage-fade relative overflow-hidden"
-        style={{ height: layout?.height ?? phoneHeight(SIZES.wide.phone) + 144 }}
+        style={{
+          height: layout
+            ? layout.closed && !isOpen
+              ? layout.closed.height
+              : layout.height
+            : phoneHeight(SIZES.wide.phone) + 144,
+          transition: reduced ? undefined : "height 600ms cubic-bezier(0.16, 1, 0.3, 1)",
+        }}
       >
         {layout && (
           <>
@@ -358,10 +380,12 @@ export default function PhoneShowcase({
               const r = layout.s.bubble / 2;
               const at = docked
                 ? layout.dock(i)
-                : {
-                    x: Math.min(Math.max(fx * width, r + 6), width - r - 6),
-                    y: fy * layout.height,
-                  };
+                : layout.closed
+                  ? layout.closed.at(i)
+                  : {
+                      x: Math.min(Math.max(fx * width, r + 6), width - r - 6),
+                      y: fy * layout.height,
+                    };
               const scale = docked
                 ? (chosen ? layout.s.dock * 1.14 : layout.s.dock) /
                   layout.s.bubble

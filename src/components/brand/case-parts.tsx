@@ -126,7 +126,7 @@ export function NextCase({ href, client, title }: { href: string; client: string
         <Link href={href} className="group flex flex-wrap items-end justify-between gap-6 border-t border-[var(--home-line)] py-14 md:py-20">
           <span>
             <span className="text-[11px] uppercase tracking-wider text-[var(--home-dim)]">Next case study</span>
-            <span className="home-display mt-4 block text-[clamp(2rem,5vw,4.4rem)] leading-[1.02]">
+            <span className="home-display mt-4 block text-[clamp(1.8rem,9vw,2rem)] leading-[1.02] md:text-[clamp(2rem,5vw,4.4rem)]">
               {client} <span className="home-outline">{title}</span>
             </span>
           </span>

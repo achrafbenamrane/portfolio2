@@ -78,7 +78,7 @@ export default function WorkGallery() {
         <BandShell
           label="WEB"
           title="Built for the browser"
-          blurb="Every site on its own shelf. Hover one to light it up, click it to step closer."
+          blurb="Every site on its own shelf. Choose one to step closer."
           count={SITES.length}
         >
           <div className="pt-10 md:pt-14">
@@ -110,7 +110,7 @@ export default function WorkGallery() {
         <Band
           label="AUTOMATION"
           title="Built to run itself"
-          blurb="Workflows that fire without anyone watching them. Click one to read about it."
+          blurb="Workflows that fire without anyone watching them. Choose one to read about it."
           count={AUTOMATIONS.length}
           initial={AUTOMATIONS[0]}
         >
@@ -130,7 +130,7 @@ export default function WorkGallery() {
           id="design"
           label="BRAND IDENTITY"
           title="Built to be recognised"
-          blurb="We build brand identities for businesses: the logo, then everything it lives on. Click a piece to read about it."
+          blurb="We build brand identities for businesses: the logo, then everything it lives on. Choose a piece to read about it."
           count={DESIGN.length}
           initial={DESIGN[0]}
         >

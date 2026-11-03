@@ -497,8 +497,10 @@ export default function SiteWall({ sites }: { sites: readonly Project[] }) {
         <div aria-hidden className="wardrobe-plinth" />
       </div>
 
+      {/* Told as the visitor can do it: a phone has no hover. */}
       <p className="meta mt-14 text-center text-dim">
-        Hover a shelf · click a site to step closer
+        <span className="[@media(hover:none)]:hidden">Hover a shelf · click a site to step closer</span>
+        <span className="hidden [@media(hover:none)]:inline">Tap a site to step closer</span>
       </p>
     </div>
   );

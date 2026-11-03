@@ -43,7 +43,9 @@ export default function PageHeader({
           <span>{index}</span>
         </div>
 
-        <h1 className="home-display mt-12 text-[clamp(2.2rem,6vw,5.4rem)] leading-[1.02]">
+        {/* On a phone the size follows the screen, so the longest word
+            ("INDEPENDENT", "CREDENTIALS") still fits a 320px one. */}
+        <h1 className="home-display mt-12 text-[clamp(1.8rem,9vw,2.2rem)] leading-[1.02] md:text-[clamp(2.2rem,6vw,5.4rem)]">
           <span className="block">{title}</span>
           {outline && <span className="home-outline block md:pl-[9%]">{outline}</span>}
         </h1>

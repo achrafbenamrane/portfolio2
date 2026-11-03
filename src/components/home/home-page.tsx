@@ -128,8 +128,9 @@ export default function HomePage() {
             </Link>
           </div>
           <Photos
-            a="/portrait.webp"
-            b="/origami.webp"
+            a="/vision/street-detection.webp"
+            b="/vision/cctv-tracking.webp"
+            center
             sticker="Computer · Vision · "
             id="ring-vision"
             eye

@@ -35,8 +35,10 @@ export default function SiteFooter() {
         </nav>
 
         <div className="space-y-3 text-[15px] md:text-right">
-          <a href={`mailto:${site.email}`} className="block break-all transition-colors hover:text-[var(--home-sky)]">
-            {site.email}
+          {/* On a narrow phone the address wraps after the "@", not mid-word. */}
+          <a href={`mailto:${site.email}`} className="block [overflow-wrap:anywhere] transition-colors hover:text-[var(--home-sky)]">
+            {site.email.split("@")[0]}@<wbr />
+            {site.email.split("@")[1]}
           </a>
           <a href={site.phoneHref} className="block transition-colors hover:text-[var(--home-sky)]">
             {site.phone}

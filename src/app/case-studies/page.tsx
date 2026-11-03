@@ -8,7 +8,7 @@ import PageHeader from "@/components/page-header";
 export const metadata: Metadata = {
   title: "Case studies",
   description:
-    "The thinking behind AXIOM's work: the problem, the decisions and what shipped.",
+    "The thinking behind Wolfexo's work: the problem, the decisions and what shipped.",
 };
 
 /** Every case study, in the order of their numbers (04.1, 04.2…). */

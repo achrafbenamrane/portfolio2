@@ -3,8 +3,8 @@ import { ImageResponse } from "next/og";
 import { site } from "@/content/site";
 
 /**
- * The social card: AXIOM's, not a person's. No face and no location, the
- * studio's name large on its navy, with the four things it makes.
+ * The social card: Wolfexo's, not a person's. No face and no location, the
+ * agency's name large on its navy, with the four things it makes.
  *
  * Typeset in Geist, which Next ships inside its OG compiler, so nothing is
  * fetched at build time. Only the regular weight is available, so the
@@ -49,12 +49,12 @@ export default function Image() {
             color: DIM,
           }}
         >
-          <span>/ STUDIO</span>
+          <span>/ AGENCY</span>
           <span style={{ color: SKY }}>{site.availability}</span>
         </div>
 
         <div style={{ display: "flex", flexDirection: "column" }}>
-          <div style={{ fontSize: 190, letterSpacing: 18, lineHeight: 1 }}>{site.brand}</div>
+          <div style={{ fontSize: 150, letterSpacing: 14, lineHeight: 1 }}>{site.brand.toUpperCase()}</div>
           <div style={{ marginTop: 26, fontSize: 34, color: DIM }}>
             Apps built end to end, software that can see, brands people recognise.
           </div>

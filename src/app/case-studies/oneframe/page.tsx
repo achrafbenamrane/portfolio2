@@ -35,7 +35,7 @@ const PACKAGING = [
 ];
 
 /**
- * A case study in AXIOM's own look: the home page's navy, its wide uppercase
+ * A case study in Wolfexo's own look: the home page's navy, its wide uppercase
  * headlines, outlined words and numbered section rules. ONEFRAME's black
  * and white appear only where ONEFRAME itself is shown.
  */

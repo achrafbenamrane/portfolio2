@@ -50,7 +50,7 @@ const AUTOMATIONS = projects.filter(
   (p) => p.category === "AI Automation" && !SITES.includes(p),
 );
 
-/** AXIOM sells brand identity on one body of work: ONEFRAME's logo and
+/** Wolfexo sells brand identity on one body of work: ONEFRAME's logo and
  *  packaging. The rest of the print work stays in site.ts, off this page. */
 const DESIGN = projects.filter(
   (p) => p.category === "Graphic Design" && p.slug.startsWith("oneframe"),

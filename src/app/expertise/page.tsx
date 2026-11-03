@@ -8,7 +8,7 @@ import PageHeader from "@/components/page-header";
 export const metadata: Metadata = {
   title: "Expertise",
   description:
-    "Full-stack development, computer vision and brand identity: what AXIOM builds, with what, and the projects that prove it.",
+    "Full-stack development, computer vision and brand identity: what Wolfexo builds, with what, and the projects that prove it.",
 };
 
 const SERVICES = [
@@ -71,7 +71,7 @@ export default function ExpertisePage() {
         index="02"
         label="Expertise"
         title="Three disciplines,"
-        outline="one studio"
+        outline="one agency"
         description="Full-stack development, computer vision and brand identity, under one roof and in one pair of hands, so nothing gets lost between them."
       />
 

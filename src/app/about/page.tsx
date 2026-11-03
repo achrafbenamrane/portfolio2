@@ -9,7 +9,7 @@ import { certifications, experiences, projects } from "@/content/site";
 export const metadata: Metadata = {
   title: "About us",
   description:
-    "AXIOM is an independent, founder-led studio for full-stack development, computer vision and brand identity.",
+    "Wolfexo is an independent, founder-led agency for full-stack development, computer vision and brand identity.",
 };
 
 const STEPS = [
@@ -35,11 +35,11 @@ export default function AboutPage() {
         index="01"
         label="About us"
         title="An independent"
-        outline="studio"
-        description="AXIOM is a founder-led studio for full-stack development, computer vision and brand identity. One senior specialist across every role, from the first call to launch."
+        outline="agency"
+        description="Wolfexo is a founder-led agency for full-stack development, computer vision and brand identity. One senior specialist across every role, from the first call to launch."
       />
 
-      <Chapter n="01" label="The studio">
+      <Chapter n="01" label="The agency">
         <div className="grid gap-12 pt-14 md:grid-cols-2 md:gap-20 md:pt-20">
           <h2 className="home-display text-[clamp(1.8rem,3.2vw,2.9rem)]">
             <span className="whitespace-nowrap">Founder-led</span>{" "}
@@ -102,7 +102,7 @@ export default function AboutPage() {
       <Chapter n="04" label="The founder">
         <div className="grid items-center gap-12 pt-14 md:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] md:gap-20 md:pt-20">
           <div className="relative mx-auto aspect-square w-full max-w-[420px] overflow-hidden rounded-[4px] bg-[#0e2438]">
-            <Image src="/portrait.webp" alt="Benamrane Mohamed Achraf, founder of AXIOM" fill sizes="(min-width: 768px) 420px, 90vw" className="object-cover object-top" />
+            <Image src="/portrait.webp" alt="Benamrane Mohamed Achraf, founder of Wolfexo" fill sizes="(min-width: 768px) 420px, 90vw" className="object-cover object-top" />
           </div>
           <div>
             <p className="text-[11px] uppercase tracking-wider text-[#24689b]">Founder</p>
@@ -118,7 +118,7 @@ export default function AboutPage() {
             <p className="mt-6 max-w-xl leading-relaxed text-[#0e2438]/75">
               A certified auto-entrepreneur and full-stack engineer, with a
               Master&apos;s in network and information security. Behind
-              AXIOM&apos;s work: apps live in the
+              Wolfexo&apos;s work: apps live in the
               App Store and on Google Play, online stores taking orders every
               day, computer vision running in the browser, and brands printed
               on real boxes.

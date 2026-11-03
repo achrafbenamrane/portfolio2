@@ -29,7 +29,7 @@ const instrumentSerif = Instrument_Serif({
 });
 
 const DESCRIPTION =
-  "AXIOM is a full-stack development, computer vision and brand identity studio. We build web and mobile apps end to end, software that can see, and brands people recognise.";
+  "Wolfexo is a full-stack development, computer vision and brand identity agency. We build web and mobile apps end to end, software that can see, and brands people recognise.";
 const TITLE = `${site.brand} — Full-stack development, computer vision & brand identity`;
 
 export const metadata: Metadata = {
@@ -45,7 +45,7 @@ export const metadata: Metadata = {
   authors: [{ name: site.brand, url: site.url }],
   creator: site.brand,
   keywords: [
-    "AXIOM",
+    "Wolfexo",
     "Full-stack development",
     "Web apps",
     "Mobile apps",

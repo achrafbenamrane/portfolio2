@@ -6,7 +6,7 @@ import PageHeader from "@/components/page-header";
 export const metadata: Metadata = {
   title: "Contact",
   description:
-    "Start a project with AXIOM: email or phone, and a reply within one working day.",
+    "Start a project with Wolfexo: email or phone, and a reply within one working day.",
 };
 
 export default function ContactPage() {

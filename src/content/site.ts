@@ -11,7 +11,7 @@ export const site = {
   initials: "BA",
 
   /** The business the site speaks for. Copy says "we", never "I". */
-  brand: "AXIOM",
+  brand: "Wolfexo",
   brandLine: "Full-stack development, computer vision and brand identity.",
 
   /**

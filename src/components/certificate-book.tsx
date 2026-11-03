@@ -603,7 +603,7 @@ function Cover({ entries }: { entries: readonly Numbered[] }) {
         className="meta relative opacity-90"
         style={{ textShadow: EMBOSS }}
       >
-        VOL. 03 · AXIOM
+        VOL. 03 · WOLFEXO
       </p>
     </div>
   );

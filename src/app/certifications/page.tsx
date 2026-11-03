@@ -7,7 +7,7 @@ import { certifications } from "@/content/site";
 export const metadata: Metadata = {
   title: "Certifications",
   description:
-    "The credentials behind AXIOM: a degree, a red-team credential, automation certifications and community recognition.",
+    "The credentials behind Wolfexo: a degree, a red-team credential, automation certifications and community recognition.",
 };
 
 export default function CertificationsPage() {
@@ -17,8 +17,8 @@ export default function CertificationsPage() {
         index="01.2"
         label="About us — Credentials"
         title="The credentials"
-        outline="behind AXIOM"
-        description="The credentials behind AXIOM: a degree, a red-team credential, automation certifications and community recognition — the documents themselves."
+        outline="behind Wolfexo"
+        description="The credentials behind Wolfexo: a degree, a red-team credential, automation certifications and community recognition — the documents themselves."
         meta={{
           label: "CREDENTIALS",
           value: `${certifications.length.toString().padStart(3, "0")} TOTAL`,

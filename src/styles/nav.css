@@ -1,7 +1,7 @@
 /* ── the bar and its full-screen menu ──
  * After treize.pro: a wordmark, two underlined links, a round button; the
  * menu fills the screen with numbered titles set in the wide display face.
- * AXIOM's navy where Treize is charcoal. */
+ * Wolfexo's navy where Treize is charcoal. */
 
 .site-bar {
   color: #f8fafc;
@@ -30,6 +30,8 @@
   font-size: 22px;
   letter-spacing: 0.04em;
   line-height: 1;
+  /* The name is written "Wolfexo"; the mark sets it in capitals. */
+  text-transform: uppercase;
   text-decoration: none;
 }
 

@@ -17,7 +17,7 @@ export default function SiteFooter() {
             {site.brand}
           </Link>
           <p className="mt-5 max-w-xs leading-relaxed text-[var(--home-dim)]">
-            An independent studio for full-stack development, computer vision
+            An independent agency for full-stack development, computer vision
             and brand identity.
           </p>
         </div>

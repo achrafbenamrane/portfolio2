@@ -7,7 +7,7 @@ import PageHeader from "@/components/page-header";
 export const metadata: Metadata = {
   title: "Industries",
   description:
-    "The industries AXIOM builds for, and the shipped projects behind each one.",
+    "The industries Wolfexo builds for, and the shipped projects behind each one.",
 };
 
 /** Each industry with what we build there and the real work that proves it. */

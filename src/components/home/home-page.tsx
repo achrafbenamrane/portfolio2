@@ -6,7 +6,7 @@ import CoffeeCountdown from "./coffee-countdown";
 import { wide } from "./wide-font";
 
 /**
- * AXIOM's home page, laid out after treize.pro: wide uppercase headlines, words
+ * Wolfexo's home page, laid out after treize.pro: wide uppercase headlines, words
  * in outline, numbered section rules, tilted photos, a logo wall, staggered
  * project cards, a numbered FAQ and a three-column contact.
  */
@@ -57,10 +57,10 @@ const PROJECTS = [
 const FAQ = [
   {
     q: "Who will actually work on my project?",
-    a: "AXIOM's founder, from the first call to launch. AXIOM is founder-led by design: no account managers, no juniors, no hand-offs. You always talk to the person doing the work, which is why projects move fast and nothing gets lost.",
+    a: "Wolfexo's founder, from the first call to launch. Wolfexo is founder-led by design: no account managers, no juniors, no hand-offs. You always talk to the person doing the work, which is why projects move fast and nothing gets lost.",
   },
   {
-    q: "Why one studio for the whole product?",
+    q: "Why one agency for the whole product?",
     a: "Because nothing gets lost in the handover. The same hands design your screens, build the front end and the back end, and put it online, so what you approve is what ships.",
   },
   {
@@ -73,7 +73,7 @@ const FAQ = [
   },
   {
     q: "Do you subcontract any of the work?",
-    a: "Never. Development, computer vision, brand identity and launch are all done in-house at AXIOM, from the first sketch to the app stores.",
+    a: "Never. Development, computer vision, brand identity and launch are all done in-house at Wolfexo, from the first sketch to the app stores.",
   },
   {
     q: "How do payments work?",
@@ -172,7 +172,7 @@ export default function HomePage() {
               Founder-led, from first call to launch
             </h2>
             <p className="mt-6 max-w-lg leading-relaxed text-[var(--home-dim)]">
-              AXIOM is an independent studio, founder-led by design. The
+              Wolfexo is an independent agency, founder-led by design. The
               person you talk to is the person who designs, builds and launches
               your product: no account managers, no juniors, no hand-offs. We
               take on a limited number of projects at a time, so each one gets

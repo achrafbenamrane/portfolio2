@@ -50,7 +50,11 @@ const AUTOMATIONS = projects.filter(
   (p) => p.category === "AI Automation" && !SITES.includes(p),
 );
 
-const DESIGN = projects.filter((p) => p.category === "Graphic Design");
+/** AXIOM sells brand identity on one body of work: ONEFRAME's logo and
+ *  packaging. The rest of the print work stays in site.ts, off this page. */
+const DESIGN = projects.filter(
+  (p) => p.category === "Graphic Design" && p.slug.startsWith("oneframe"),
+);
 
 const VISION = projects.filter((p) => p.category === "Computer Vision");
 
@@ -123,9 +127,10 @@ export default function WorkGallery() {
 
       {DESIGN.length > 0 && (
         <Band
-          label="DESIGN"
-          title="Print and identity"
-          blurb="Swipe through, or use the arrows. Click a piece to read about it."
+          id="design"
+          label="BRAND IDENTITY"
+          title="Built to be recognised"
+          blurb="We build brand identities for businesses: the logo, then everything it lives on. Click a piece to read about it."
           count={DESIGN.length}
           initial={DESIGN[0]}
         >
@@ -144,6 +149,7 @@ export default function WorkGallery() {
 }
 
 function Band({
+  id,
   label,
   title,
   blurb,
@@ -151,6 +157,7 @@ function Band({
   initial,
   children,
 }: {
+  id?: string;
   label: string;
   title: string;
   blurb?: string;
@@ -165,7 +172,7 @@ function Band({
   const [selected, setSelected] = useState<Project | null>(initial);
 
   return (
-    <BandShell label={label} title={title} blurb={blurb} count={count}>
+    <BandShell id={id} label={label} title={title} blurb={blurb} count={count}>
       {/* On a phone the showcase comes first and the panel under it, so a
           tap on the device puts its description just below the thumb. */}
       <div className="grid gap-10 pt-12 md:grid-cols-[minmax(0,20rem)_1fr] md:gap-16 md:pt-16">
@@ -257,6 +264,21 @@ function Details({ project }: { project: Project | null }) {
       )}
 
       <Badges tags={project.tags} brand={project.brand} className="mt-5" />
+
+      {project.caseStudy && (
+        <Link
+          href={project.caseStudy}
+          className="group/case mt-6 mr-6 inline-flex items-center gap-2 border-b border-ink pb-0.5 text-sm font-medium transition-colors hover:border-accent hover:text-accent"
+        >
+          Read the case study
+          <span
+            aria-hidden
+            className="transition-transform duration-200 group-hover/case:translate-x-1"
+          >
+            →
+          </span>
+        </Link>
+      )}
 
       {project.href && (
         <Link

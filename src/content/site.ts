@@ -10,6 +10,10 @@ export const site = {
   shortName: "Achraf Benamrane",
   initials: "BA",
 
+  /** The business the site speaks for. Copy says "we", never "I". */
+  brand: "AXIOM",
+  brandLine: "Full-stack development, computer vision and brand identity.",
+
   /**
    * Canonical origin, used for metadataBase, the sitemap and OG image URLs.
    * Vercel injects the production domain at build time, so a custom domain
@@ -37,12 +41,12 @@ export const site = {
   ],
 
   tagline:
-    "I combine development, design and security to build modern digital solutions.",
+    "We build web and mobile apps end to end, and software that can see.",
 
   bio: "Full-Stack Engineer with an MSc in Network & Information Security, and experience in web and mobile application development, secure communication platforms, UI/UX design and technical project leadership. Currently working remotely at PROGIX, building full-stack applications with React, Next.js, Node.js and PostgreSQL.",
 
-  availability: "AVAILABLE FOR WORK",
-  location: "ANNABA, ALGERIA",
+  availability: "OPEN FOR NEW PROJECTS",
+  location: "REMOTE — CLIENTS WORLDWIDE",
 
   email: "Mohamed-achraf.benamrane@univ-annaba.dz",
   phone: "+213 558 78 01 31",
@@ -79,10 +83,10 @@ export interface Service {
  * interesting thing about Achraf is that they do not.
  */
 export const servicesIntro = {
-  label: "WHAT I DO",
+  label: "WHAT WE DO",
   headingTop: "From the wireframe",
   headingBottom: "to the firewall",
-  body: "Most projects lose something in the handover — design to development, development to whoever secures it. I work across all three, so nothing gets lost in between.",
+  body: "Most projects lose something in the handover — design to development, development to whoever secures it. We work across all three, so nothing gets lost in between.",
   cta: "See the work",
 } as const;
 
@@ -98,28 +102,28 @@ export const services: readonly Service[] = [
     title: "Web Development",
     description:
       "Full-stack sites and platforms in React, Next.js and Node — from the database through to the interface.",
-    href: "/work",
+    href: "/projects",
   },
   {
     icon: "phone",
     title: "Mobile Apps",
     description:
       "Cross-platform applications in React Native, with real-time data and payments built in.",
-    href: "/work",
+    href: "/projects",
   },
   {
     icon: "shield",
     title: "Network & Security",
     description:
       "Intrusion detection, network hardening and Cisco infrastructure, backed by a Master's in the field.",
-    href: "/work",
+    href: "/projects",
   },
   {
     icon: "pen",
     title: "UI/UX & Branding",
     description:
       "Interfaces, identities and print design — the visual side handled by the person who builds it.",
-    href: "/work",
+    href: "/projects",
   },
 ];
 
@@ -190,7 +194,7 @@ export interface Project {
   featured?: boolean;
   /**
    * Square app icon, for the app's launch screen and its name under the
-   * phone on /work — e.g. "/apps/neemafood.png". Without one they draw a
+   * phone on /projects — e.g. "/apps/neemafood.png". Without one they draw a
    * tinted tile with the app's initials, so a missing logo looks deliberate
    * rather than broken.
    */
@@ -207,12 +211,14 @@ export interface Project {
    */
   stores?: { appStore?: string; googlePlay?: string };
   /**
-   * Screen recording that plays inside the app's phone on /work —
+   * Screen recording that plays inside the app's phone on /projects —
    * e.g. "/apps/neemafood.mp4", produced by `npm run app:video`. Takes
    * precedence over the screenshot gallery: a recording shows the app being
    * used, which no set of stills can.
    */
   video?: string;
+  /** A case-study page on this site, e.g. "/case-studies/oneframe". */
+  caseStudy?: string;
   /**
    * The recording had no status bar of its own and went through
    * `npm run app:video -- --bare`, which leaves an empty strip of the app's
@@ -331,7 +337,7 @@ export const projects: readonly Project[] = [
     featured: true,
     title: "ONEFRAME",
     description:
-      "E-commerce storefront built for my own brand, from product pages through to checkout.",
+      "E-commerce storefront built for our own brand, from product pages through to checkout.",
     category: "Web Development",
     tags: ["E-commerce", "Next.js", "Stripe"],
     year: "2025",
@@ -354,6 +360,7 @@ export const projects: readonly Project[] = [
     year: "2026",
     href: "https://linkygroup.com/",
     brand: "#0E6E55",
+    caseStudy: "/case-studies/linky",
     images: [
       "/projects/linky-web/screen-1.webp",
       "/projects/linky-web/screen-2.webp",
@@ -386,6 +393,7 @@ export const projects: readonly Project[] = [
     year: "2026",
     href: "https://getdraft.net/",
     brand: "#121212",
+    caseStudy: "/case-studies/getdraft",
     images: [
       "/projects/getdraft-web/screen-1.webp",
       "/projects/getdraft-web/screen-2.webp",
@@ -397,12 +405,13 @@ export const projects: readonly Project[] = [
     slug: "aloulou93",
     title: "Aloulou 93",
     description:
-      "Online store for the Aloulou 93 clothing brand: shoes, clothes and football jerseys, delivered to all 58 wilayas and paid on delivery, with order tracking.",
+      "Online store for the Aloulou 93 clothing brand: shoes, clothes and football jerseys, delivered nationwide and paid on delivery, with order tracking.",
     category: "Web Development",
     tags: ["Next.js", "E-commerce", "Fashion"],
     year: "2026",
     href: "https://aloulou98.com/",
     brand: "#2B4739",
+    caseStudy: "/case-studies/aloulou93",
     images: [
       "/projects/aloulou93/screen-1.webp",
       "/projects/aloulou93/screen-2.webp",
@@ -413,7 +422,7 @@ export const projects: readonly Project[] = [
     slug: "boutique-amine",
     title: "Boutique Amine",
     description:
-      "An Arabic-first boutique for women's shoes in Algiers: heels, shoes and boots, delivered to every wilaya and paid on delivery, with a French version.",
+      "An Arabic-first boutique for women's shoes: heels, shoes and boots, delivered nationwide and paid on delivery, with a French version.",
     category: "Web Development",
     tags: ["Next.js", "E-commerce", "Arabic RTL"],
     year: "2026",
@@ -478,17 +487,29 @@ export const projects: readonly Project[] = [
     images: ["/projects/ai-automation/weather.webp"],
   },
   {
+    slug: "oneframe-identity",
+    title: "ONEFRAME Brand Identity",
+    description:
+      "Logo and identity for ONEFRAME, our own brand of 3D car frames: a boxed black-and-white wordmark that carries from the website to every box and post.",
+    category: "Graphic Design",
+    tags: ["Logo", "Brand identity"],
+    year: "2025",
+    brand: "#111111",
+    caseStudy: "/case-studies/oneframe",
+    href: "https://www.instagram.com/oneframe.dz?igsh=eGR6Z3ljZ3FkZzFt",
+    images: ["/projects/oneframe/road-to-your-walls.webp", "/projects/oneframe/logo-bw.webp"],
+  },
+  {
     slug: "oneframe-packaging",
     title: "ONEFRAME Packaging",
     description:
       "Packaging design collection featuring custom car-themed artwork for ONEFRAME brand products.",
     category: "Graphic Design",
     tags: ["Packaging", "Branding", "Adobe Illustrator"],
+    caseStudy: "/case-studies/oneframe",
     year: "2025",
     href: "https://www.instagram.com/oneframe.dz?igsh=eGR6Z3ljZ3FkZzFt",
     images: [
-      "https://res.cloudinary.com/dwvgbojw0/image/upload/f_auto,q_auto/v1765668604/1_hdwbhl.webp",
-      "https://res.cloudinary.com/dwvgbojw0/image/upload/f_auto,q_auto/v1765668605/6_hzpruh.webp",
       "https://res.cloudinary.com/dwvgbojw0/image/upload/f_auto,q_auto/v1765668611/3_mvdmkz.webp",
       "https://res.cloudinary.com/dwvgbojw0/image/upload/f_auto,q_auto/v1765668606/5_zsjru0.webp",
       "https://res.cloudinary.com/dwvgbojw0/image/upload/f_auto,q_auto/v1765668604/2_wdhnke.webp",
@@ -499,7 +520,7 @@ export const projects: readonly Project[] = [
     slug: "rital-panels",
     title: "Rital Fast Food Panels",
     description:
-      "Large-scale outdoor advertising panels for Rital Fast Food, Sidi Amar, Annaba — bold typography and food photography built to read at distance.",
+      "Large-scale outdoor advertising panels for Rital Fast Food — bold typography and food photography built to read at distance.",
     category: "Graphic Design",
     tags: ["Billboard", "Advertising", "Branding"],
     year: "2025",
@@ -518,7 +539,7 @@ export const projects: readonly Project[] = [
     slug: "rital-branding",
     title: "Rital Fast Food Branding",
     description:
-      "Restaurant branding and menu design for Rital Fast Food in Sidi Amar, Annaba — visual identity through to plated presentation.",
+      "Restaurant branding and menu design for Rital Fast Food — visual identity through to plated presentation.",
     category: "Graphic Design",
     tags: ["Branding", "Menu Design", "Restaurant"],
     year: "2025",
@@ -534,7 +555,7 @@ export const projects: readonly Project[] = [
     slug: "berchicha-logo",
     title: "Berchicha Store Logo",
     description:
-      "Brand identity for Berchicha, an Algerian retailer specialising in authentic TN and Lacoste products.",
+      "Brand identity for Berchicha, a retailer specialising in authentic TN and Lacoste products.",
     category: "Graphic Design",
     tags: ["Logo", "Brand Identity", "Retail"],
     year: "2025",
@@ -552,7 +573,7 @@ export const projects: readonly Project[] = [
     slug: "osca-logo",
     title: "OSCA Logo",
     description:
-      "Official logo for the Open Source Community Annaba, a scientific club promoting open-source technology among developers in Annaba.",
+      "Official logo for OSCA, a scientific club promoting open-source technology among developers.",
     category: "Graphic Design",
     tags: ["Logo", "Brand Identity", "Community"],
     year: "2024",
@@ -607,7 +628,7 @@ export const projects: readonly Project[] = [
     slug: "dmd-logo",
     title: "DMD Logo",
     description:
-      "Logo for DMD, an Algerian clothing store in Annaba. Distinctive branding for Algerian fashion retail.",
+      "Logo for DMD, a clothing store. Distinctive branding for fashion retail.",
     category: "Graphic Design",
     tags: ["Logo", "Branding", "Fashion"],
     year: "2025",
@@ -672,7 +693,7 @@ export const experiences: readonly Experience[] = [
   },
   {
     role: "Cybersecurity & Network Intern",
-    organisation: "Sonelgaz — Khenchela, Algeria",
+    organisation: "Sonelgaz",
     period: "Feb — Apr 2026",
     image: {
       src: "/experience/sonelgaz-thesis.webp",
@@ -690,7 +711,7 @@ export const experiences: readonly Experience[] = [
   },
   {
     role: "Master's Degree (MSc), Network & Information Security",
-    organisation: "Badji Mokhtar University, Annaba",
+    organisation: "Badji Mokhtar University",
     period: "2026",
     image: {
       src: "/experience/msc.webp",
@@ -729,13 +750,13 @@ export const experiences: readonly Experience[] = [
   },
   {
     role: "Bachelor's Degree, Computer Science",
-    organisation: "Badji Mokhtar University, Annaba",
+    organisation: "Badji Mokhtar University",
     period: "2024",
     image: {
       src: "/experience/bsc-graduation.webp",
       width: 1080,
       height: 810,
-      alt: "Four graduates in gowns and “Yes I did it” sashes in front of the brick wall of Badji Mokhtar Annaba University, one holding his cap in the air.",
+      alt: "Four graduates in gowns and “Yes I did it” sashes in front of the brick wall of Badji Mokhtar University, one holding his cap in the air.",
       caption: "Graduation day, Badji Mokhtar University",
     },
     description:
@@ -748,7 +769,7 @@ export const experiences: readonly Experience[] = [
   },
   {
     role: "Co-Founder & UI/UX Design Kernel Lead",
-    organisation: "Open-Source Community Annaba",
+    organisation: "Open-Source Community (OSCA)",
     period: "2023 — 2025",
     image: {
       src: "/experience/osc.webp",
@@ -762,7 +783,7 @@ export const experiences: readonly Experience[] = [
     achievements: [
       "Mentored students in graphic design and UI/UX through volunteer training sessions",
       "Maintained the computer labs",
-      "Organised events, including the international Study in Japan event in Annaba",
+      "Organised events, including the international Study in Japan event",
     ],
   },
   {
@@ -773,7 +794,7 @@ export const experiences: readonly Experience[] = [
       src: "/experience/podium.webp",
       width: 403,
       height: 535,
-      alt: "Achraf speaking into a microphone at a lectern beside the Algerian flag, an audience seated to the left.",
+      alt: "Achraf speaking into a microphone at a lectern beside a flag, an audience seated to the left.",
       caption: "Pitching the platform at Badji Mokhtar University",
     },
     description:
@@ -821,7 +842,7 @@ export interface Certification {
 export const certifications: readonly Certification[] = [
   {
     title: "Master's Degree in Networks & Computer Security",
-    issuer: "Badji Mokhtar University, Annaba",
+    issuer: "Badji Mokhtar University",
     date: "2026",
     issued: "2026-07-01",
     kind: "degree",
@@ -928,7 +949,7 @@ export const certifications: readonly Certification[] = [
   },
   {
     title: "Bachelor's Degree in Computer Systems",
-    issuer: "Badji Mokhtar University, Annaba",
+    issuer: "Badji Mokhtar University",
     date: "2024",
     issued: "2024-07-21",
     kind: "degree",
@@ -947,7 +968,7 @@ export const certifications: readonly Certification[] = [
   },
   {
     title: "Startup Brevet — Smart Dental Platform",
-    issuer: "Badji Mokhtar University, Annaba",
+    issuer: "Badji Mokhtar University",
     date: "2023 — 2024",
     issued: "2024-06-29",
     kind: "recognition",
@@ -965,7 +986,7 @@ export const certifications: readonly Certification[] = [
   },
   {
     title: "Open-Source Community Leader",
-    issuer: "OSC Annaba — Computer Science Department",
+    issuer: "OSCA — Computer Science Department",
     date: "2023 — 2024",
     issued: "2024",
     kind: "recognition",
@@ -983,7 +1004,7 @@ export const certifications: readonly Certification[] = [
   },
   {
     title: "Event Organizer — Study in Japan 2024",
-    issuer: "Open-Source Community Annaba",
+    issuer: "Open-Source Community (OSCA)",
     date: "2024",
     issued: "2024",
     kind: "recognition",

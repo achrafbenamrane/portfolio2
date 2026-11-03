@@ -181,8 +181,7 @@ function Contacts() {
     <div className="fw-contacts">
       <ContactRow label="EMAIL" value={site.email} href={`mailto:${site.email}`} />
       <ContactRow label="PHONE" value={site.phone} href={site.phoneHref} />
-      <ContactRow label="LOCATION" value={site.location} />
-      <ContactRow label="RÉSUMÉ" value="Download CV (PDF)" href={site.cvHref} />
+      <ContactRow label="WORKING" value={site.location} />
       {site.links.map((link) => (
         <ContactRow
           key={link.label}

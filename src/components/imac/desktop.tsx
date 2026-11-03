@@ -40,7 +40,7 @@ const FOLDERS: readonly FolderSpec[] = [
   {
     id: "works",
     label: "WORKS",
-    href: "/work",
+    href: "/projects",
     count: projects.length,
     hint: "projects",
   },
@@ -202,13 +202,6 @@ export default function Desktop({
       onOpen: () => setApp("phone"),
     },
     {
-      id: "cv",
-      label: "CV (PDF)",
-      tint: "linear-gradient(160deg,#F05B4A,#C2160B)",
-      icon: <span className="glyph-text glyph-pdf">PDF</span>,
-      onOpen: () => window.open(site.cvHref, "_blank", "noopener"),
-    },
-    {
       id: "quran",
       label: "Quran",
       tint: "linear-gradient(160deg,#2FBFA0,#0E7C63)",
@@ -253,8 +246,7 @@ export default function Desktop({
         <div className={`desktop-wall${diving ? " is-diving" : ""}`} />
 
         <div className="menubar">
-          <span className="menubar-brand">{site.initials}</span>
-          <span>{site.shortName}</span>
+          <span className="menubar-brand">{site.brand}</span>
           <span className="menubar-spacer" />
           <span>{tracking ? "◉ Hand control" : "○ Hand control off"}</span>
           <span>{clock}</span>

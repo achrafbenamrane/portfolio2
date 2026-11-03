@@ -45,7 +45,7 @@ export default function Services() {
             </p>
 
             <Link
-              href="/work"
+              href="/projects"
               className="group mt-6 inline-flex items-center gap-2.5 rounded-full border border-line px-5 py-2.5 text-sm font-medium transition-colors hover:border-accent hover:text-accent"
             >
               {servicesIntro.cta}

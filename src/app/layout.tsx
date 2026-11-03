@@ -29,41 +29,45 @@ const instrumentSerif = Instrument_Serif({
 });
 
 const DESCRIPTION =
-  "Full-Stack Developer, UI/UX Designer and Network & Information Security Engineer based in Annaba, Algeria.";
+  "AXIOM is a full-stack development, computer vision and brand identity studio. We build web and mobile apps end to end, software that can see, and brands people recognise.";
+const TITLE = `${site.brand} — Full-stack development, computer vision & brand identity`;
 
 export const metadata: Metadata = {
   // Without metadataBase the OG image resolves to a relative URL, which every
   // social scraper rejects — the card renders blank.
   metadataBase: new URL(site.url),
   title: {
-    default: `${site.name} — Developer, Designer, Security Engineer`,
-    template: `%s — ${site.shortName}`,
+    default: TITLE,
+    template: `%s — ${site.brand}`,
   },
   description: DESCRIPTION,
-  applicationName: site.shortName,
-  authors: [{ name: site.name, url: site.url }],
-  creator: site.name,
+  applicationName: site.brand,
+  authors: [{ name: site.brand, url: site.url }],
+  creator: site.brand,
   keywords: [
-    ...site.roles,
-    "Portfolio",
-    "Annaba",
-    "Algeria",
-    "Next.js",
-    "React",
-    "Cybersecurity",
+    "AXIOM",
+    "Full-stack development",
+    "Web apps",
+    "Mobile apps",
+    "Websites",
+    "Computer vision",
+    "Hand tracking",
+    "Brand identity",
+    "Logo design",
+    "Packaging design",
   ],
   alternates: { canonical: "/" },
   openGraph: {
     type: "website",
-    siteName: site.shortName,
-    title: `${site.name} — Developer, Designer, Security Engineer`,
+    siteName: site.brand,
+    title: TITLE,
     description: DESCRIPTION,
     url: site.url,
     locale: "en_US",
   },
   twitter: {
     card: "summary_large_image",
-    title: `${site.name} — Developer, Designer, Security Engineer`,
+    title: TITLE,
     description: DESCRIPTION,
   },
   robots: {

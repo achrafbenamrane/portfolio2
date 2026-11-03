@@ -1,6 +1,6 @@
 import type { MetadataRoute } from "next";
 
-import { SECTIONS } from "@/content/nav";
+import { MORE_PAGES, SECTIONS } from "@/content/nav";
 import { site } from "@/content/site";
 
 /**
@@ -10,7 +10,7 @@ import { site } from "@/content/site";
  */
 export default function sitemap(): MetadataRoute.Sitemap {
   const now = new Date();
-  const routes = ["/", ...SECTIONS.map((section) => section.href)];
+  const routes = ["/", ...SECTIONS.map((section) => section.href), ...MORE_PAGES];
 
   return routes.map((href) => ({
     url: new URL(href, site.url).toString(),

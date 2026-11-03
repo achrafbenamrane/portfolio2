@@ -13,6 +13,14 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  // Work became Projects, and the ONEFRAME case study moved under the case
+  // studies. Old links, bookmarks and search results land on the new pages.
+  async redirects() {
+    return [
+      { source: "/work/oneframe", destination: "/case-studies/oneframe", permanent: true },
+      { source: "/work", destination: "/projects", permanent: true },
+    ];
+  },
 };
 
 export default nextConfig;

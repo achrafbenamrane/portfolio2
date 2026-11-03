@@ -603,7 +603,7 @@ function Cover({ entries }: { entries: readonly Numbered[] }) {
         className="meta relative opacity-90"
         style={{ textShadow: EMBOSS }}
       >
-        VOL. 03 · ANNABA
+        VOL. 03 · AXIOM
       </p>
     </div>
   );
@@ -771,7 +771,7 @@ function BackCover() {
       />
       <p className="meta relative text-white/70">{site.initials}</p>
       <p className="font-brand relative mt-3 text-[clamp(1rem,3.5cqw,1.6rem)] italic">
-        my portfolio
+        certifications
       </p>
     </div>
   );

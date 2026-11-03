@@ -7,16 +7,18 @@ import { certifications } from "@/content/site";
 export const metadata: Metadata = {
   title: "Certifications",
   description:
-    "A degree, a red-team credential, automation certifications and community recognition, with the certificates themselves.",
+    "The credentials behind AXIOM: a degree, a red-team credential, automation certifications and community recognition.",
 };
 
 export default function CertificationsPage() {
   return (
     <>
       <PageHeader
-        index="03 / CERTIFICATIONS"
-        title="Certifications"
-        description="A degree, a red-team credential, automation certifications and community recognition — the documents themselves."
+        index="01.2"
+        label="About us — Credentials"
+        title="The credentials"
+        outline="behind AXIOM"
+        description="The credentials behind AXIOM: a degree, a red-team credential, automation certifications and community recognition — the documents themselves."
         meta={{
           label: "CREDENTIALS",
           value: `${certifications.length.toString().padStart(3, "0")} TOTAL`,

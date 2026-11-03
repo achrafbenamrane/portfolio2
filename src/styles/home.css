@@ -1,0 +1,548 @@
+/* ── the home page ──
+ * Laid out after treize.pro: wide uppercase headlines, words drawn in
+ * outline, a spinning scroll badge, numbered section rules, tilted photos.
+ * The colours stay the site's own: navy where Treize is charcoal, the
+ * light blue where it is iridescent. */
+
+.home {
+  --home-bg: #0e2438;
+  --home-fg: #f8fafc;
+  --home-dim: rgba(248, 250, 252, 0.72);
+  --home-line: rgba(248, 250, 252, 0.16);
+  --home-sky: #7cc4f0;
+  --home-iris: conic-gradient(from 210deg, #7cc4f0, #ffffff, #24689b, #a9dcf7, #7cc4f0);
+  /* Film grain over the navy, as Treize has over its charcoal: a tile of
+     faint noise drawn above the colour, so it marks the background but
+     never the photos on it. */
+  background: url("/grain.png") repeat, var(--home-bg);
+  color: var(--home-fg);
+}
+
+/* Every page but home, under its navy heading: the same type, rules and
+   buttons on white, with the navy turned to ink and the light blue darkened
+   to stay legible. The footer, shared by every page, follows the page it
+   closes: white wherever a page heading (.page-head) says it is not home. */
+.home-light,
+body:has(.page-head) .site-footer {
+  /* The page's own white, so these sections meet the Projects and Contact
+     content below them without a seam. */
+  --home-bg: var(--color-canvas);
+  --home-fg: #0e2438;
+  --home-dim: rgba(14, 36, 56, 0.7);
+  --home-line: rgba(14, 36, 56, 0.14);
+  --home-sky: #24689b;
+  /* The grain is the navy's; the white stays clean. */
+  background-image: none;
+}
+
+/* The wide display face: Archivo at its widest, standing in for Treize's
+   Moderat Extended. */
+.home-display {
+  margin: 0;
+  font-family: var(--font-wide), var(--font-sans);
+  font-stretch: 125%;
+  font-weight: 700;
+  line-height: 1.05;
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
+  text-wrap: balance;
+}
+
+/* The stroke is given its colour outright: with the fill transparent,
+   currentColor is transparent too, and the word disappears. */
+.home-outline {
+  color: transparent;
+  -webkit-text-stroke: 1.4px var(--home-fg);
+}
+
+.home-outline-dark {
+  color: transparent;
+  -webkit-text-stroke: 1.4px #0e2438;
+}
+
+/* ── section rule: "/ EXPERTISE ... 01" ── */
+.home-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding-top: 14px;
+  border-top: 1px solid var(--home-line);
+  font: 500 11px/1.4 var(--font-sans);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.home-row span:first-child {
+  display: flex;
+  gap: 32px;
+}
+
+/* ── buttons: pills in the text colour, uppercase — white on navy, navy on
+   white ── */
+.home-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 46px;
+  padding: 0 24px;
+  border-radius: 999px;
+  background: var(--home-fg);
+  color: var(--home-bg, #0e2438);
+  font: 700 12px/1 var(--font-wide), var(--font-sans);
+  font-stretch: 112%;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  text-decoration: none;
+  transition: background-color 0.25s ease, transform 0.25s ease;
+}
+
+.home-btn:hover {
+  background: var(--home-sky);
+  transform: translateY(-1px);
+}
+
+.home-btn-dark {
+  background: #0e2438;
+  color: #f8fafc;
+}
+
+.home-btn-dark:hover {
+  background: #24689b;
+}
+
+/* The second choice beside a filled button: outlined, filling on hover. */
+.home-btn-ghost {
+  background: transparent;
+  color: var(--home-fg, #0e2438);
+  box-shadow: inset 0 0 0 1px var(--home-line, rgba(14, 36, 56, 0.25));
+}
+
+.home-btn-ghost:hover {
+  background: var(--home-fg, #0e2438);
+  color: var(--home-bg, #ffffff);
+}
+
+/* ── the spinning "scroll" badge ── */
+.home-badge {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 112px;
+  height: 112px;
+  flex: none;
+}
+
+.home-badge svg.home-ring {
+  position: absolute;
+  inset: 0;
+  animation: home-spin 14s linear infinite;
+}
+
+.home-badge-core {
+  display: grid;
+  place-items: center;
+  width: 66px;
+  height: 66px;
+  border-radius: 50%;
+  background: var(--home-iris);
+  color: #0e2438;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.6);
+}
+
+/* The small round sticker that sits on the photos. */
+.home-sticker {
+  position: absolute;
+  display: grid;
+  place-items: center;
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+  background: #f8fafc;
+  color: #0e2438;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+}
+
+.home-sticker svg.home-ring {
+  position: absolute;
+  inset: 6px;
+  animation: home-spin 18s linear infinite reverse;
+}
+
+.home-sticker-core {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--home-iris);
+}
+
+@keyframes home-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* The globe-like chip set inside the hero's headline. */
+.home-chip {
+  display: inline-grid;
+  place-items: center;
+  width: 0.92em;
+  height: 0.92em;
+  margin: 0 0.12em;
+  vertical-align: -0.1em;
+  border-radius: 50%;
+  background: var(--home-iris);
+  color: #0e2438;
+  box-shadow: inset 0 0 0 0.04em rgba(255, 255, 255, 0.7);
+}
+
+/* ── tilted photos ── */
+.home-photo {
+  position: absolute;
+  overflow: hidden;
+  border-radius: 4px;
+  box-shadow: 0 30px 60px -20px rgba(0, 0, 0, 0.55);
+  background: #133a5e;
+}
+
+.home-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top;
+}
+
+/* ── clients: two rows of cards sliding past each other ──
+ * Each row is its list three times over and slides one copy's width (a
+ * third) before starting again, so the seam never shows. The edges fade
+ * out rather than cut off. */
+/* Room above and below, so a card lifting under the pointer is not clipped. */
+.home-marquee {
+  overflow: hidden;
+  padding-block: 6px;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent);
+}
+
+.home-marquee-track {
+  display: flex;
+  width: max-content;
+  animation: home-marquee 64s linear infinite;
+}
+
+.home-marquee-reverse .home-marquee-track {
+  animation-direction: reverse;
+  animation-duration: 72s;
+}
+
+.home-marquee:hover .home-marquee-track {
+  animation-play-state: paused;
+}
+
+/* The space after each card, not between them, so the three copies are
+   exactly the same width and a third of the track is exactly one copy. */
+.home-marquee ul {
+  display: flex;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+@keyframes home-marquee {
+  to {
+    transform: translateX(calc(-100% / 3));
+  }
+}
+
+/* A pill: the logo in a circle, the name, and what we made. Under the
+   pointer it takes on the client's own colour (--brand). */
+.home-client {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  margin-right: 16px;
+  padding: 12px 40px 12px 12px;
+  border: 1px solid var(--home-line);
+  border-radius: 999px;
+  background: rgba(248, 250, 252, 0.03);
+  white-space: nowrap;
+  transition: background-color 0.35s ease, border-color 0.35s ease, transform 0.35s ease;
+}
+
+.home-client:hover {
+  border-color: color-mix(in oklab, var(--brand) 55%, #ffffff);
+  background: color-mix(in oklab, var(--brand) 24%, transparent);
+  transform: translateY(-2px);
+}
+
+.home-client img {
+  flex: none;
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  object-fit: cover;
+  box-shadow: 0 0 0 1px rgba(248, 250, 252, 0.14);
+  transition: box-shadow 0.35s ease;
+}
+
+.home-client:hover img {
+  box-shadow:
+    0 0 0 2px color-mix(in oklab, var(--brand) 55%, #ffffff),
+    0 8px 28px -6px color-mix(in oklab, var(--brand) 80%, transparent);
+}
+
+.home-client b {
+  display: block;
+  font: 700 17px/1.2 var(--font-wide), var(--font-sans);
+  font-stretch: 118%;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.home-client small {
+  display: block;
+  margin-top: 6px;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--home-dim);
+}
+
+@media (max-width: 767px) {
+  .home-client {
+    gap: 14px;
+    margin-right: 12px;
+    padding: 8px 24px 8px 8px;
+  }
+
+  .home-client img {
+    width: 48px;
+    height: 48px;
+  }
+
+  .home-client b {
+    font-size: 14px;
+  }
+}
+
+/* Still, for reduced motion: one copy of each row, scrolled by hand. */
+@media (prefers-reduced-motion: reduce) {
+  .home-marquee {
+    overflow-x: auto;
+  }
+
+  .home-marquee-track {
+    animation: none;
+    padding-inline: 24px;
+  }
+
+  .home-marquee ul[aria-hidden] {
+    display: none;
+  }
+}
+
+/* ── projects: the image grows a little on hover ── */
+.home-card .home-card-img {
+  overflow: hidden;
+  background: #133a5e;
+}
+
+.home-card .home-card-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top;
+  transition: transform 0.8s ease;
+}
+
+.home-card:hover .home-card-img img {
+  transform: scale(1.04);
+}
+
+/* ── FAQ ── */
+.home-faq details {
+  border-bottom: 1px solid var(--home-line);
+}
+
+.home-faq summary {
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+  padding: 26px 0;
+  cursor: pointer;
+  list-style: none;
+}
+
+.home-faq summary::-webkit-details-marker {
+  display: none;
+}
+
+.home-faq .num {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 22px;
+  height: 22px;
+  margin-top: 0.15em;
+  border: 1px solid currentColor;
+  border-radius: 50%;
+  font: 500 11px/1 var(--font-sans);
+}
+
+.home-faq .plus {
+  position: relative;
+  flex: none;
+  width: 22px;
+  height: 22px;
+  margin-left: auto;
+  margin-top: 0.15em;
+  transition: transform 0.3s ease;
+}
+
+.home-faq .plus::before,
+.home-faq .plus::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  height: 1.5px;
+  background: currentColor;
+}
+
+.home-faq .plus::after {
+  transform: rotate(90deg);
+}
+
+.home-faq details[open] .plus {
+  transform: rotate(45deg);
+}
+
+/* ── "Can I help you?": each line fills from the bottom as it scrolls in;
+   at rest, where scroll-driven animation is missing, it stays half full,
+   as Treize's does. ── */
+.home-fill {
+  position: relative;
+  display: block;
+}
+
+.home-fill > span:last-child {
+  position: absolute;
+  inset: 0;
+  color: #0e2438;
+  -webkit-text-stroke: 0;
+  clip-path: inset(50% 0 0 0);
+}
+
+@supports (animation-timeline: view()) {
+  .home-fill > span:last-child {
+    animation: home-fill-rise linear both;
+    animation-timeline: view();
+    animation-range: entry 30% cover 55%;
+  }
+}
+
+@keyframes home-fill-rise {
+  from {
+    clip-path: inset(100% 0 0 0);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .home-badge svg.home-ring,
+  .home-sticker svg.home-ring {
+    animation: none;
+  }
+
+  .home-fill > span:last-child {
+    animation: none;
+    clip-path: inset(50% 0 0 0);
+  }
+}
+
+/* ── laptop and phone: the full-stack section's devices ──
+ * Drawn in CSS around real content: the website recording plays in the
+ * laptop, the app's screens cross-fade in the phone. */
+
+.home-devices {
+  position: relative;
+  aspect-ratio: 16 / 11;
+}
+
+.home-laptop {
+  position: absolute;
+  left: 0;
+  top: 6%;
+  width: 84%;
+}
+
+.home-laptop-screen {
+  position: relative;
+  padding: 2.2% 2.2% 2.6%;
+  border-radius: 14px 14px 4px 4px;
+  background: #0b1220;
+  box-shadow:
+    inset 0 0 0 1.5px rgba(255, 255, 255, 0.08),
+    0 40px 70px -30px rgba(0, 0, 0, 0.7);
+}
+
+.home-laptop-screen video,
+.home-laptop-screen img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 1280 / 680;
+  object-fit: cover;
+  border-radius: 3px;
+  background: #0e2438;
+}
+
+/* The deck: a little wider than the screen, with the notch you open it by. */
+.home-laptop-base {
+  position: relative;
+  height: 14px;
+  margin: 0 -6.5%;
+  border-radius: 0 0 14px 14px;
+  background: linear-gradient(180deg, #c9d2dc 0%, #8e99a6 60%, #6d7884 100%);
+  box-shadow: 0 18px 30px -12px rgba(0, 0, 0, 0.6);
+}
+
+.home-laptop-base::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 0;
+  width: 15%;
+  height: 5px;
+  transform: translateX(-50%);
+  border-radius: 0 0 6px 6px;
+  background: #6d7884;
+}
+
+.home-phone {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 27%;
+  padding: 2.4%;
+  border-radius: 13% / 6%;
+  background: #0b1220;
+  box-shadow:
+    inset 0 0 0 1.5px rgba(255, 255, 255, 0.12),
+    0 40px 60px -20px rgba(0, 0, 0, 0.75);
+}
+
+.home-phone-screen {
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: 772 / 1655;
+  border-radius: 11% / 5%;
+  background: #000;
+}
+
+/* One screen, held still: the app's home screen. */
+.home-phone-screen img {
+  object-fit: cover;
+  object-position: top;
+}

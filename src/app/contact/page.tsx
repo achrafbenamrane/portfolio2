@@ -6,16 +6,18 @@ import PageHeader from "@/components/page-header";
 export const metadata: Metadata = {
   title: "Contact",
   description:
-    "Email, phone and social links — plus a downloadable CV. Based in Annaba, Algeria.",
+    "Start a project with AXIOM: email or phone, and a reply within one working day.",
 };
 
 export default function ContactPage() {
   return (
     <>
       <PageHeader
-        index="04 / CONTACT"
-        title="Contact"
-        description="Open to freelance and full-time work. The fastest route is email."
+        index="06"
+        label="Contact"
+        title="Let's build"
+        outline="something real"
+        description="Tell us about your project. You'll hear back within one working day, from the person who will build it."
       />
       <Contact />
     </>

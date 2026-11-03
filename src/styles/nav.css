@@ -1,0 +1,241 @@
+/* ── the bar and its full-screen menu ──
+ * After treize.pro: a wordmark, two underlined links, a round button; the
+ * menu fills the screen with numbered titles set in the wide display face.
+ * AXIOM's navy where Treize is charcoal. */
+
+.site-bar {
+  color: #f8fafc;
+}
+
+/* Frosted navy glass: the page scrolls under the bar, blurred. The glass is
+   a layer of its own, because a backdrop-filter on the bar itself would make
+   the bar the box the fixed full-screen menu inside it is placed in. */
+.site-bar::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  /* The same grain as the navy pages, so the bar and the page under it
+     read as one surface. */
+  background: url("/grain.png") repeat, rgba(14, 36, 56, 0.88);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  -webkit-backdrop-filter: blur(18px) saturate(160%);
+  backdrop-filter: blur(18px) saturate(160%);
+}
+
+.site-wordmark {
+  font-family: var(--font-wide), var(--font-sans);
+  font-stretch: 125%;
+  font-weight: 700;
+  font-size: 22px;
+  letter-spacing: 0.04em;
+  line-height: 1;
+  text-decoration: none;
+}
+
+.site-underline {
+  padding-bottom: 3px;
+  border-bottom: 2px solid currentColor;
+  font-family: var(--font-wide), var(--font-sans);
+  font-stretch: 112%;
+  font-weight: 700;
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: inherit;
+  transition: color 0.2s ease;
+}
+
+.site-underline:hover {
+  color: #7cc4f0;
+}
+
+.site-round {
+  display: inline-grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  flex: none;
+  border: 0;
+  border-radius: 50%;
+  background: #f8fafc;
+  color: #0e2438;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.site-round:hover {
+  background: #7cc4f0;
+  transform: scale(1.05);
+}
+
+.site-round-ghost {
+  width: 56px;
+  height: 56px;
+  background: transparent;
+  color: #f8fafc;
+  border: 1px solid rgba(248, 250, 252, 0.35);
+}
+
+.site-round-ghost:hover {
+  background: #f8fafc;
+  color: #0e2438;
+}
+
+/* ── the menu ── */
+
+.site-menu {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  overflow-y: auto;
+  background: url("/grain.png") repeat, #0e2438;
+  color: #f8fafc;
+}
+
+.site-menu.is-open {
+  animation: site-menu-in 0.35s ease both;
+}
+
+@keyframes site-menu-in {
+  from {
+    opacity: 0;
+    transform: translateY(-12px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.site-menu-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.site-menu-list li {
+  display: grid;
+  grid-template-columns: 52px auto 1fr;
+  align-items: center;
+  column-gap: 20px;
+}
+
+.site-menu-num {
+  align-self: start;
+  padding-top: 0.9em;
+  font-size: 15px;
+  font-variant-numeric: tabular-nums;
+  color: rgba(248, 250, 252, 0.6);
+}
+
+.site-menu-link {
+  font-family: var(--font-wide), var(--font-sans);
+  font-stretch: 125%;
+  font-weight: 700;
+  font-size: clamp(1.9rem, 5vw, 4.4rem);
+  line-height: 1.1;
+  white-space: nowrap;
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: #f8fafc;
+  transition: color 0.2s ease, -webkit-text-stroke-color 0.2s ease;
+}
+
+.site-menu-link[aria-current="page"] {
+  color: #7cc4f0;
+}
+
+/* Hovering one title fills it and turns the others to outline. */
+.site-menu-list:hover .site-menu-link {
+  color: transparent;
+  -webkit-text-stroke: 1.4px #f8fafc;
+}
+
+.site-menu-list .site-menu-link:hover {
+  color: #f8fafc;
+  -webkit-text-stroke: 0;
+}
+
+/* Keyboard focus is shown as a rule under the title, so a title focused
+   on opening the menu never looks hovered at the same time as another. */
+.site-menu-link:focus-visible {
+  outline: none;
+  text-decoration: underline;
+  text-decoration-thickness: 3px;
+  text-underline-offset: 8px;
+}
+
+.site-menu-note {
+  max-width: 16em;
+  font-family: var(--font-wide), var(--font-sans);
+  font-stretch: 112%;
+  font-weight: 600;
+  font-size: 12px;
+  line-height: 1.3;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: rgba(248, 250, 252, 0.85);
+}
+
+.site-menu-side {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 26px;
+  text-align: right;
+  font-size: 17px;
+}
+
+.site-menu-side a {
+  color: #f8fafc;
+  text-decoration: none;
+}
+
+.site-menu-side a:hover {
+  color: #7cc4f0;
+}
+
+.site-lang {
+  padding-bottom: 4px;
+  border-bottom: 2px solid #f8fafc;
+  font-family: var(--font-wide), var(--font-sans);
+  font-stretch: 112%;
+  font-weight: 700;
+  font-size: 14px;
+}
+
+.site-menu-side a {
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 767px) {
+  .site-menu-list li {
+    grid-template-columns: 34px 1fr;
+    column-gap: 12px;
+  }
+
+  /* The longest title, CASE STUDIES, still fits a 320px phone. */
+  .site-menu-link {
+    font-size: min(1.9rem, 7.2vw);
+  }
+
+  .site-menu-note {
+    grid-column: 2;
+    margin: -2px 0 8px;
+  }
+
+  .site-menu-side {
+    align-items: flex-start;
+    text-align: left;
+    font-size: 15px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .site-menu.is-open {
+    animation: none;
+  }
+}

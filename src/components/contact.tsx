@@ -4,7 +4,7 @@ import { site } from "@/content/site";
  * The contact page: one thing to do, and the details under it.
  *
  * The address is the page — set as large as it fits and followed by a
- * button, because on a phone "tap here to write to me" is the whole job
+ * button, because on a phone "tap here to start a project" is the whole job
  * and a mailto link set in body copy is easy to miss. Everything else is
  * a ruled row, label left and value right, the same form the rest of the
  * site uses for a list of facts.
@@ -38,7 +38,7 @@ export default function Contact() {
             href={`mailto:${site.email}`}
             className="group mt-7 inline-flex items-center gap-2.5 rounded-full bg-ink px-6 py-3.5 text-sm font-medium text-canvas transition-opacity hover:opacity-85"
           >
-            Write to me
+            Start a project
             <span
               aria-hidden
               className="transition-transform duration-200 group-hover:translate-x-1"
@@ -60,17 +60,9 @@ export default function Contact() {
             </a>
           </Row>
 
-          <Row label="LOCATION">{site.location}</Row>
+          <Row label="WORKING">{site.location}</Row>
 
-          <Row label="RÉSUMÉ">
-            <a
-              href={site.cvHref}
-              download
-              className="transition-colors hover:text-accent"
-            >
-              Download CV (PDF) ↓
-            </a>
-          </Row>
+          <Row label="REPLY">Within one working day</Row>
 
           {site.links.map((link) => (
             <Row key={link.label} label={link.label.toUpperCase()}>

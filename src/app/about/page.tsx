@@ -108,7 +108,7 @@ export default function AboutPage() {
             <p className="text-[11px] uppercase tracking-wider text-[#b3122a]">Founder</p>
             <h2 className="home-display mt-3 text-[clamp(1.8rem,3.2vw,2.9rem)]">Benamrane Mohamed Achraf</h2>
             {/* His legal status: "auto-entrepreneur agréé" on his card. */}
-            <p className="mt-5 inline-flex items-center gap-2 rounded-full border border-[#b3122a]/40 bg-[#b3122a]/[0.07] py-1.5 pl-2 pr-4 text-[12px] font-semibold uppercase tracking-wider text-[#b3122a]">
+            <p className="mt-5 inline-flex items-center gap-2 rounded-full border border-[#15803d]/40 bg-[#15803d]/[0.07] py-1.5 pl-2 pr-4 text-[12px] font-semibold uppercase tracking-wider text-[#15803d]">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden>
                 <circle cx="12" cy="12" r="10" fill="currentColor" />
                 <path d="M7.5 12.5l3 3 6-6.5" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />

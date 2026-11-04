@@ -199,7 +199,7 @@ export function useLightbox(image: ZoomableSource, alt: string) {
         }}
         onPointerMove={onMove}
         onWheel={close}
-        className="fixed inset-0 z-100 bg-[#0E2438]/60 outline-none backdrop-blur-sm"
+        className="fixed inset-0 z-100 BG-[#281B1C]/60 outline-none backdrop-blur-sm"
       >
         {/* The bare photograph, laid out where it will rest; the animation
             starts it over the origin. Not next/image: this is the file

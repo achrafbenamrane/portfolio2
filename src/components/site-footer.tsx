@@ -5,7 +5,7 @@ import { SECTIONS } from "@/content/nav";
 import { site } from "@/content/site";
 
 /**
- * The footer: the wordmark, the menu and the contacts. Navy under the home
+ * The footer: the wordmark, the menu and the contacts. Red under the home
  * page, white under the others (see .home-light).
  */
 export default function SiteFooter() {

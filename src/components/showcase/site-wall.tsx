@@ -646,7 +646,7 @@ function CloseUp({
               href={site.href}
               target="_blank"
               rel="noopener noreferrer"
-              className="closeup-visit group/link inline-flex h-9 items-center gap-2 rounded-full bg-accent px-4 text-[13px] font-semibold text-canvas shadow-[0_8px_24px_-6px_rgba(36,104,155,0.55)] transition-colors hover:bg-ink"
+              className="closeup-visit group/link inline-flex h-9 items-center gap-2 rounded-full bg-accent px-4 text-[13px] font-semibold text-canvas shadow-[0_8px_24px_-6px_rgba(179,18,42,0.55)] transition-colors hover:bg-ink"
             >
               Visit site
               <span
@@ -708,7 +708,7 @@ function SiteCard({
   live?: boolean;
 }) {
   return (
-    <div className="overflow-hidden rounded-[10px] bg-surface-1 shadow-[0_26px_40px_-18px_rgba(14,36,56,0.4)] ring-1 ring-ink/10">
+    <div className="overflow-hidden rounded-[10px] bg-surface-1 shadow-[0_26px_40px_-18px_rgba(40,27,28,0.4)] ring-1 ring-ink/10">
       <div className="flex aspect-[16/11] flex-col">
         <div className="flex h-[6%] items-center gap-[1%] bg-surface-2 px-[2.4%]">
           {[0, 1, 2].map((dot) => (

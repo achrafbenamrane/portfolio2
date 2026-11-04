@@ -8,7 +8,7 @@
  * evenly, so they stay on one line down to a small phone.
  */
 export const ACTION_BUTTON =
-  "inline-flex h-11 shrink-0 items-center whitespace-nowrap rounded-full border border-line bg-white text-ink shadow-[0_8px_22px_-10px_rgba(14,36,56,0.45)] transition-colors hover:border-accent @max-[28rem]:h-10 @max-[28rem]:min-w-0 @max-[28rem]:not-only:flex-1 @max-[28rem]:justify-center";
+  "inline-flex h-11 shrink-0 items-center whitespace-nowrap rounded-full border border-line bg-white text-ink shadow-[0_8px_22px_-10px_rgba(40,27,28,0.45)] transition-colors hover:border-accent @max-[28rem]:h-10 @max-[28rem]:min-w-0 @max-[28rem]:not-only:flex-1 @max-[28rem]:justify-center";
 
 /** The leading mark in every button, sized with it. */
 export const ACTION_ICON = "size-[22px] shrink-0 @max-[28rem]:size-4";

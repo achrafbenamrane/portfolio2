@@ -494,7 +494,7 @@ function drawOverlay(
   }
   ctx.stroke();
 
-  ctx.fillStyle = "#24689B";
+  ctx.fillStyle = "#B3122A";
   for (let i = 0; i < landmarks.length; i++) {
     ctx.beginPath();
     ctx.arc(px(i), py(i), 4, 0, Math.PI * 2);

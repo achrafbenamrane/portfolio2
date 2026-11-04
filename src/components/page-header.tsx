@@ -2,7 +2,7 @@ import { wide } from "@/components/home/wide-font";
 
 /**
  * Shared masthead for every page but home, in the home page's identity: the
- * navy, the numbered rule, and the wide uppercase title with its second
+ * red, the numbered rule, and the wide uppercase title with its second
  * words drawn in outline. The page below it is white.
  *
  * It also marks the page as not home (.page-head), which turns the footer
@@ -28,7 +28,7 @@ export default function PageHeader({
   /**
    * The row that names the list beneath and counts it — "CREDENTIALS · 006
    * TOTAL". Rendered inside the band rather than by the page below it, so the
-   * navy ends on that rule instead of stopping short of it.
+   * red ends on that rule instead of stopping short of it.
    */
   meta?: { label: string; value: string };
 }) {

@@ -121,7 +121,7 @@ export default function LinkyCase() {
           </div>
           <ul className="grid grid-cols-3 gap-3 sm:gap-4">
             {SCREENS.map((screen) => (
-              <li key={screen.src} className="relative aspect-[9/16] overflow-hidden rounded-[6px] shadow-[0_24px_40px_-24px_rgba(14,36,56,0.55)]">
+              <li key={screen.src} className="relative aspect-[9/16] overflow-hidden rounded-[6px] shadow-[0_24px_40px_-24px_rgba(40,27,28,0.55)]">
                 <Image src={screen.src} alt={screen.alt} fill sizes="(min-width: 768px) 18vw, 31vw" className="object-cover" />
               </li>
             ))}

@@ -35,7 +35,7 @@ const PACKAGING = [
 ];
 
 /**
- * A case study in Wolfexo's own look: the home page's navy, its wide uppercase
+ * A case study in Wolfexo's own look: the home page's red, its wide uppercase
  * headlines, outlined words and numbered section rules. ONEFRAME's black
  * and white appear only where ONEFRAME itself is shown.
  */
@@ -153,9 +153,9 @@ export default function OneFrameCase() {
       </Chapter>
 
       {/* ── 04 the packaging ── */}
-      <section className="px-6 py-20 text-[#0e2438] md:px-12 md:py-28">
+      <section className="px-6 py-20 text-[#281b1c] md:px-12 md:py-28">
         <div className="mx-auto max-w-350">
-          <div className="home-row" style={{ borderTopColor: "rgba(14, 36, 56, 0.15)" }}>
+          <div className="home-row" style={{ borderTopColor: "rgba(40, 27, 28, 0.15)" }}>
             <span>
               <span aria-hidden>/</span>
               <span>The packaging</span>
@@ -167,21 +167,21 @@ export default function OneFrameCase() {
               <h2 className="home-display text-[clamp(1.8rem,3.2vw,2.9rem)]">
                 Every box tells its own story
               </h2>
-              <p className="mt-6 leading-relaxed text-[#0e2438]/75">
+              <p className="mt-6 leading-relaxed text-[#281b1c]/75">
                 The box is the first thing an owner holds, so it does the
                 talking: the frame&apos;s name, a few lines on what the car
                 stands for, and, on the side, what makes it rare. We wrote it
                 as a certificate as much as a label.
               </p>
             </div>
-            <blockquote className="border-l-2 border-[#0e2438] pl-6 font-mono text-[15px] leading-relaxed">
+            <blockquote className="border-l-2 border-[#281b1c] pl-6 font-mono text-[15px] leading-relaxed">
               <p className="home-display mb-3 text-[13px] tracking-wider">What&apos;s inside?</p>
               A unique OneFrame created only once, just for you.
               <br />
               No second copy. No reprint.
               <br />
               One edition. One owner. OneFrame.
-              <footer className="mt-4 text-[11px] uppercase tracking-wider text-[#0e2438]/60">
+              <footer className="mt-4 text-[11px] uppercase tracking-wider text-[#281b1c]/60">
                 Printed on every ONEFRAME box
               </footer>
             </blockquote>
@@ -199,10 +199,10 @@ export default function OneFrameCase() {
           <ul className="mt-20 grid gap-6 sm:grid-cols-2">
             {PACKAGING.map((box) => (
               <li key={box.name}>
-                <div className="relative aspect-[1123/794] overflow-hidden rounded-[4px] shadow-[0_20px_40px_-24px_rgba(14,36,56,0.5)]">
+                <div className="relative aspect-[1123/794] overflow-hidden rounded-[4px] shadow-[0_20px_40px_-24px_rgba(40,27,28,0.5)]">
                   <Image src={box.src} alt={`Packaging for the ${box.name}, “${box.line}”`} fill sizes="(min-width: 640px) 45vw, 100vw" className="object-cover" />
                 </div>
-                <p className="mt-3 text-[12px] uppercase tracking-wider text-[#0e2438]/70">
+                <p className="mt-3 text-[12px] uppercase tracking-wider text-[#281b1c]/70">
                   {box.name} · “{box.line}”
                 </p>
               </li>
@@ -214,7 +214,7 @@ export default function OneFrameCase() {
       {/* ── 05 the store ── */}
       <Chapter n="05" label="The store">
         <div className="grid items-center gap-12 pt-14 md:grid-cols-[1.2fr_1fr] md:gap-20 md:pt-20">
-          <div className="overflow-hidden rounded-[10px] bg-[#0b1c2c] shadow-[0_30px_60px_-30px_rgba(14,36,56,0.55)]">
+          <div className="overflow-hidden rounded-[10px] bg-[#5a0b18] shadow-[0_30px_60px_-30px_rgba(40,27,28,0.55)]">
             <div className="flex h-8 items-center gap-1.5 border-b border-white/10 px-3">
               <span className="size-2 rounded-full bg-white/25" />
               <span className="size-2 rounded-full bg-white/25" />
@@ -274,9 +274,9 @@ export default function OneFrameCase() {
       <NextCase href="/case-studies/getdraft" client="Getdraft" title="It's a Draft!" />
 
       {/* ── next ── */}
-      <section className="px-6 py-20 text-[#0e2438] md:px-12 md:py-28">
+      <section className="px-6 py-20 text-[#281b1c] md:px-12 md:py-28">
         <div className="mx-auto max-w-350 text-center">
-          <p className="border-t border-[#0e2438]/15 pt-4 text-[11px] uppercase tracking-wider">
+          <p className="border-t border-[#281b1c]/15 pt-4 text-[11px] uppercase tracking-wider">
             Your brand next
           </p>
           <h2 className="home-display mt-14 text-[clamp(2.4rem,6vw,5.6rem)] leading-[1.02]">

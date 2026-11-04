@@ -41,7 +41,7 @@ export function BuildYours({ line = "Can we build yours?" }: { line?: string }) 
   return (
     <section className={`home home-light px-6 py-20 md:px-12 md:py-28 ${wide.variable}`}>
       <div className="mx-auto max-w-350 text-center">
-        <p className="border-t border-[#0e2438]/15 pt-4 text-[11px] uppercase tracking-wider">
+        <p className="border-t border-[#281b1c]/15 pt-4 text-[11px] uppercase tracking-wider">
           Your project next
         </p>
         <h2 className="home-display mt-14 text-[clamp(2.4rem,6vw,5.6rem)] leading-[1.02]">

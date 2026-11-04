@@ -25,7 +25,7 @@ export default function Experience() {
     <section className="px-6 pb-24 md:px-12">
       <div className="mx-auto max-w-350">
         {/* The "ROLES & EDUCATION · 006 ENTRIES" row lives in the masthead
-            above, inside its blue band. */}
+            above, inside its red band. */}
         <ol>
           {experiences.map((entry, index) => {
             const year = yearOf(entry);

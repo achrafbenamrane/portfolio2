@@ -110,13 +110,13 @@ export default function HandControl({ className = "" }: { className?: string }) 
               nothing. */}
           <span
             aria-hidden
-            className="nudge mt-px shrink-0 rotate-90 text-[#7CC4F0] sm:rotate-0"
+            className="nudge mt-px shrink-0 rotate-90 text-[#FFB4AE] sm:rotate-0"
           >
             ←
           </span>
 
           <div className="border-l border-white/25 pl-3">
-            <p className="meta text-[#7CC4F0]">TRY IT</p>
+            <p className="meta text-[#FFB4AE]">TRY IT</p>
             <p className="mt-1.5 text-[12px] leading-relaxed text-white/70">
               This portrait is <span className="text-white">live</span>. Turn on
               your camera, then open and close your hand to fold it into paper.

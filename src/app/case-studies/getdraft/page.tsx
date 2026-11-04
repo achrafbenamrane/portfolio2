@@ -88,7 +88,7 @@ export default function GetdraftCase() {
               playsInline
               preload="metadata"
               aria-label="The Getdraft website, scrolling"
-              className="block aspect-[1280/680] w-full bg-[#0e2438] object-cover"
+              className="block aspect-[1280/680] w-full bg-[#8f1024] object-cover"
             />
           </Browser>
         </div>

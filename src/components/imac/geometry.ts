@@ -121,8 +121,8 @@ export function projectScreen(canvasWidth: number, canvasHeight: number) {
 }
 
 export const IMAC_COLORS = {
-  /** Saturated back shell — the blue iMac, which suits the site palette. */
-  shell: "#2E6FA8",
+  /** Saturated back shell — the red iMac, which suits the site palette. */
+  shell: "#C4203A",
   /** Pale painted aluminium: the frame around the glass. */
   front: "#DFE5EA",
   /** Anodised stand. */

@@ -176,7 +176,7 @@ export default function Desktop({
     {
       id: "vision",
       label: "Vision",
-      tint: "linear-gradient(160deg,#3D8FD1,#0E2438)",
+      tint: "linear-gradient(160deg,#E0364C,#8F1024)",
       icon: <VisionGlyph />,
       onOpen: () => setApp("vision"),
     },
@@ -190,7 +190,7 @@ export default function Desktop({
     {
       id: "linkedin",
       label: "LinkedIn",
-      tint: "linear-gradient(160deg,#3C93D4,#0A66C2)",
+      tint: "linear-gradient(160deg,#E0364C,#0A66C2)",
       icon: <span className="glyph-text">in</span>,
       onOpen: () => window.open(site.links[1].href, "_blank", "noopener"),
     },
@@ -211,7 +211,7 @@ export default function Desktop({
     {
       id: "siri",
       label: "Assistant",
-      tint: "linear-gradient(160deg,#2E6FA8,#12304A)",
+      tint: "linear-gradient(160deg,#C4203A,#75101F)",
       icon: <RobotGlyph />,
       onOpen: () => setApp("siri"),
     },

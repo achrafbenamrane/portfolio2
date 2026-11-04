@@ -17,7 +17,7 @@ const [MAILBOX, DOMAIN] = site.email.split("@");
 
 export default function Contact() {
   return (
-    /* Top padding of its own: the masthead's padding is inside the blue
+    /* Top padding of its own: the masthead's padding is inside the red
        band, so without this the first label sits on the band's edge. */
     <section className="px-6 pb-24 pt-12 md:px-12 md:pt-16">
       <div className="mx-auto max-w-350">
@@ -36,7 +36,7 @@ export default function Contact() {
 
           <a
             href={`mailto:${site.email}`}
-            className="group mt-7 inline-flex items-center gap-2.5 rounded-full bg-ink px-6 py-3.5 text-sm font-medium text-canvas transition-opacity hover:opacity-85"
+            className="group mt-7 inline-flex items-center gap-2.5 rounded-full bg-[#8f1024] px-6 py-3.5 text-sm font-medium text-canvas transition-opacity hover:opacity-85"
           >
             Start a project
             <span

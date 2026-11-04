@@ -87,7 +87,7 @@ const FAQ = [
 
 export default function HomePage() {
   return (
-    <div className={`home ${wide.variable}`}>
+    <div className={`home home-stage ${wide.variable}`}>
       <Hero />
 
       <Section id="expertise" label="Full-stack development" n="01">
@@ -513,8 +513,8 @@ function WolfGlyph() {
     <svg width="66%" height="66%" viewBox="0 0 64 64" aria-hidden>
       <path fill="currentColor" d="M13 3L24 18L32 15V61L27 56L18 45L7 42L10 37L5 34L10 30L7 25L12 21Z" />
       <path fill="currentColor" opacity=".78" d="M51 3L40 18L32 15V61L37 56L46 45L57 42L54 37L59 34L54 30L57 25L52 21Z" />
-      <path fill="#e6f4fd" d="M17.5 30L28 33.5L21 35.5ZM46.5 30L36 33.5L43 35.5Z" />
-      <path fill="#e6f4fd" opacity=".45" d="M17 12L21.5 18.5L15.5 20.5ZM47 12L42.5 18.5L48.5 20.5Z" />
+      <path fill="#ffece9" d="M17.5 30L28 33.5L21 35.5ZM46.5 30L36 33.5L43 35.5Z" />
+      <path fill="#ffece9" opacity=".45" d="M17 12L21.5 18.5L15.5 20.5ZM47 12L42.5 18.5L48.5 20.5Z" />
     </svg>
   );
 }
@@ -530,9 +530,9 @@ function EyeGlyph() {
 
 function Contact() {
   return (
-    <section id="contact" className="bg-white px-6 py-20 text-[#0e2438] md:px-12 md:py-28">
+    <section id="contact" className="bg-white px-6 py-20 text-[#281b1c] md:px-12 md:py-28">
       <div className="mx-auto max-w-350">
-        <p className="border-t border-[#0e2438]/15 pt-4 text-center text-[11px] uppercase tracking-wider">
+        <p className="border-t border-[#281b1c]/15 pt-4 text-center text-[11px] uppercase tracking-wider">
           Contact
         </p>
 
@@ -551,7 +551,7 @@ function Contact() {
           </Link>
         </div>
 
-        <div className="mt-20 grid gap-12 border-t border-[#0e2438]/15 pt-10 md:grid-cols-3">
+        <div className="mt-20 grid gap-12 border-t border-[#281b1c]/15 pt-10 md:grid-cols-3">
           <div>
             <h3 className="home-display text-[17px] leading-snug">Want to chat?</h3>
             <p className="mt-5 text-[13px] uppercase tracking-wide">

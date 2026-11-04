@@ -11,7 +11,7 @@ export default function ExperiencePhoto({
 }) {
   return (
     <figure className={className}>
-      <div className="rounded-xl bg-canvas p-1.5 shadow-[0_24px_48px_-28px_rgba(24,38,49,0.45)] ring-1 ring-line">
+      <div className="rounded-xl bg-canvas p-1.5 shadow-[0_24px_48px_-28px_rgba(40,27,28,0.45)] ring-1 ring-line">
         <ZoomableImage
           image={image}
           alt={image.alt}

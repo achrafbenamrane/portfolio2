@@ -64,7 +64,7 @@ function accentColor(): string {
   cachedAccent ??=
     getComputedStyle(document.documentElement)
       .getPropertyValue("--color-accent")
-      .trim() || "#7CD4FF";
+      .trim() || "#FF9A92";
   return cachedAccent;
 }
 

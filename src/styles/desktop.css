@@ -18,7 +18,7 @@
      out of the box drei measures. */
   font-size: 13px;
   line-height: 1.4;
-  color: #f5f8fa;
+  color: #faf6f5;
   isolation: isolate;
 }
 
@@ -26,9 +26,9 @@
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(120% 90% at 20% 0%, #4d7fb0 0%, transparent 60%),
-    radial-gradient(90% 80% at 90% 20%, #2b6a92 0%, transparent 55%),
-    linear-gradient(160deg, #12304a 0%, #0b1c2c 55%, #142a3d 100%);
+    radial-gradient(120% 90% at 20% 0%, #c8485a 0%, transparent 60%),
+    radial-gradient(90% 80% at 90% 20%, #b3122a 0%, transparent 55%),
+    linear-gradient(160deg, #75101f 0%, #5a0b18 55%, #6b0c1b 100%);
   transition:
     filter 420ms cubic-bezier(0.32, 0.72, 0, 1),
     transform 500ms cubic-bezier(0.32, 0.72, 0, 1);
@@ -51,7 +51,7 @@
   font-size: 10px;
   letter-spacing: 0.02em;
   color: rgba(255, 255, 255, 0.9);
-  background: rgba(10, 22, 34, 0.42);
+  background: rgba(62, 9, 17, 0.42);
   backdrop-filter: blur(20px) saturate(180%);
   -webkit-backdrop-filter: blur(20px) saturate(180%);
 }
@@ -133,7 +133,7 @@
   width: 104px;
   height: 95px;
   border-radius: 9px;
-  background: linear-gradient(180deg, #3a5878 0%, #1d3350 100%);
+  background: linear-gradient(180deg, #a44a58 0%, #7a1424 100%);
   border: 1px solid rgba(255, 255, 255, 0.28);
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.22),
@@ -143,10 +143,10 @@
 .folder-sheet {
   position: absolute;
   border-radius: 6px;
-  background: linear-gradient(180deg, #f4f7fb 0%, #d9e2ec 100%);
+  background: linear-gradient(180deg, #faf6f5 0%, #f2e2e2 100%);
   box-shadow:
     inset 0 1px 0 #fff,
-    0 3px 8px rgba(4, 14, 28, 0.32);
+    0 3px 8px rgba(30, 5, 9, 0.32);
   transform-origin: 50% 100%;
   transition: transform 320ms cubic-bezier(0.32, 0.72, 0, 1);
 }
@@ -161,14 +161,14 @@
 
 .folder-sheet::before {
   height: 5px;
-  background: #a3b3c5;
+  background: #d9b9b8;
 }
 
 .folder-sheet::after {
   height: 20px;
   background: repeating-linear-gradient(
     180deg,
-    #bac6d4 0 2.5px,
+    #e8cfcd 0 2.5px,
     transparent 2.5px 7px
   );
 }
@@ -233,9 +233,9 @@
   height: 76px;
   background: linear-gradient(
     180deg,
-    rgba(196, 215, 236, 0.66) 0%,
-    rgba(138, 165, 196, 0.56) 42%,
-    rgba(104, 133, 166, 0.6) 100%
+    rgba(244, 214, 214, 0.66) 0%,
+    rgba(205, 150, 155, 0.56) 42%,
+    rgba(176, 110, 118, 0.6) 100%
   );
   /* Unprefixed LAST: the CSS pipeline folds the pair into whichever comes
      second, and Chrome and Firefox ignore the -webkit- one. */
@@ -266,7 +266,7 @@
   font-weight: 500;
   line-height: 1;
   color: rgba(255, 255, 255, 0.94);
-  text-shadow: 0 1px 2px rgba(10, 30, 55, 0.25);
+  text-shadow: 0 1px 2px rgba(70, 10, 20, 0.25);
 }
 
 .folder-num {
@@ -278,7 +278,7 @@
   font-weight: 700;
   line-height: 1;
   letter-spacing: -0.05em;
-  background: linear-gradient(180deg, #eef6fe 8%, #a9cdf0 45%, #4b8bd3 92%);
+  background: linear-gradient(180deg, #fef2f0 8%, #f7ccc8 45%, #dc4256 92%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -435,7 +435,7 @@
   border-radius: 8px;
   font-size: 12px;
   white-space: nowrap;
-  background: rgba(20, 30, 40, 0.85);
+  background: rgba(56, 14, 20, 0.85);
   backdrop-filter: blur(10px);
   opacity: 0;
   pointer-events: none;
@@ -455,7 +455,7 @@
   z-index: 6;
   display: grid;
   place-items: center;
-  background: rgba(6, 16, 26, 0.34);
+  background: rgba(34, 6, 11, 0.34);
   backdrop-filter: blur(6px);
   -webkit-backdrop-filter: blur(6px);
 }
@@ -466,7 +466,7 @@
   flex-direction: column;
   border-radius: 14px;
   overflow: hidden;
-  background: rgba(24, 36, 48, 0.92);
+  background: rgba(40, 27, 28, 0.92);
   border: 1px solid rgba(255, 255, 255, 0.16);
   box-shadow: 0 30px 70px rgba(0, 0, 0, 0.5);
 }
@@ -507,7 +507,7 @@
 }
 
 /* ── the Vision app: the computer-vision demo ──
- * The live portrait on the left, in the navy it had as the home page's
+ * The live portrait on the left, in the red it had as the home page's
  * hero; on the right the instrument reading the hand. Wider than tall on
  * purpose: the portrait fits itself to a wide well at full size and holds
  * back in a tall one. */
@@ -524,8 +524,8 @@
   border-radius: 10px;
   overflow: hidden;
   background:
-    radial-gradient(70% 90% at 60% 40%, #1b4a78 0%, transparent 62%),
-    linear-gradient(160deg, #0e2438 0%, #133a5e 55%, #0b1c2c 100%);
+    radial-gradient(70% 90% at 60% 40%, #b81a33 0%, transparent 62%),
+    linear-gradient(160deg, #8f1024 0%, #a5142b 55%, #5a0b18 100%);
 }
 
 .vision-side {
@@ -545,7 +545,7 @@
   border: 1px solid rgba(255, 255, 255, 0.12);
   /* Opaque: the window is faintly see-through, and a folder on the desktop
      behind it ghosting through an empty camera well reads as a picture. */
-  background: #0d1822;
+  background: #3e0911;
 }
 
 /* Mirrored, so a raised right hand reads as one on screen. */
@@ -580,7 +580,7 @@
 }
 
 .vision-percent {
-  color: #7cc4f0;
+  color: #ffb4ae;
   font-variant-numeric: tabular-nums;
 }
 
@@ -634,7 +634,7 @@
 
 .app-button.is-primary {
   background: #fff;
-  color: #10202e;
+  color: #600c1a;
   border-color: #fff;
 }
 
@@ -883,7 +883,7 @@
   height: 372px;
   border-radius: 14px;
   overflow: hidden;
-  background: rgba(18, 30, 42, 0.94);
+  background: rgba(56, 12, 19, 0.94);
   border: 1px solid rgba(255, 255, 255, 0.16);
   box-shadow: 0 24px 60px rgba(0, 0, 0, 0.5);
 }
@@ -1059,7 +1059,7 @@
 .fw-timeline li {
   padding: 10px 12px;
   border-radius: 9px;
-  border-left: 2px solid rgba(120, 200, 255, 0.6);
+  border-left: 2px solid rgba(255, 154, 146, 0.6);
   background: rgba(255, 255, 255, 0.05);
 }
 
@@ -1067,7 +1067,7 @@
   font-family: var(--font-mono);
   font-size: 10px;
   letter-spacing: 0.08em;
-  color: #7cd4ff;
+  color: #ff9a92;
 }
 
 .fw-role {
@@ -1227,8 +1227,8 @@ button.fw-contact-value:hover {
   border-radius: 50%;
   background: radial-gradient(
     circle,
-    rgba(56, 168, 255, 0.55) 0%,
-    rgba(56, 168, 255, 0.14) 55%,
+    rgba(255, 77, 90, 0.55) 0%,
+    rgba(255, 77, 90, 0.14) 55%,
     transparent 72%
   );
   transition: opacity 260ms ease, transform 260ms ease;
@@ -1238,7 +1238,7 @@ button.fw-contact-value:hover {
   position: absolute;
   inset: 4px;
   border-radius: 50%;
-  border: 2px solid rgba(56, 168, 255, 0.6);
+  border: 2px solid rgba(255, 77, 90, 0.6);
   opacity: 0;
 }
 
@@ -1307,14 +1307,14 @@ button.fw-contact-value:hover {
   font-size: 12px;
   line-height: 1.45;
   text-align: center;
-  color: #f5f8fa;
+  color: #faf6f5;
 }
 
 .siri-mic {
   padding: 8px 20px;
   border: 1px solid rgba(255, 255, 255, 0.22);
   border-radius: 999px;
-  background: rgba(142, 123, 239, 0.22);
+  background: rgba(255, 120, 110, 0.22);
   color: #fff;
   font-size: 12px;
   cursor: pointer;
@@ -1323,11 +1323,11 @@ button.fw-contact-value:hover {
 
 .siri-mic:hover:not(:disabled),
 .siri-mic.aimed {
-  background: rgba(142, 123, 239, 0.42);
+  background: rgba(255, 120, 110, 0.42);
 }
 
 .siri-mic.is-live {
-  background: rgba(142, 123, 239, 0.5);
+  background: rgba(255, 120, 110, 0.5);
   cursor: default;
 }
 

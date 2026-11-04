@@ -21,11 +21,11 @@ export default function Hero() {
            window's edge. */
         className="relative flex min-h-dvh flex-col justify-center gap-5 overflow-hidden px-6 pb-10 pt-32 md:px-12 lg:gap-0 lg:pb-0 lg:pl-[max(3rem,calc((100%_-_87.5rem)/2_+_3rem))] lg:pt-32"
         style={{
-          /* The nav's blue, continued. The bar sits directly above this, so
+          /* The nav's red, continued. The bar sits directly above this, so
              anything else would put a seam across the top of the page. */
           background:
-            "radial-gradient(70% 90% at 72% 40%, #1B4A78 0%, transparent 62%)," +
-            "linear-gradient(160deg, #0E2438 0%, #133A5E 55%, #0B1C2C 100%)",
+            "radial-gradient(70% 90% at 72% 40%, #B81A33 0%, transparent 62%)," +
+            "linear-gradient(160deg, #8F1024 0%, #A5142B 55%, #5A0B18 100%)",
         }}
       >
         <div className="relative z-10 max-w-2xl">
@@ -55,7 +55,7 @@ export default function Hero() {
         <div className="relative z-10 max-w-2xl lg:mt-10">
           <Link
             href="/projects#computer-vision"
-            className="group inline-flex items-center gap-2 rounded-full border border-white/25 px-4 py-2 text-sm font-medium text-white transition-colors hover:border-[#7CC4F0] hover:text-[#7CC4F0]"
+            className="group inline-flex items-center gap-2 rounded-full border border-white/25 px-4 py-2 text-sm font-medium text-white transition-colors hover:border-[#FFB4AE] hover:text-[#FFB4AE]"
           >
             Try the hand-tracking demo
             <span

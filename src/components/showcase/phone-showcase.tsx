@@ -301,7 +301,7 @@ export default function PhoneShowcase({
         {layout && (
           <>
             {/* The invitation, set like the apps' own names, in the page's
-                display weight — its second half in the glacier accent with a
+                display weight — its second half in the red accent with a
                 light passing over it. It mounts as the bubbles surface, so
                 its lines rise with them. */}
             {layout.wide && inView && (
@@ -525,7 +525,7 @@ function Bubble({
         >
           <span
             ref={glassRef}
-            className={`bubble-glass relative grid size-full place-items-center rounded-full bg-white/75 shadow-[0_18px_40px_-14px_rgba(18,48,74,0.45),inset_0_-6px_14px_rgba(18,48,74,0.08)] ring-1 backdrop-blur-sm transition-[scale,box-shadow] duration-300 ${
+            className={`bubble-glass relative grid size-full place-items-center rounded-full bg-white/75 shadow-[0_18px_40px_-14px_rgba(117,16,31,0.45),inset_0_-6px_14px_rgba(117,16,31,0.08)] ring-1 backdrop-blur-sm transition-[scale,box-shadow] duration-300 ${
               chosen ? "ring-2 ring-accent" : "ring-white"
             } ${docked ? "" : "group-hover:scale-110"}`}
           >
@@ -569,13 +569,13 @@ function TapHand() {
   );
   return (
     <svg viewBox="0 0 24 24" className="bubble-hand">
-      <g fill="none" stroke="#182631" strokeWidth="2.6" strokeLinejoin="round">
+      <g fill="none" stroke="#281b1c" strokeWidth="2.6" strokeLinejoin="round">
         {parts}
       </g>
       <g fill="#fff">{parts}</g>
       <path
         d="M11.4 11.2v2.2M14.6 12v1.8M17.6 12.6v1.4"
-        stroke="#182631"
+        stroke="#281b1c"
         strokeWidth="0.9"
         strokeLinecap="round"
         opacity="0.55"
@@ -673,7 +673,7 @@ function AppDetails({
   );
 }
 
-/** The site's mark in the row of ways through, in the glacier accent. */
+/** The site's mark in the row of ways through, in the red accent. */
 function GlobeIcon() {
   return (
     <svg
@@ -819,7 +819,7 @@ function AppIcon({
       ) : (
         /* Initials on a tinted tile until a logo lands, so a missing icon
            reads as deliberate rather than as a broken image. */
-        <span className="grid size-full place-items-center bg-[#12304A] text-[0.7em] font-bold text-white">
+        <span className="grid size-full place-items-center bg-[#75101F] text-[0.7em] font-bold text-white">
           {initials(app.title)}
         </span>
       )}

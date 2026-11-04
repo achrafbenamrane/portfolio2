@@ -10,8 +10,8 @@
 
 type Rgb = [number, number, number];
 
-/** The page the badges sit on: `--color-canvas`, #FAFCFE. */
-const CANVAS: Rgb = [0xfa, 0xfc, 0xfe];
+/** The page the badges sit on: `--color-canvas`, #FDFBFB. */
+const CANVAS: Rgb = [0xfd, 0xfb, 0xfb];
 const BLACK: Rgb = [0, 0, 0];
 const AA = 4.5;
 

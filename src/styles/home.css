@@ -1,25 +1,48 @@
 /* ── the home page ──
  * Laid out after treize.pro: wide uppercase headlines, words drawn in
  * outline, a spinning scroll badge, numbered section rules, tilted photos.
- * The colours stay the site's own: navy where Treize is charcoal, the
- * light blue where it is iridescent. */
+ * The colours stay the site's own: red where Treize is charcoal, the
+ * rose where it is iridescent. */
 
 .home {
-  --home-bg: #0e2438;
+  --home-bg: #8f1024;
   --home-fg: #f8fafc;
   --home-dim: rgba(248, 250, 252, 0.72);
   --home-line: rgba(248, 250, 252, 0.16);
-  --home-sky: #7cc4f0;
-  --home-iris: conic-gradient(from 210deg, #7cc4f0, #ffffff, #24689b, #a9dcf7, #7cc4f0);
-  /* Film grain over the navy, as Treize has over its charcoal: a tile of
-     faint noise drawn above the colour, so it marks the background but
+  --home-sky: #ffb4ae;
+  --home-iris: conic-gradient(from 210deg, #ffb4ae, #ffffff, #b3122a, #ffd9d5, #ffb4ae);
+  /* Film grain over the red, as Treize has over its charcoal: a tile of
+     film grain drawn above the colour, so it marks the background but
      never the photos on it. */
   background: url("/grain.png") repeat, var(--home-bg);
   color: var(--home-fg);
 }
 
-/* Every page but home, under its navy heading: the same type, rules and
-   buttons on white, with the navy turned to ink and the light blue darkened
+/* The home page's background stands still: the red and its grain are a layer
+   fixed to the screen, and the content scrolls over it, as on Treize's. The
+   large viewport unit keeps it covering the screen while a phone's address
+   bar slides away. The footer goes clear to show the same layer, and the
+   page's paper tooth is left off: it scrolls, so the red would shimmer. */
+.home-stage,
+body:has(.home-stage) .site-footer {
+  background: none;
+}
+
+body:has(.home-stage)::after {
+  content: none;
+}
+
+.home-stage::before {
+  content: "";
+  position: fixed;
+  inset: 0 0 auto;
+  z-index: -1;
+  height: 100lvh;
+  background: url("/grain.png") repeat, var(--home-bg);
+}
+
+/* Every page but home, under its red heading: the same type, rules and
+   buttons on white, with the red turned to ink and the rose darkened
    to stay legible. The footer, shared by every page, follows the page it
    closes: white wherever a page heading (.page-head) says it is not home. */
 .home-light,
@@ -27,11 +50,11 @@ body:has(.page-head) .site-footer {
   /* The page's own white, so these sections meet the Projects and Contact
      content below them without a seam. */
   --home-bg: var(--color-canvas);
-  --home-fg: #0e2438;
-  --home-dim: rgba(14, 36, 56, 0.7);
-  --home-line: rgba(14, 36, 56, 0.14);
-  --home-sky: #24689b;
-  /* The grain is the navy's; the white stays clean. */
+  --home-fg: #281b1c;
+  --home-dim: rgba(40, 27, 28, 0.7);
+  --home-line: rgba(40, 27, 28, 0.14);
+  --home-sky: #b3122a;
+  /* The grain is the red's; the white stays clean. */
   background-image: none;
 }
 
@@ -57,7 +80,7 @@ body:has(.page-head) .site-footer {
 
 .home-outline-dark {
   color: transparent;
-  -webkit-text-stroke: 1.4px #0e2438;
+  -webkit-text-stroke: 1.4px #281b1c;
 }
 
 /* ── section rule: "/ EXPERTISE ... 01" ── */
@@ -77,7 +100,7 @@ body:has(.page-head) .site-footer {
   gap: 32px;
 }
 
-/* ── buttons: pills in the text colour, uppercase — white on navy, navy on
+/* ── buttons: pills in the text colour, uppercase — white on red, ink on
    white ── */
 .home-btn {
   display: inline-flex;
@@ -87,7 +110,7 @@ body:has(.page-head) .site-footer {
   padding: 0 24px;
   border-radius: 999px;
   background: var(--home-fg);
-  color: var(--home-bg, #0e2438);
+  color: var(--home-bg, #8f1024);
   font: 700 12px/1 var(--font-wide), var(--font-sans);
   font-stretch: 112%;
   letter-spacing: 0.04em;
@@ -102,23 +125,33 @@ body:has(.page-head) .site-footer {
 }
 
 .home-btn-dark {
-  background: #0e2438;
+  background: #8f1024;
   color: #f8fafc;
 }
 
 .home-btn-dark:hover {
-  background: #24689b;
+  background: #b3122a;
+}
+
+/* On white the main button is the brand's red, not the ink. */
+.home-light .home-btn:not(.home-btn-ghost) {
+  background: #8f1024;
+  color: #f8fafc;
+}
+
+.home-light .home-btn:not(.home-btn-ghost):hover {
+  background: #b3122a;
 }
 
 /* The second choice beside a filled button: outlined, filling on hover. */
 .home-btn-ghost {
   background: transparent;
-  color: var(--home-fg, #0e2438);
-  box-shadow: inset 0 0 0 1px var(--home-line, rgba(14, 36, 56, 0.25));
+  color: var(--home-fg, #281b1c);
+  box-shadow: inset 0 0 0 1px var(--home-line, rgba(40, 27, 28, 0.25));
 }
 
 .home-btn-ghost:hover {
-  background: var(--home-fg, #0e2438);
+  background: var(--home-fg, #281b1c);
   color: var(--home-bg, #ffffff);
 }
 
@@ -145,7 +178,7 @@ body:has(.page-head) .site-footer {
   height: 66px;
   border-radius: 50%;
   background: var(--home-iris);
-  color: #0e2438;
+  color: #3a0a12;
   box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.6);
 }
 
@@ -158,7 +191,7 @@ body:has(.page-head) .site-footer {
   height: 96px;
   border-radius: 50%;
   background: #f8fafc;
-  color: #0e2438;
+  color: #3a0a12;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
 }
 
@@ -191,7 +224,7 @@ body:has(.page-head) .site-footer {
   vertical-align: -0.1em;
   border-radius: 50%;
   background: var(--home-iris);
-  color: #0e2438;
+  color: #3a0a12;
   box-shadow: inset 0 0 0 0.04em rgba(255, 255, 255, 0.7);
 }
 
@@ -201,7 +234,7 @@ body:has(.page-head) .site-footer {
   overflow: hidden;
   border-radius: 4px;
   box-shadow: 0 30px 60px -20px rgba(0, 0, 0, 0.55);
-  background: #133a5e;
+  background: #a5142b;
 }
 
 .home-photo img {
@@ -343,7 +376,7 @@ body:has(.page-head) .site-footer {
 /* ── projects: the image grows a little on hover ── */
 .home-card .home-card-img {
   overflow: hidden;
-  background: #133a5e;
+  background: #a5142b;
 }
 
 .home-card .home-card-img img {
@@ -428,7 +461,7 @@ body:has(.page-head) .site-footer {
 .home-fill > span:last-child {
   position: absolute;
   inset: 0;
-  color: #0e2438;
+  color: #281b1c;
   -webkit-text-stroke: 0;
   clip-path: inset(50% 0 0 0);
 }
@@ -495,7 +528,7 @@ body:has(.page-head) .site-footer {
   aspect-ratio: 1280 / 680;
   object-fit: cover;
   border-radius: 3px;
-  background: #0e2438;
+  background: #8f1024;
 }
 
 /* The deck: a little wider than the screen, with the notch you open it by. */

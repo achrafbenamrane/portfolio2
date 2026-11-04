@@ -4,7 +4,7 @@ import { site } from "@/content/site";
 
 /**
  * The social card: Wolfexo's, not a person's. No face and no location, the
- * agency's name large on its navy, with the four things it makes.
+ * agency's name large on its red, with the four things it makes.
  *
  * Typeset in Geist, which Next ships inside its OG compiler, so nothing is
  * fetched at build time. Only the regular weight is available, so the
@@ -15,8 +15,8 @@ export const alt = `${site.brand} — ${site.brandLine}`;
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
-const NAVY = "#0E2438";
-const SKY = "#7CC4F0";
+const RED = "#8F1024";
+const ROSE = "#FFB4AE";
 const WHITE = "#F8FAFC";
 const DIM = "rgba(248, 250, 252, 0.62)";
 const LINE = "rgba(248, 250, 252, 0.18)";
@@ -34,7 +34,7 @@ export default function Image() {
           flexDirection: "column",
           justifyContent: "space-between",
           padding: 64,
-          background: `linear-gradient(160deg, ${NAVY} 0%, #133A5E 60%, #1B4A78 100%)`,
+          background: `linear-gradient(160deg, ${RED} 0%, #A5142B 60%, #B81A33 100%)`,
           color: WHITE,
         }}
       >
@@ -50,7 +50,7 @@ export default function Image() {
           }}
         >
           <span>/ AGENCY</span>
-          <span style={{ color: SKY }}>{site.availability}</span>
+          <span style={{ color: ROSE }}>{site.availability}</span>
         </div>
 
         <div style={{ display: "flex", flexDirection: "column" }}>

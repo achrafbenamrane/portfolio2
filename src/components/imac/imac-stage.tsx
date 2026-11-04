@@ -151,7 +151,7 @@ export default function ImacStage() {
                 <hemisphereLight
                   intensity={0.9}
                   color="#ffffff"
-                  groundColor="#c3ccd3"
+                  groundColor="#d2c8c7"
                 />
                 <directionalLight position={[-4, 5, 6]} intensity={1.9} />
                 <directionalLight position={[5, -1, 3]} intensity={0.7} />

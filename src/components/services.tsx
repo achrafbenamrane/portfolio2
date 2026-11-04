@@ -21,7 +21,7 @@ export default function Services() {
   return (
     <section
       /* Generous top space: this is the first white section after the
-         blue hero, and a colour change needs room around it or the two
+         red hero, and a colour change needs room around it or the two
          read as one block that happened to change colour. */
       className="px-6 pb-20 pt-20 md:px-12 md:pt-28"
       aria-label="Services"

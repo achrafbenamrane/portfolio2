@@ -8,23 +8,23 @@
 /* ── Editorial Terminal · design tokens ─────────────────────────── */
 
 /*
- * Glacial palette on a white ground. One hue family (~240) at very low chroma
- * does all the structural work, so the only genuinely saturated things on the
- * page are the accent and the warm origami — which is why the paper reads as
- * warm at all. It has nothing to compete with.
+ * A warm white ground under a red brand. One hue family (~20) at very low
+ * chroma does all the structural work, so the only genuinely saturated things
+ * on the page are the accent and the warm origami. They have nothing to
+ * compete with.
  *
  * Lightness values are chosen against measured contrast, not by eye:
- * ink 15:1 on canvas, dim 6.6:1, accent 5.8:1.
+ * ink 16:1 on canvas, dim 6.7:1, accent 6.7:1.
  */
 
 @theme {
-  --color-canvas: oklch(0.99 0.003 240); /* #FAFCFE white, faintly cold */
-  --color-surface-1: oklch(0.965 0.006 240); /* #F0F4F7 raised   */
-  --color-surface-2: oklch(0.925 0.01 240); /* #E0E7EC recessed */
-  --color-line: oklch(0.84 0.014 240); /* #C3CCD3 hairline */
-  --color-ink: oklch(0.26 0.028 242); /* #182631 slate ink */
-  --color-dim: oklch(0.47 0.024 242); /* #4F5D67 muted     */
-  --color-accent: oklch(0.5 0.105 245); /* #24689B glacier blue */
+  --color-canvas: oklch(0.99 0.002 20); /* #FDFBFB white, faintly warm */
+  --color-surface-1: oklch(0.965 0.005 20); /* #F7F2F2 raised   */
+  --color-surface-2: oklch(0.925 0.008 20); /* #EBE4E4 recessed */
+  --color-line: oklch(0.84 0.012 20); /* #D2C8C7 hairline */
+  --color-ink: oklch(0.24 0.02 15); /* #281B1C warm ink */
+  --color-dim: oklch(0.47 0.02 15); /* #665657 muted     */
+  --color-accent: oklch(0.49 0.189 22.2); /* #B3122A brand red */
   --color-warn: oklch(0.55 0.115 55); /* #A45D25 warm, ties to the paper */
 
   --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
@@ -112,7 +112,7 @@
   }
 }
 
-/* Bookcloth over board: the navy, with a coarser weave laid over it. */
+/* Bookcloth over board: the red, with a coarser weave laid over it. */
 @utility cloth {
   position: relative;
 

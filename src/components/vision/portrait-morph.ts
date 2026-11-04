@@ -287,16 +287,16 @@ function createPlaceholderTexture(label: string, hint: string): THREE.Texture {
   const ctx = canvas.getContext("2d")!;
 
   const gradient = ctx.createLinearGradient(0, 0, 512, 512);
-  gradient.addColorStop(0, "#F0F4F7");
-  gradient.addColorStop(1, "#E0E7EC");
+  gradient.addColorStop(0, "#F7F2F2");
+  gradient.addColorStop(1, "#EBE4E4");
   ctx.fillStyle = gradient;
   ctx.fillRect(0, 0, 512, 512);
 
   ctx.textAlign = "center";
-  ctx.fillStyle = "#24689B";
+  ctx.fillStyle = "#B3122A";
   ctx.font = "600 26px ui-monospace, monospace";
   ctx.fillText(label, 256, 244);
-  ctx.fillStyle = "#4F5D67";
+  ctx.fillStyle = "#665657";
   ctx.font = "20px ui-monospace, monospace";
   ctx.fillText(hint, 256, 280);
 

@@ -72,11 +72,11 @@ export default function AboutPage() {
         </h2>
         <ol className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
           {STEPS.map((step, index) => (
-            <li key={step.title} className="flex flex-col rounded-[6px] border border-[#0e2438]/15 p-6">
-              <span className="home-display text-[2rem] text-[#24689b]">{String(index + 1).padStart(2, "0")}</span>
+            <li key={step.title} className="flex flex-col rounded-[6px] border border-[#281b1c]/15 p-6">
+              <span className="home-display text-[2rem] text-[#b3122a]">{String(index + 1).padStart(2, "0")}</span>
               <h3 className="home-display mt-5 text-[15px] leading-snug">{step.title}</h3>
-              <p className="mt-3 text-[15px] leading-relaxed text-[#0e2438]/75">{step.body}</p>
-              <p className="mt-auto border-t border-dashed border-[#0e2438]/20 pt-4 text-[11px] uppercase tracking-wider text-[#24689b]">
+              <p className="mt-3 text-[15px] leading-relaxed text-[#281b1c]/75">{step.body}</p>
+              <p className="mt-auto border-t border-dashed border-[#281b1c]/20 pt-4 text-[11px] uppercase tracking-wider text-[#b3122a]">
                 → {step.get}
               </p>
             </li>
@@ -101,21 +101,21 @@ export default function AboutPage() {
 
       <Chapter n="04" label="The founder">
         <div className="grid items-center gap-12 pt-14 md:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] md:gap-20 md:pt-20">
-          <div className="relative mx-auto aspect-square w-full max-w-[420px] overflow-hidden rounded-[4px] bg-[#0e2438]">
+          <div className="relative mx-auto aspect-square w-full max-w-[420px] overflow-hidden rounded-[4px] bg-[#8f1024]">
             <Image src="/portrait.webp" alt="Benamrane Mohamed Achraf, founder of Wolfexo" fill sizes="(min-width: 768px) 420px, 90vw" className="object-cover object-top" />
           </div>
           <div>
-            <p className="text-[11px] uppercase tracking-wider text-[#24689b]">Founder</p>
+            <p className="text-[11px] uppercase tracking-wider text-[#b3122a]">Founder</p>
             <h2 className="home-display mt-3 text-[clamp(1.8rem,3.2vw,2.9rem)]">Benamrane Mohamed Achraf</h2>
             {/* His legal status: "auto-entrepreneur agréé" on his card. */}
-            <p className="mt-5 inline-flex items-center gap-2 rounded-full border border-[#24689b]/40 bg-[#24689b]/[0.07] py-1.5 pl-2 pr-4 text-[12px] font-semibold uppercase tracking-wider text-[#24689b]">
+            <p className="mt-5 inline-flex items-center gap-2 rounded-full border border-[#b3122a]/40 bg-[#b3122a]/[0.07] py-1.5 pl-2 pr-4 text-[12px] font-semibold uppercase tracking-wider text-[#b3122a]">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden>
                 <circle cx="12" cy="12" r="10" fill="currentColor" />
                 <path d="M7.5 12.5l3 3 6-6.5" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
               Certified auto-entrepreneur
             </p>
-            <p className="mt-6 max-w-xl leading-relaxed text-[#0e2438]/75">
+            <p className="mt-6 max-w-xl leading-relaxed text-[#281b1c]/75">
               A certified auto-entrepreneur and full-stack engineer, with a
               Master&apos;s in network and information security. Behind
               Wolfexo&apos;s work: apps live in the

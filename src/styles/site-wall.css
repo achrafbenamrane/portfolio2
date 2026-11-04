@@ -1,33 +1,33 @@
 /* ── the website wardrobe on /work ───────────────────────────────────
  *
- * A navy-lacquer wardrobe with fluted glass doors on the white page. It
+ * A red-lacquer wardrobe with fluted glass doors on the white page. It
  * arrives shut, the sites a soft blur behind the reeded glass, and the
  * scroll works its doors: `--open`, written by the component as the page
  * moves, runs from 0 (shut) to 1 (open), and everything that changes with
  * the doors — their swing, their shading, the light strip, the dim inside,
  * the blur behind the glass, the shadows they throw — is a function of it.
- * A site under the pointer lights the strip it stands on — a line of blue
+ * A site under the pointer lights the strip it stands on — a line of red
  * neon — which throws its light up onto the site and down the shelf.
  *
- * Every colour is the site's own: the lacquer is the header's navy
- * (#0E2438 into #1B4A78), the glass and the light are its light blue
- * (#7CC4F0), the inside a pale wash of the glacier accent (#24689B).
+ * Every colour is the site's own: the lacquer is the header's red
+ * (#8F1024 into #B81A33), the glass and the light are its rose
+ * (#FFB4AE), the inside a pale wash of the red accent (#B3122A).
  */
 
 .wardrobe {
   /* How open the doors are, 0 to 1; set by the scroll. */
   --open: 0;
   --frame: 14px;
-  --edge: rgb(10 26 41 / 0.55);
-  /* The header's own gradient, so the cabinet is cut from the same navy. */
-  --lacquer: linear-gradient(100deg, #0e2438 0%, #1b4a78 55%, #133a5e 100%);
-  --lacquer-solid: #143a5e;
-  /* The neon, from its hot core out to its deepest blue. `--glow` is the
+  --edge: rgb(71 10 20 / 0.55);
+  /* The header's own gradient, so the cabinet is cut from the same red. */
+  --lacquer: linear-gradient(100deg, #8f1024 0%, #b81a33 55%, #a5142b 100%);
+  --lacquer-solid: #a5142b;
+  /* The neon, from its hot core out to its deepest red. `--glow` is the
      light it throws, as channels so it can take any alpha. */
-  --neon-hot: #e3f4ff;
-  --neon-mid: #7cc4f0;
-  --neon: #3d8fd1;
-  --neon-deep: #24689b;
+  --neon-hot: #ffece9;
+  --neon-mid: #ffb4ae;
+  --neon: #e0364c;
+  --neon-deep: #b3122a;
   --glow: 61 143 209;
   --glow-deep: 36 104 155;
   /* The doors' frame: stiles and top rail, and a deeper bottom rail. */
@@ -51,17 +51,17 @@
   border-radius: 7px 7px 2px 2px;
   background: var(--lacquer);
   box-shadow:
-    inset 0 1px 0 rgb(124 196 240 / 0.35),
+    inset 0 1px 0 rgb(255 150 140 / 0.35),
     0 0 0 1px var(--edge),
-    0 12px 18px -12px rgb(14 36 56 / 0.5);
+    0 12px 18px -12px rgb(40 27 28 / 0.5);
 }
 
 .wardrobe-plate {
   padding: 4px 12px;
   border-radius: 3px;
-  border: 1px solid rgb(124 196 240 / 0.7);
-  background: linear-gradient(180deg, #ffffff, #e8f3fb);
-  box-shadow: 0 0 14px rgb(124 196 240 / 0.35);
+  border: 1px solid rgb(255 150 140 / 0.7);
+  background: linear-gradient(180deg, #ffffff, #fceeec);
+  box-shadow: 0 0 14px rgb(255 150 140 / 0.35);
   /* Lettered like the apps' "Tap an app" headline: the page's display
      weight, its second half in the sheen. Held at the 17px line the plate
      has always had, so the plate itself does not change size. */
@@ -72,7 +72,7 @@
   letter-spacing: 0.03em;
   text-transform: uppercase;
   white-space: nowrap;
-  color: #0e2438;
+  color: #281b1c;
 }
 
 .wardrobe-plate-dash {
@@ -85,9 +85,9 @@
   padding: var(--frame);
   background: var(--lacquer);
   box-shadow:
-    inset 0 0 0 1px rgb(124 196 240 / 0.12),
+    inset 0 0 0 1px rgb(255 150 140 / 0.12),
     0 0 0 1px var(--edge),
-    0 60px 80px -50px rgb(14 36 56 / 0.6);
+    0 60px 80px -50px rgb(40 27 28 / 0.6);
   perspective-origin: 50% 50%;
 }
 
@@ -95,17 +95,17 @@
   height: 22px;
   margin-inline: 10px;
   border-radius: 0 0 4px 4px;
-  background: linear-gradient(180deg, #0e2438, #0a1a29);
+  background: linear-gradient(180deg, #8f1024, #470a14);
   box-shadow:
     0 0 0 1px var(--edge),
-    0 26px 30px -18px rgb(14 36 56 / 0.55);
+    0 26px 30px -18px rgb(40 27 28 / 0.55);
 }
 
 /* ── inside ── */
 
 .interior-bg,
 .wardrobe-interior {
-  background: linear-gradient(180deg, #dfecf7 0%, #f1f7fc 32%, #e2eef8 100%);
+  background: linear-gradient(180deg, #f9e4e2 0%, #fcf5f4 32%, #fae7e5 100%);
 }
 
 .wardrobe-interior {
@@ -115,9 +115,9 @@
   /* Measured by the shelves' height below, before the script has. */
   container-type: inline-size;
   box-shadow:
-    inset 0 28px 36px -24px rgb(14 36 56 / 0.45),
-    inset 24px 0 30px -26px rgb(14 36 56 / 0.4),
-    inset -24px 0 30px -26px rgb(14 36 56 / 0.4);
+    inset 0 28px 36px -24px rgb(40 27 28 / 0.45),
+    inset 24px 0 30px -26px rgb(40 27 28 / 0.4),
+    inset -24px 0 30px -26px rgb(40 27 28 / 0.4);
 }
 
 /* The light strip under the top of the cabinet, and the wash it throws. */
@@ -131,8 +131,8 @@
   border-radius: 0 0 3px 3px;
   background: linear-gradient(90deg, transparent, var(--neon-hot) 8%, var(--neon-hot) 92%, transparent);
   box-shadow:
-    0 0 10px rgb(124 196 240 / 0.9),
-    0 0 36px rgb(124 196 240 / 0.45);
+    0 0 10px rgb(255 150 140 / 0.9),
+    0 0 36px rgb(255 150 140 / 0.45);
   /* Comes on once the doors are a third of the way open. */
   opacity: clamp(0, calc((var(--open) - 0.3) * 2.5), 1);
   pointer-events: none;
@@ -145,7 +145,7 @@
   left: -6%;
   right: -6%;
   height: 300px;
-  background: radial-gradient(ellipse 60% 100% at 50% 0%, rgb(124 196 240 / 0.2), transparent 70%);
+  background: radial-gradient(ellipse 60% 100% at 50% 0%, rgb(255 150 140 / 0.2), transparent 70%);
 }
 
 /* A shut cabinet is dim inside — dim, not dark, so the sites still show
@@ -154,7 +154,7 @@
   position: absolute;
   z-index: 2;
   inset: 0;
-  background: rgb(14 36 56 / 0.32);
+  background: rgb(40 27 28 / 0.32);
   pointer-events: none;
   opacity: calc(1 - var(--open));
 }
@@ -176,23 +176,23 @@
 
 .wardrobe-interior::before {
   left: 0;
-  background: linear-gradient(90deg, rgb(14 36 56 / 0.42), transparent);
+  background: linear-gradient(90deg, rgb(40 27 28 / 0.42), transparent);
 }
 
 .wardrobe-interior::after {
   right: 0;
-  background: linear-gradient(270deg, rgb(14 36 56 / 0.42), transparent);
+  background: linear-gradient(270deg, rgb(40 27 28 / 0.42), transparent);
 }
 
-/* A shelf board: a pale top face, then its front edge in the glacier blue,
+/* A shelf board: a pale top face, then its front edge in the red,
    then its shadow on the back of the cabinet. */
 .board {
   position: relative;
   height: 14px;
-  background: linear-gradient(180deg, #ffffff 0 34%, #cfe3f3 34%, #a9cbe6 100%);
+  background: linear-gradient(180deg, #ffffff 0 34%, #f6dad8 34%, #f4cbc7 100%);
   box-shadow:
-    0 1px 0 rgb(24 38 49 / 0.06),
-    0 18px 22px -14px rgb(14 36 56 / 0.4);
+    0 1px 0 rgb(40 27 28 / 0.06),
+    0 18px 22px -14px rgb(40 27 28 / 0.4);
 }
 
 /* ── the doors: a lacquer frame round a pane of fluted glass ── */
@@ -230,7 +230,7 @@
   border-bottom-width: calc(var(--stile) * 1.6);
   box-shadow:
     0 0 0 1px var(--edge),
-    inset 0 0 0 1px rgb(124 196 240 / 0.45);
+    inset 0 0 0 1px rgb(255 150 140 / 0.45);
 }
 
 .door-front {
@@ -239,7 +239,7 @@
 
 .door-back {
   transform: rotateY(180deg) translateZ(calc(var(--door-t) / 2));
-  border-color: #102f4c;
+  border-color: #75101f;
 }
 
 /* The free edge of the door, square to its faces: invisible while it is
@@ -249,8 +249,8 @@
   top: 0;
   bottom: 0;
   width: var(--door-t);
-  background: linear-gradient(180deg, #2a5f8f, #143a5e 55%, #0e2438);
-  box-shadow: inset 0 0 0 1px rgb(124 196 240 / 0.25);
+  background: linear-gradient(180deg, #c42a3e, #a5142b 55%, #8f1024);
+  box-shadow: inset 0 0 0 1px rgb(255 150 140 / 0.25);
 }
 
 .door-left .door-edge {
@@ -269,8 +269,8 @@
   width: 6px;
   height: 7%;
   border-radius: 3px;
-  background: linear-gradient(90deg, #8fa8bc, #f4f8fb 50%, #9fb5c7);
-  box-shadow: 0 1px 4px rgb(5 15 25 / 0.55);
+  background: linear-gradient(90deg, #cda3a3, #fbf6f5 50%, #d6b2b1);
+  box-shadow: 0 1px 4px rgb(32 6 10 / 0.55);
   transform: translateZ(calc(var(--door-t) / 2 + 1px));
 }
 
@@ -301,12 +301,12 @@
       90deg,
       rgb(255 255 255 / 0.5) 0px,
       rgb(255 255 255 / 0.1) 5px,
-      rgb(14 36 56 / 0.1) 10px,
+      rgb(40 27 28 / 0.1) 10px,
       rgb(255 255 255 / 0.28) 13px,
       rgb(255 255 255 / 0.5) 14px
     ),
-    linear-gradient(180deg, rgb(178 220 246 / 0.55), rgb(124 196 240 / 0.42) 60%, rgb(61 143 209 / 0.4));
-  box-shadow: inset 0 2px 12px rgb(14 36 56 / 0.25);
+    linear-gradient(180deg, rgb(250 200 196 / 0.55), rgb(255 150 140 / 0.42) 60%, rgb(224 54 76 / 0.4));
+  box-shadow: inset 0 2px 12px rgb(40 27 28 / 0.25);
 }
 
 /* What stands behind the glass is a blur until the doors open, and comes
@@ -346,13 +346,13 @@
   content: "";
   position: absolute;
   inset: calc(-1 * var(--stile)) calc(-1 * var(--stile)) calc(-1.6 * var(--stile));
-  background: linear-gradient(90deg, rgb(14 36 56 / 0.2), rgb(14 36 56 / 0.05));
+  background: linear-gradient(90deg, rgb(40 27 28 / 0.2), rgb(40 27 28 / 0.05));
   opacity: var(--open);
   pointer-events: none;
 }
 
 .door-right .door-front::after {
-  background: linear-gradient(270deg, rgb(14 36 56 / 0.2), rgb(14 36 56 / 0.05));
+  background: linear-gradient(270deg, rgb(40 27 28 / 0.2), rgb(40 27 28 / 0.05));
 }
 
 /* A slim steel bar on the stile where the doors meet. */
@@ -363,10 +363,10 @@
   height: 32%;
   width: 6px;
   border-radius: 3px;
-  background: linear-gradient(90deg, #9fb7ca, #ffffff 45%, #b9cddc);
+  background: linear-gradient(90deg, #d6b2b1, #ffffff 45%, #efd2cf);
   box-shadow:
-    0 2px 8px rgb(5 15 25 / 0.5),
-    0 0 10px rgb(124 196 240 / 0.35);
+    0 2px 8px rgb(32 6 10 / 0.5),
+    0 0 10px rgb(255 150 140 / 0.35);
 }
 
 .door-left .door-handle {
@@ -402,7 +402,7 @@
   position: relative;
   height: 3px;
   border-radius: 2px;
-  background: rgb(24 38 49 / 0.08);
+  background: rgb(40 27 28 / 0.08);
   transition:
     background 350ms ease,
     box-shadow 350ms ease;

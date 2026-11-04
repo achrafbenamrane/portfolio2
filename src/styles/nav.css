@@ -1,13 +1,13 @@
 /* ── the bar and its full-screen menu ──
  * After treize.pro: a wordmark, two underlined links, a round button; the
  * menu fills the screen with numbered titles set in the wide display face.
- * Wolfexo's navy where Treize is charcoal. */
+ * Wolfexo's red where Treize is charcoal. */
 
 .site-bar {
   color: #f8fafc;
 }
 
-/* Frosted navy glass: the page scrolls under the bar, blurred. The glass is
+/* Frosted red glass: the page scrolls under the bar, blurred. The glass is
    a layer of its own, because a backdrop-filter on the bar itself would make
    the bar the box the fixed full-screen menu inside it is placed in. */
 .site-bar::before {
@@ -15,9 +15,9 @@
   position: absolute;
   inset: 0;
   z-index: -1;
-  /* The same grain as the navy pages, so the bar and the page under it
+  /* The same grain as the red pages, so the bar and the page under it
      read as one surface. */
-  background: url("/grain.png") repeat, rgba(14, 36, 56, 0.88);
+  background: url("/grain.png") repeat, rgba(143, 16, 36, 0.97);
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   -webkit-backdrop-filter: blur(18px) saturate(160%);
   backdrop-filter: blur(18px) saturate(160%);
@@ -50,7 +50,7 @@
 }
 
 .site-underline:hover {
-  color: #7cc4f0;
+  color: #ffb4ae;
 }
 
 .site-round {
@@ -62,13 +62,13 @@
   border: 0;
   border-radius: 50%;
   background: #f8fafc;
-  color: #0e2438;
+  color: #8f1024;
   cursor: pointer;
   transition: background-color 0.2s ease, transform 0.2s ease;
 }
 
 .site-round:hover {
-  background: #7cc4f0;
+  background: #ffb4ae;
   transform: scale(1.05);
 }
 
@@ -82,7 +82,7 @@
 
 .site-round-ghost:hover {
   background: #f8fafc;
-  color: #0e2438;
+  color: #8f1024;
 }
 
 /* ── the menu ── */
@@ -92,7 +92,7 @@
   inset: 0;
   z-index: 60;
   overflow-y: auto;
-  background: url("/grain.png") repeat, #0e2438;
+  background: url("/grain.png") repeat, #8f1024;
   color: #f8fafc;
 }
 
@@ -147,7 +147,7 @@
 }
 
 .site-menu-link[aria-current="page"] {
-  color: #7cc4f0;
+  color: #ffb4ae;
 }
 
 /* Hovering one title fills it and turns the others to outline. */
@@ -197,7 +197,7 @@
 }
 
 .site-menu-side a:hover {
-  color: #7cc4f0;
+  color: #ffb4ae;
 }
 
 .site-lang {

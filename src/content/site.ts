@@ -450,7 +450,7 @@ export const projects: readonly Project[] = [
     category: "Computer Vision",
     tags: ["MediaPipe", "Hand Tracking", "Three.js", "WebGL Shaders"],
     year: "2026",
-    brand: "#24689B",
+    brand: "#B3122A",
     images: ["/portrait.webp"],
   },
   {
@@ -461,7 +461,7 @@ export const projects: readonly Project[] = [
     category: "Computer Vision",
     tags: ["MediaPipe", "Gesture Control", "React Three Fiber", "TypeScript"],
     year: "2026",
-    brand: "#24689B",
+    brand: "#B3122A",
     images: ["/origami.webp"],
   },
   {

@@ -291,14 +291,14 @@ export default function CertificateBook({
           {open && (
             <div
               aria-hidden
-              className={`cloth absolute rounded-md shadow-[0_50px_90px_-36px_rgba(24,38,49,0.65)] ${
+              className={`cloth absolute rounded-md shadow-[0_50px_90px_-36px_rgba(40,27,28,0.65)] ${
                 spread
                   ? "-inset-x-[1.6%] -inset-y-[2.4%]"
                   : "-top-[2%] -bottom-[5.5%] -left-[9%] -right-[7%]"
               }`}
               style={{
                 background:
-                  "linear-gradient(160deg, #163F66 0%, #0E2438 55%, #0B1C2C 100%)",
+                  "linear-gradient(160deg, #A5142B 0%, #8F1024 55%, #5A0B18 100%)",
               }}
             >
               {/* The spine shows down the middle of an open spread. On a
@@ -307,10 +307,10 @@ export default function CertificateBook({
                   takes a line of light along its crown, and the page casts
                   into it. Without that the page is a card with a border. */}
               {spread ? (
-                <div className="absolute inset-y-0 left-1/2 w-[2.6%] -translate-x-1/2 bg-linear-to-r from-[#0B1C2C] via-[#091623] to-[#0B1C2C]" />
+                <div className="absolute inset-y-0 left-1/2 w-[2.6%] -translate-x-1/2 bg-linear-to-r from-[#5A0B18] via-[#3a0710] to-[#5A0B18]" />
               ) : (
                 <>
-                  <div className="absolute inset-y-0 left-0 w-[11%] rounded-l-md bg-linear-to-r from-[#0B1C2C] via-[#06101A] to-[#0A1B2B]" />
+                  <div className="absolute inset-y-0 left-0 w-[11%] rounded-l-md bg-linear-to-r from-[#5A0B18] via-[#2A060C] to-[#470A14]" />
                   <div className="absolute inset-y-[7%] left-[2.2%] w-px bg-white/15" />
                   <div className="absolute inset-y-[7%] left-[8.5%] w-px bg-black/45" />
                 </>
@@ -508,8 +508,8 @@ function FaceView({
           opacity: shade,
           background:
             side === "front"
-              ? "linear-gradient(to left, rgba(255,255,255,0.55) 0%, rgba(255,255,255,0.12) 18%, rgba(24,38,49,0.28) 100%)"
-              : "linear-gradient(to right, rgba(255,255,255,0.55) 0%, rgba(255,255,255,0.12) 18%, rgba(24,38,49,0.28) 100%)",
+              ? "linear-gradient(to left, rgba(255,255,255,0.55) 0%, rgba(255,255,255,0.12) 18%, rgba(40,27,28,0.28) 100%)"
+              : "linear-gradient(to right, rgba(255,255,255,0.55) 0%, rgba(255,255,255,0.12) 18%, rgba(40,27,28,0.28) 100%)",
         }}
       />
     </div>
@@ -539,8 +539,8 @@ function Cover({ entries }: { entries: readonly Numbered[] }) {
       style={{
         color: FOIL,
         background:
-          "radial-gradient(80% 60% at 30% 12%, #1B4A78 0%, transparent 60%)," +
-          "linear-gradient(165deg, #143B61 0%, #0E2438 55%, #0A1A29 100%)",
+          "radial-gradient(80% 60% at 30% 12%, #B81A33 0%, transparent 60%)," +
+          "linear-gradient(165deg, #A5142B 0%, #8F1024 55%, #470A14 100%)",
       }}
     >
       {/* Double rule, blind-tooled then foiled: the outer pressed into
@@ -762,7 +762,7 @@ function BackCover() {
       className="cloth flex h-full flex-col items-center justify-center text-white"
       style={{
         background:
-          "linear-gradient(200deg, #133A5E 0%, #0E2438 60%, #0B1C2C 100%)",
+          "linear-gradient(200deg, #A5142B 0%, #8F1024 60%, #5A0B18 100%)",
       }}
     >
       <div

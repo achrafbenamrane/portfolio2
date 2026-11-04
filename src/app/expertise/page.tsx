@@ -86,7 +86,7 @@ export default function ExpertisePage() {
               <p className="mt-6 max-w-lg leading-relaxed text-[var(--home-dim)]">
                 {service.intro}
               </p>
-              <div className="relative mt-10 aspect-[16/10] overflow-hidden rounded-[4px] bg-[#0e2438]">
+              <div className="relative mt-10 aspect-[16/10] overflow-hidden rounded-[4px] bg-[#8f1024]">
                 <Image src={service.image} alt="" fill sizes="(min-width: 768px) 45vw, 100vw" className="object-cover object-top" />
               </div>
             </div>

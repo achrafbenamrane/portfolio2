@@ -9,7 +9,7 @@ import { site } from "@/content/site";
  * JavaScript for that would be paying for nothing.
  *
  * The gradient is built from the palette's own accent and the iMac's shell
- * blue rather than an arbitrary blue, so it reads as part of this site instead
+ * red rather than an arbitrary red, so it reads as part of this site instead
  * of a banner lifted from a template. The soft light bands are two very wide
  * radial gradients — cheap, resolution-independent, and no image to download.
  */
@@ -20,9 +20,9 @@ export default function CtaBanner() {
         className="relative mx-auto max-w-350 overflow-hidden rounded-2xl px-7 py-14 md:px-14 md:py-20"
         style={{
           background:
-            "radial-gradient(120% 140% at 85% 15%, #3D7FC0 0%, transparent 55%)," +
-            "radial-gradient(90% 120% at 15% 90%, #1B4A78 0%, transparent 60%)," +
-            "linear-gradient(135deg, #0E2438 0%, #133A5E 55%, #0B1C2C 100%)",
+            "radial-gradient(120% 140% at 85% 15%, #D33348 0%, transparent 55%)," +
+            "radial-gradient(90% 120% at 15% 90%, #B81A33 0%, transparent 60%)," +
+            "linear-gradient(135deg, #8F1024 0%, #A5142B 55%, #5A0B18 100%)",
         }}
       >
         {/* Side by side from lg: on a tablet the right column's 20rem left

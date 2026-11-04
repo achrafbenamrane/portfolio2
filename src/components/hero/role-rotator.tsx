@@ -58,7 +58,7 @@ export default function RoleRotator({ roles }: { roles: readonly string[] }) {
       {text}
       <span
         aria-hidden
-        className="ml-1 inline-block h-[1em] w-[2px] translate-y-[0.12em] animate-pulse bg-[#7CC4F0]"
+        className="ml-1 inline-block h-[1em] w-[2px] translate-y-[0.12em] animate-pulse bg-[#FFB4AE]"
       />
     </p>
   );

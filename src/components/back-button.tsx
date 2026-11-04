@@ -5,7 +5,7 @@
  *
  * Callers place it and choose its transition, since one fades in with the
  * copy around it and another waits for a phone to land. `small` and
- * `accent` match it to a button beside it — the sites' 36px glacier-blue
+ * `accent` match it to a button beside it — the sites' 36px red
  * "Visit site".
  */
 const SIZES = {
@@ -21,11 +21,11 @@ const SIZES = {
 
 const TONES = {
   light: {
-    pill: "border-line bg-canvas text-ink shadow-[0_8px_22px_-10px_rgba(14,36,56,0.45)] hover:border-accent hover:text-accent",
+    pill: "border-line bg-canvas text-ink shadow-[0_8px_22px_-10px_rgba(40,27,28,0.45)] hover:border-accent hover:text-accent",
     disc: "bg-ink text-canvas group-hover/back:bg-accent",
   },
   accent: {
-    pill: "border-transparent bg-accent text-canvas shadow-[0_8px_24px_-6px_rgba(36,104,155,0.55)] hover:bg-ink",
+    pill: "border-transparent bg-accent text-canvas shadow-[0_8px_24px_-6px_rgba(179,18,42,0.55)] hover:bg-ink",
     disc: "bg-canvas text-accent group-hover/back:text-ink",
   },
 } as const;

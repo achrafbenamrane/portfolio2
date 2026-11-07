@@ -9,7 +9,7 @@ import PageHeader from "@/components/page-header";
 export const metadata: Metadata = {
   title: "ONEFRAME case study",
   description:
-    "How we built ONEFRAME's brand: the boxed wordmark, a packaging line where every box tells its own story, the storefront and the Instagram page.",
+    "How I built ONEFRAME's brand: the boxed wordmark, a packaging line where every box tells its own story, the storefront and the Instagram page.",
 };
 
 const CDN = "https://res.cloudinary.com/dwvgbojw0/image/upload/f_auto,q_auto";
@@ -35,7 +35,7 @@ const PACKAGING = [
 ];
 
 /**
- * A case study in Wolfexo's own look: the home page's red, its wide uppercase
+ * A case study in the site's own look: the home page's red, its wide uppercase
  * headlines, outlined words and numbered section rules. ONEFRAME's black
  * and white appear only where ONEFRAME itself is shown.
  */
@@ -47,15 +47,15 @@ export default function OneFrameCase() {
         label="Case studies — ONEFRAME"
         title="ONEFRAME"
         outline="a story in 3D"
-        description="Each frame tells a story in 3D. How we built the brand: the boxed wordmark, a packaging line where every box tells its own story, the storefront and the Instagram page."
+        description="Each frame tells a story in 3D. How I built the brand: the boxed wordmark, a packaging line where every box tells its own story, the storefront and the Instagram page."
       />
 
       {/* ── the brief, and the brand at a glance ── */}
       <section className="px-6 pb-16 md:px-12 md:pb-24">
         <div className="mx-auto max-w-350">
           <dl className="grid gap-8 border-t border-[var(--home-line)] pt-8 text-[13px] sm:grid-cols-2 lg:grid-cols-4">
-            <Fact label="Client">ONEFRAME, our own brand, 2025</Fact>
-            <Fact label="What we did">Logo, brand identity, packaging line, online store</Fact>
+            <Fact label="Client">ONEFRAME, my own brand, 2025</Fact>
+            <Fact label="What I did">Logo, brand identity, packaging line, online store</Fact>
             <Fact label="Product">Lit 3D frames, each made only once</Fact>
             <Fact label="Live">
               <a href={STORE} target="_blank" rel="noopener noreferrer" className="underline-offset-4 hover:underline">
@@ -170,7 +170,7 @@ export default function OneFrameCase() {
               <p className="mt-6 leading-relaxed text-[#281b1c]/75">
                 The box is the first thing an owner holds, so it does the
                 talking: the frame&apos;s name, a few lines on what the car
-                stands for, and, on the side, what makes it rare. We wrote it
+                stands for, and, on the side, what makes it rare. I wrote it
                 as a certificate as much as a label.
               </p>
             </div>
@@ -280,7 +280,7 @@ export default function OneFrameCase() {
             Your brand next
           </p>
           <h2 className="home-display mt-14 text-[clamp(2.4rem,6vw,5.6rem)] leading-[1.02]">
-            {["Can we build", "yours?"].map((line) => (
+            {["Let's build", "yours"].map((line) => (
               <span key={line} className="home-fill">
                 <span className="home-outline-dark">{line}</span>
                 <span aria-hidden>{line}</span>
@@ -292,7 +292,7 @@ export default function OneFrameCase() {
               Get a quote
             </Link>
             <Link href="/projects" className="home-btn home-btn-ghost">
-              More of our work
+              More of my work
             </Link>
           </div>
         </div>

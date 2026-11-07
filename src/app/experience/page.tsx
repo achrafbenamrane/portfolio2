@@ -8,7 +8,7 @@ import { experiences } from "@/content/site";
 export const metadata: Metadata = {
   title: "Experience",
   description:
-    "The track record behind Wolfexo: a full-stack role, a security internship, a Master's degree and co-founded products.",
+    "My track record: a full-stack role, a security internship, a Master's degree and co-founded products.",
 };
 
 export default function ExperiencePage() {
@@ -16,10 +16,10 @@ export default function ExperiencePage() {
     <>
       <PageHeader
         index="01.1"
-        label="About us — Track record"
+        label="About me — Track record"
         title="The track record"
-        outline="behind Wolfexo"
-        description="The track record behind Wolfexo: one founder across every role. A full-stack position, a security internship, a Master's degree and the products co-founded along the way."
+        outline="behind the work"
+        description="One person across every role: a full-stack position, a security internship, a Master's degree and the products I co-founded along the way."
         meta={{
           label: "ROLES & EDUCATION",
           value: `${experiences.length.toString().padStart(3, "0")} ENTRIES`,

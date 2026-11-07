@@ -8,7 +8,7 @@ import PageHeader from "@/components/page-header";
 export const metadata: Metadata = {
   title: "Getdraft case study",
   description:
-    "How we built Getdraft, a sports recruiting app for iOS and Android: swipe to Draft, chat on a match, ID-verified adults and parent-approved minors, its back end and its website.",
+    "Getdraft, a sports recruiting app for iOS and Android: swipe to Draft, chat on a match, ID-verified adults and parent-approved minors, its back end and its website.",
 };
 
 const SITE = "https://getdraft.net/";
@@ -31,7 +31,7 @@ const DECISIONS = [
   },
   {
     title: "Every adult is ID-verified",
-    text: "An identity check sits between the profile and the payment. It runs through a dedicated verification service, and the result reaches our back end through signed webhooks, so it can't be faked from the phone.",
+    text: "An identity check sits between the profile and the payment. It runs through a dedicated verification service, and the result reaches the back end through signed webhooks, so it can't be faked from the phone.",
   },
   {
     title: "Minors go live with a guardian",
@@ -67,7 +67,7 @@ export default function GetdraftCase() {
         <div className="mx-auto max-w-350">
           <dl className="grid gap-8 border-t border-[var(--home-line)] pt-8 text-[13px] sm:grid-cols-2 lg:grid-cols-4">
             <Fact label="Client">Getdraft, 2026</Fact>
-            <Fact label="What we did">iOS and Android app, back end and payments, website</Fact>
+            <Fact label="What I did">iOS and Android app, back end and payments, website</Fact>
             <Fact label="Who it's for">Athletes, parents, coaches, recruiters and agents, across 15 sports</Fact>
             <Fact label="Live">
               <Out href={SITE}>getdraft.net</Out>
@@ -172,7 +172,7 @@ export default function GetdraftCase() {
               One TypeScript app for iOS and Android. A NestJS back end on
               Fastify serves it, with the data in Postgres on Supabase and
               row-level security on every table, Stripe for payments and a
-              live socket for chat. We audited the back end before release:
+              live socket for chat. The back end was audited before release:
               six critical issues found and fixed, and all 45 tests passing.
             </p>
             <Stack items={["Expo", "React Native", "TypeScript", "Redux Toolkit", "NestJS", "Fastify", "Supabase", "PostgreSQL", "Stripe", "Socket.IO"]} />
@@ -181,7 +181,7 @@ export default function GetdraftCase() {
       </Chapter>
 
       <NextCase href="/case-studies/linky" client="Linky" title="trust built in" />
-      <BuildYours line="Can we build yours?" />
+      <BuildYours />
     </div>
   );
 }

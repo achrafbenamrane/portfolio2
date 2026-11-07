@@ -6,7 +6,7 @@ import { projects } from "@/content/site";
 
 export const metadata: Metadata = {
   title: "Projects",
-  description: `${projects.length} projects across web, mobile, computer vision and brand identity, designed, built and shipped by Wolfexo.`,
+  description: `${projects.length} projects across web, mobile, computer vision and brand identity, designed, built and shipped by Achraf Benamrane.`,
 };
 
 export default function ProjectsPage() {
@@ -17,7 +17,7 @@ export default function ProjectsPage() {
         label="Projects"
         title="Projects"
         outline="that ship"
-        description="Web, mobile, computer vision and brand identity — every project designed, built and shipped by Wolfexo."
+        description="Web, mobile, computer vision and brand identity — every project designed, built and shipped by me."
       />
       <WorkGallery />
     </>

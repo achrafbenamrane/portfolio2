@@ -9,7 +9,7 @@ import PageHeader from "@/components/page-header";
 export const metadata: Metadata = {
   title: "Linky case study",
   description:
-    "How we built Linky, a marketplace and real-estate app with escrow payments by Mobile Money, verified sellers, a courier app, an admin console and its website.",
+    "How I built Linky, a marketplace and real-estate app with escrow payments by Mobile Money, verified sellers, a courier app, an admin console and its website.",
 };
 
 const SITE = "https://linkygroup.com/";
@@ -27,7 +27,7 @@ const SCREENS = [
 const DECISIONS = [
   {
     title: "Escrow, kept as a ledger",
-    text: "Mobile Money can't split one payment between a seller and a platform, so we hold every payment and keep the books ourselves. The seller is paid once the buyer confirms delivery, the commission is taken at release, and an order nobody confirms is refunded on its own.",
+    text: "Mobile Money can't split one payment between a seller and a platform, so the app holds every payment and keeps its own books. The seller is paid once the buyer confirms delivery, the commission is taken at release, and an order nobody confirms is refunded on its own.",
   },
   {
     title: "Only verified sellers",
@@ -67,7 +67,7 @@ export default function LinkyCase() {
         <div className="mx-auto max-w-350">
           <dl className="grid gap-8 border-t border-[var(--home-line)] pt-8 text-[13px] sm:grid-cols-2 lg:grid-cols-4">
             <Fact label="Client">Linky, 2026</Fact>
-            <Fact label="What we did">Android and iOS app, courier app, back end, admin console, website</Fact>
+            <Fact label="What I did">Android and iOS app, courier app, back end, admin console, website</Fact>
             <Fact label="Payments">Orange Money and MTN Mobile Money, card, cash on delivery</Fact>
             <Fact label="Live">
               <Out href={SITE}>linkygroup.com</Out>
@@ -176,7 +176,7 @@ export default function LinkyCase() {
       </Chapter>
 
       <NextCase href="/case-studies/aloulou93" client="Aloulou 93" title="streetwear, delivered" />
-      <BuildYours line="Can we build yours?" />
+      <BuildYours />
     </div>
   );
 }

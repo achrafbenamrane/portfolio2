@@ -17,8 +17,8 @@ export default function SiteFooter() {
             {site.brand}
           </Link>
           <p className="mt-5 max-w-xs leading-relaxed text-[var(--home-dim)]">
-            An independent agency for full-stack development, computer vision
-            and brand identity.
+            Certified auto-entrepreneur and full-stack developer: web and
+            mobile apps, computer vision and brand identity.
           </p>
         </div>
 
@@ -55,7 +55,7 @@ export default function SiteFooter() {
 
       <div className="mx-auto mt-14 flex max-w-350 flex-wrap justify-between gap-4 border-t border-[var(--home-line)] pt-6 text-[11px] uppercase tracking-wider text-[var(--home-dim)]">
         <span>© {site.brand}</span>
-        <span>Designed and built by {site.brand}</span>
+        <span>Designed and built by me</span>
       </div>
     </footer>
   );

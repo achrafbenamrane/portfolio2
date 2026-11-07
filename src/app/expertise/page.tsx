@@ -8,7 +8,7 @@ import PageHeader from "@/components/page-header";
 export const metadata: Metadata = {
   title: "Expertise",
   description:
-    "Full-stack development, computer vision and brand identity: what Wolfexo builds, with what, and the projects that prove it.",
+    "Full-stack development, computer vision and brand identity: what I build, with what, and the projects that prove it.",
 };
 
 const SERVICES = [
@@ -18,7 +18,7 @@ const SERVICES = [
     title: "Full-stack",
     outline: "development",
     intro:
-      "The whole product, front to back: what your customers see, the back end that runs it, and the servers it lives on. Then we keep it running.",
+      "The whole product, front to back: what your customers see, the back end that runs it, and the servers it lives on. Then I keep it running.",
     builds: ["Web apps and platforms", "Mobile apps for iOS and Android", "Online stores with cash on delivery", "APIs, databases and admin panels", "Hosting, monitoring and maintenance"],
     tools: ["Next.js", "React", "React Native", "Node.js", "PostgreSQL", "Firebase", "Stripe"],
     proof: [
@@ -37,7 +37,7 @@ const SERVICES = [
     title: "Computer",
     outline: "vision",
     intro:
-      "Software that sees: it tracks hands, reads gestures and analyses images and video, in the browser or on a server. We prototype first, so you can try it before you invest.",
+      "Software that sees: it tracks hands, reads gestures and analyses images and video, in the browser or on a server. I prototype first, so you can try it before you invest.",
     builds: ["Hand tracking and gesture control", "Image and video analysis", "Detection, counting and tracking", "Interactive installations on the web", "Prototypes you can try in a browser"],
     tools: ["MediaPipe", "Three.js", "WebGL", "TypeScript"],
     proof: [
@@ -71,7 +71,7 @@ export default function ExpertisePage() {
         index="02"
         label="Expertise"
         title="Three disciplines,"
-        outline="one agency"
+        outline="one developer"
         description="Full-stack development, computer vision and brand identity, under one roof and in one pair of hands, so nothing gets lost between them."
       />
 
@@ -92,7 +92,7 @@ export default function ExpertisePage() {
             </div>
 
             <div className="space-y-12">
-              <Block title="What we build">
+              <Block title="What I build">
                 <ul className="divide-y divide-current/10">
                   {service.builds.map((item) => (
                     <li key={item} className="py-3 text-[17px]">{item}</li>

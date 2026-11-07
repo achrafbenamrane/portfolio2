@@ -7,10 +7,10 @@ import PageHeader from "@/components/page-header";
 export const metadata: Metadata = {
   title: "Industries",
   description:
-    "The industries Wolfexo builds for, and the shipped projects behind each one.",
+    "The industries I build for, and the shipped projects behind each one.",
 };
 
-/** Each industry with what we build there and the real work that proves it. */
+/** Each industry with what I build there and the real work that proves it. */
 const INDUSTRIES = [
   {
     name: "Restaurants & food delivery",
@@ -56,11 +56,11 @@ export default function IndustriesPage() {
         index="05"
         label="Industries"
         title="Industries"
-        outline="we know"
-        description="Every business has its habits: ordering on WhatsApp, paying on delivery, a menu in two languages. We know them because we have built for them."
+        outline="I know"
+        description="Every business has its habits: ordering on WhatsApp, paying on delivery, a menu in two languages. I know them because I have built for them."
       />
 
-      <Chapter n={String(INDUSTRIES.length).padStart(2, "0")} label="Where we have shipped">
+      <Chapter n={String(INDUSTRIES.length).padStart(2, "0")} label="Where I have shipped">
         <ul className="mt-14 border-t border-[var(--home-line)] md:mt-20">
           {INDUSTRIES.map((industry, index) => (
             <li key={industry.name} className="grid gap-4 border-b border-[var(--home-line)] py-8 md:grid-cols-[64px_1.1fr_1.2fr_1fr] md:items-baseline md:gap-8">
@@ -83,7 +83,7 @@ export default function IndustriesPage() {
         <div className="mt-14 flex flex-wrap items-center justify-between gap-6 rounded-[6px] border border-[var(--home-line)] p-8">
           <div>
             <h2 className="home-display text-[clamp(1.2rem,2vw,1.7rem)]">Your industry next</h2>
-            <p className="mt-2 text-[var(--home-dim)]">Health, education, tourism, industry: tell us how your business works.</p>
+            <p className="mt-2 text-[var(--home-dim)]">Health, education, tourism, industry: tell me how your business works.</p>
           </div>
           <Link href="/contact" className="home-btn">
             Start a project

@@ -9,7 +9,7 @@ import PageHeader from "@/components/page-header";
 export const metadata: Metadata = {
   title: "Aloulou 93 case study",
   description:
-    "How we built Aloulou 93's online store: three languages with Arabic right to left, delivery priced for 58 regions, cash on delivery, and a back-office for the orders.",
+    "How I built Aloulou 93's online store: three languages with Arabic right to left, delivery priced for 58 regions, cash on delivery, and a back-office for the orders.",
 };
 
 // The domain is aloulou98.com; the brand calls itself Aloulou 93.
@@ -75,7 +75,7 @@ export default function AloulouCase() {
         <div className="mx-auto max-w-350">
           <dl className="grid gap-8 border-t border-[var(--home-line)] pt-8 text-[13px] sm:grid-cols-2 lg:grid-cols-4">
             <Fact label="Client">Aloulou 93, 2026</Fact>
-            <Fact label="What we did">Store design, online store, back-office</Fact>
+            <Fact label="What I did">Store design, online store, back-office</Fact>
             <Fact label="What it sells">Shoes, clothes and football shirts from Nike, Adidas and Lacoste</Fact>
             <Fact label="Live">
               <Out href={SITE}>aloulou98.com</Out>
@@ -122,7 +122,7 @@ export default function AloulouCase() {
               never a fill. Red and green appear only as signals: a sale, the
               stock.
               <footer className="mt-3 text-[11px] uppercase tracking-wider text-[var(--home-dim)]">
-                From our design brief for the store
+                From my design brief for the store
               </footer>
             </blockquote>
             <ul className="mt-8 grid grid-cols-3 gap-3 text-[12px] uppercase tracking-wider">
@@ -195,7 +195,7 @@ export default function AloulouCase() {
       </Chapter>
 
       <NextCase href="/case-studies/oneframe" client="ONEFRAME" title="a story in 3D" />
-      <BuildYours line="Can we build yours?" />
+      <BuildYours />
     </div>
   );
 }

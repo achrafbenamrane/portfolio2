@@ -350,8 +350,8 @@ export default function SiteWall({ sites }: { sites: readonly Project[] }) {
       >
         <div className="wardrobe-crown">
           <span className="wardrobe-plate">
-            Our websites <span className="wardrobe-plate-dash">—</span>{" "}
-            <span className="accent-sheen">we built them</span>
+            My websites <span className="wardrobe-plate-dash">—</span>{" "}
+            <span className="accent-sheen">I built them</span>
           </span>
         </div>
 

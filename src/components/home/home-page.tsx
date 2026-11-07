@@ -1,12 +1,13 @@
 import Image from "next/image";
 import Link from "next/link";
 
+import { CertifiedBadge } from "@/components/brand/certified-badge";
 import { site } from "@/content/site";
 import CoffeeCountdown from "./coffee-countdown";
 import { wide } from "./wide-font";
 
 /**
- * Wolfexo's home page, laid out after treize.pro: wide uppercase headlines, words
+ * The home page, laid out after treize.pro: wide uppercase headlines, words
  * in outline, numbered section rules, tilted photos, a logo wall, staggered
  * project cards, a numbered FAQ and a three-column contact.
  */
@@ -16,14 +17,14 @@ type Client = {
   /** A square picture, shown cut to a circle. */
   logo: string;
   field?: string;
-  /** What we made for them. */
+  /** What I made for them. */
   work: string;
   /** Their own colour, which the card takes on under the pointer. */
   brand: string;
 };
 
 /**
- * Who we have built for, in two rows that slide past each other. The rows
+ * Who I have built for, in two rows that slide past each other. The rows
  * mix apps, stores and logos, so each shows all three kinds of work. The
  * logos in /clients were cut from the clients' own artwork; DMD's leaves off
  * the tagline under its monogram.
@@ -57,23 +58,27 @@ const PROJECTS = [
 const FAQ = [
   {
     q: "Who will actually work on my project?",
-    a: "Wolfexo's founder, from the first call to launch. Wolfexo is founder-led by design: no account managers, no juniors, no hand-offs. You always talk to the person doing the work, which is why projects move fast and nothing gets lost.",
+    a: "Me, from the first call to launch. No account managers, no juniors, no hand-offs. You always talk to the person doing the work, which is why projects move fast and nothing gets lost.",
   },
   {
-    q: "Why one agency for the whole product?",
+    q: "Are you a registered professional?",
+    a: "Yes. I'm a certified auto-entrepreneur, so you're hiring a registered professional, with the scope and the price agreed in writing before any work begins.",
+  },
+  {
+    q: "Why hire one person for the whole product?",
     a: "Because nothing gets lost in the handover. The same hands design your screens, build the front end and the back end, and put it online, so what you approve is what ships.",
   },
   {
     q: "What can computer vision do for my business?",
-    a: "Detect, count, recognise and track: products on a shelf, people in a queue, documents to read, gestures to control a screen. We build a working prototype first, often right in the browser, so you can try it before you invest.",
+    a: "Detect, count, recognise and track: products on a shelf, people in a queue, documents to read, gestures to control a screen. I build a working prototype first, often right in the browser, so you can try it before you invest.",
   },
   {
     q: "Do you use artificial intelligence to build?",
-    a: "Yes, as a tool: for research, structure and some of the code. But we make every decision, and every line that ships is checked by us.",
+    a: "Yes, as a tool: for research, structure and some of the code. But I make every decision, and I check every line that ships.",
   },
   {
     q: "Do you subcontract any of the work?",
-    a: "Never. Development, computer vision, brand identity and launch are all done in-house at Wolfexo, from the first sketch to the app stores.",
+    a: "Never. Development, computer vision, brand identity and launch are all done by me, from the first sketch to the app stores.",
   },
   {
     q: "How do payments work?",
@@ -81,7 +86,7 @@ const FAQ = [
   },
   {
     q: "Can my site be in Arabic, French and English?",
-    a: "Yes. We build sites and apps in all three, with Arabic laid out right to left. Boutique Amine, for example, we built Arabic-first.",
+    a: "Yes. I build sites and apps in all three, with Arabic laid out right to left. Boutique Amine, for example, I built Arabic-first.",
   },
 ];
 
@@ -94,17 +99,17 @@ export default function HomePage() {
         <div className="grid items-center gap-14 pt-16 md:grid-cols-2 md:gap-20 md:pt-24">
           <div>
             <h2 className="home-display text-[clamp(1.8rem,3.2vw,2.9rem)]">
-              We&apos;re experts in full-stack development
+              One developer, your whole product
             </h2>
             <p className="mt-6 max-w-lg leading-relaxed text-[var(--home-dim)]">
-              Web apps, mobile apps, websites, APIs and databases: we build the
-              whole product, front to back, put it online, and keep it running
-              for years after launch. We do three things, full-stack
-              development, computer vision and brand identity, because we&apos;d
-              rather be the best at three things than decent at ten.
+              Web apps, mobile apps, websites, APIs and databases: I build it
+              front to back, put it online, and keep it running for years after
+              launch. I do three things, full-stack development, computer vision
+              and brand identity, because I&apos;d rather be the best at three
+              things than decent at ten.
             </p>
             <Link href="/projects" className="home-btn mt-8">
-              Read more about our work
+              See my work
             </Link>
           </div>
           <Devices />
@@ -115,11 +120,11 @@ export default function HomePage() {
         <div className="grid items-center gap-14 pt-16 md:grid-cols-2 md:gap-20 md:pt-24">
           <div className="md:order-2">
             <h2 className="home-display text-[clamp(1.8rem,3.2vw,2.9rem)]">
-              We teach software to see
+              I teach software to see
             </h2>
             <p className="mt-6 max-w-lg leading-relaxed text-[var(--home-dim)]">
               Hand tracking, gesture control, image and video analysis, running
-              in the browser or on a server. Try it on our own site: a portrait
+              in the browser or on a server. Try it on my own site: a portrait
               that folds into paper when you close your hand, and a desktop you
               steer with one finger. The video never leaves your machine.
             </p>
@@ -143,12 +148,12 @@ export default function HomePage() {
         <div className="grid items-center gap-14 pt-16 md:grid-cols-2 md:gap-20 md:pt-24">
           <div>
             <h2 className="home-display text-[clamp(1.8rem,3.2vw,2.9rem)]">
-              We build brand identities for businesses
+              I build brand identities for businesses
             </h2>
             <p className="mt-6 max-w-lg leading-relaxed text-[var(--home-dim)]">
               A logo is where it starts. Then come the colours, the type, the
               packaging and everything your customers hold in their hands.
-              ONEFRAME, our own brand of 3D car frames, is the proof: we drew
+              ONEFRAME, my own brand of 3D car frames, is the proof: I drew
               its wordmark and a packaging line where every box tells its own
               story.
             </p>
@@ -170,17 +175,17 @@ export default function HomePage() {
         <div className="grid items-center gap-14 pt-16 md:grid-cols-2 md:gap-20 md:pt-24">
           <div className="md:order-2">
             <h2 className="home-display text-[clamp(1.8rem,3.2vw,2.9rem)]">
-              Founder-led, from first call to launch
+              You work with me, from first call to launch
             </h2>
             <p className="mt-6 max-w-lg leading-relaxed text-[var(--home-dim)]">
-              Wolfexo is an independent agency, founder-led by design. The
-              person you talk to is the person who designs, builds and launches
-              your product: no account managers, no juniors, no hand-offs. We
-              take on a limited number of projects at a time, so each one gets
-              our full attention.
+              I&apos;m a certified auto-entrepreneur, so you hire me directly.
+              The person you talk to is the person who designs, builds and
+              launches your product: no account managers, no juniors, no
+              hand-offs. I take on a limited number of projects at a time, so
+              each one gets my full attention.
             </p>
             <Link href="/about" className="home-btn mt-8">
-              Get to know us
+              Get to know me
             </Link>
           </div>
           <Photos
@@ -207,7 +212,7 @@ export default function HomePage() {
             </div>
             <div className="flex flex-wrap items-end justify-between gap-x-12 gap-y-6 pt-16 md:pt-24">
               <h2 className="home-display text-[clamp(1.8rem,3.2vw,2.9rem)]">
-                Brands that <span className="home-outline">trust us</span>
+                Brands that <span className="home-outline">trust me</span>
               </h2>
               <p className="max-w-sm leading-relaxed text-[var(--home-dim)]">
                 Apps, online stores and logos for businesses in sport, real
@@ -256,7 +261,7 @@ export default function HomePage() {
         </div>
         <div className="mt-16 flex justify-center">
           <Link href="/projects" className="home-btn">
-            Discover our projects
+            Discover my projects
           </Link>
         </div>
       </Section>
@@ -293,15 +298,16 @@ function Hero() {
     <section className="relative flex min-h-dvh flex-col justify-end px-6 pb-14 pt-36 md:px-12">
       <div className="mx-auto w-full max-w-350">
         <div className="border-t border-[var(--home-line)] pt-8 md:ml-[7%]">
+          <CertifiedBadge className="mb-6 bg-[#f8fafc]" />
           <h1 className="home-display text-[clamp(1.7rem,8vw,2.3rem)] leading-[1.02] md:text-[clamp(1.6rem,4.6vw,4.6rem)]">
-            <span className="home-outline block">
-              We are {site.brand}
+            <span className="block">
+              I&apos;m {site.brand}
               <span className="home-chip" aria-hidden>
-                <WolfGlyph />
+                <Image src="/hero-face.webp" alt="" width={96} height={96} priority />
               </span>
             </span>
-            <span className="block">web and mobile app</span>
-            <span className="block md:pl-[9%]">development agency</span>
+            <span className="home-outline block">full-stack developer</span>
+            <span className="block md:pl-[9%]">web and mobile apps</span>
           </h1>
         </div>
 
@@ -314,12 +320,22 @@ function Hero() {
               </svg>
             </span>
           </a>
-          <p className="flex max-w-xs gap-3 text-[12px] uppercase leading-relaxed tracking-wide">
-            <svg className="mt-0.5 flex-none text-[var(--home-sky)]" width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" aria-hidden>
-              <path d="M7 1v12M1 7h12M2.8 2.8l8.4 8.4M11.2 2.8l-8.4 8.4" />
-            </svg>
-            Web and mobile apps, back-ends, computer vision and brand identity. From the first idea to launch.
-          </p>
+          <div className="max-w-sm">
+            <p className="flex gap-3 text-[12px] uppercase leading-relaxed tracking-wide">
+              <svg className="mt-0.5 flex-none text-[var(--home-sky)]" width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" aria-hidden>
+                <path d="M7 1v12M1 7h12M2.8 2.8l8.4 8.4M11.2 2.8l-8.4 8.4" />
+              </svg>
+              I design, build and launch your app myself. One person from the first idea to launch, a price agreed in writing, and everything is yours.
+            </p>
+            <div className="mt-5 flex flex-wrap gap-3">
+              <Link href="/contact" className="home-btn">
+                Get a quote
+              </Link>
+              <Link href="/projects" className="home-btn home-btn-ghost">
+                See my work
+              </Link>
+            </div>
+          </div>
         </div>
 
         <div className="mt-10 border-t border-[var(--home-line)] pt-4 text-[11px] uppercase tracking-wider md:ml-[7%]">
@@ -359,8 +375,7 @@ function Section({
 
 /**
  * One product on both screens: Getdraft's website playing in the laptop and
- * its app in the phone. Built end to end by us, it is the plainest proof of
- * what full-stack means.
+ * its app in the phone, the plainest proof of what full-stack means.
  */
 function Devices() {
   return (
@@ -503,22 +518,6 @@ function Ring({ id, text }: { id: string; text: string }) {
   );
 }
 
-/**
- * A wolf's head cut in facets, its right side a shade lighter, as if lit
- * from the left: the chip in the hero's headline. The fur at the cheeks is
- * what keeps it a wolf, not a fox, at the chip's small size.
- */
-function WolfGlyph() {
-  return (
-    <svg width="66%" height="66%" viewBox="0 0 64 64" aria-hidden>
-      <path fill="currentColor" d="M13 3L24 18L32 15V61L27 56L18 45L7 42L10 37L5 34L10 30L7 25L12 21Z" />
-      <path fill="currentColor" opacity=".78" d="M51 3L40 18L32 15V61L37 56L46 45L57 42L54 37L59 34L54 30L57 25L52 21Z" />
-      <path fill="#ffece9" d="M17.5 30L28 33.5L21 35.5ZM46.5 30L36 33.5L43 35.5Z" />
-      <path fill="#ffece9" opacity=".45" d="M17 12L21.5 18.5L15.5 20.5ZM47 12L42.5 18.5L48.5 20.5Z" />
-    </svg>
-  );
-}
-
 function EyeGlyph() {
   return (
     <svg width="55%" height="55%" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
@@ -537,7 +536,7 @@ function Contact() {
         </p>
 
         <h2 className="home-display mt-16 text-center text-[clamp(2.4rem,6vw,5.6rem)] leading-[1.02]">
-          {["Can we", "help you?"].map((line) => (
+          {["Let's build", "your project"].map((line) => (
             <span key={line} className="home-fill">
               <span className="home-outline-dark">{line}</span>
               <span aria-hidden>{line}</span>
@@ -566,7 +565,7 @@ function Contact() {
           </div>
           <div>
             <h3 className="home-display text-[17px] leading-snug">
-              Otherwise, we&apos;re old-school: we like talking face to face.
+              Otherwise, I&apos;m old-school: I like talking face to face.
             </h3>
             <p className="mt-5 text-[13px] uppercase tracking-wide">
               A video call or a coffee, your pick.
@@ -574,7 +573,7 @@ function Contact() {
           </div>
           <div>
             <h3 className="home-display text-[17px] leading-snug">
-              And we like it even more over a coffee!
+              And I like it even more over a coffee!
             </h3>
             <CoffeeCountdown />
             <p className="mt-3 text-[13px] uppercase tracking-wide">Until our next coffee</p>

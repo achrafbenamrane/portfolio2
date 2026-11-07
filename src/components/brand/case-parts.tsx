@@ -9,7 +9,7 @@ import { wide } from "@/components/home/wide-font";
  * numbered decisions, the stack, and the way on to the next case.
  */
 
-/** One fact under the heading: "Client", "What we did", "Live"… */
+/** One fact under the heading: "Client", "What I did", "Live"… */
 export function Fact({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <div>

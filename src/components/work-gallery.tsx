@@ -50,7 +50,7 @@ const AUTOMATIONS = projects.filter(
   (p) => p.category === "AI Automation" && !SITES.includes(p),
 );
 
-/** Wolfexo sells brand identity on one body of work: ONEFRAME's logo and
+/** Brand identity is sold on one body of work: ONEFRAME's logo and
  *  packaging. The rest of the print work stays in site.ts, off this page. */
 const DESIGN = projects.filter(
   (p) => p.category === "Graphic Design" && p.slug.startsWith("oneframe"),
@@ -130,7 +130,7 @@ export default function WorkGallery() {
           id="design"
           label="BRAND IDENTITY"
           title="Built to be recognised"
-          blurb="We build brand identities for businesses: the logo, then everything it lives on. Choose a piece to read about it."
+          blurb="I build brand identities for businesses: the logo, then everything it lives on. Choose a piece to read about it."
           count={DESIGN.length}
           initial={DESIGN[0]}
         >

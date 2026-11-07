@@ -4,7 +4,7 @@ import { wide } from "@/components/home/wide-font";
 
 /**
  * The home page's building blocks, for the other pages: a numbered section
- * on white, and the closing "can we build yours?" call.
+ * on white, and the closing "let's build yours" call.
  */
 export function Chapter({
   n,
@@ -33,8 +33,8 @@ export function Chapter({
   );
 }
 
-/** "Can we build yours?", filling in as it scrolls into view. */
-export function BuildYours({ line = "Can we build yours?" }: { line?: string }) {
+/** "Let's build yours", filling in as it scrolls into view. */
+export function BuildYours({ line = "Let's build yours" }: { line?: string }) {
   const words = line.split(" ");
   const half = Math.ceil(words.length / 2);
   const lines = [words.slice(0, half).join(" "), words.slice(half).join(" ")];
@@ -57,7 +57,7 @@ export function BuildYours({ line = "Can we build yours?" }: { line?: string }) 
             Get a quote
           </Link>
           <Link href="/projects" className="home-btn home-btn-ghost">
-            See our projects
+            See my projects
           </Link>
         </div>
       </div>

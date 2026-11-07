@@ -228,6 +228,14 @@ body:has(.page-head) .site-footer {
   box-shadow: inset 0 0 0 0.04em rgba(255, 255, 255, 0.7);
 }
 
+/* The face in the chip, the iris showing round it as a ring. */
+.home-chip img {
+  width: 86%;
+  height: 86%;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
 /* ── tilted photos ── */
 .home-photo {
   position: absolute;
@@ -286,7 +294,7 @@ body:has(.page-head) .site-footer {
   }
 }
 
-/* A pill: the logo in a circle, the name, and what we made. Under the
+/* A pill: the logo in a circle, the name, and what I made. Under the
    pointer it takes on the client's own colour (--brand). */
 .home-client {
   display: flex;

@@ -8,7 +8,7 @@ import PageHeader from "@/components/page-header";
 export const metadata: Metadata = {
   title: "Case studies",
   description:
-    "The thinking behind Wolfexo's work: the problem, the decisions and what shipped.",
+    "The thinking behind my work: the problem, the decisions and what shipped.",
 };
 
 /** Every case study, in the order of their numbers (04.1, 04.2…). */
@@ -67,7 +67,7 @@ export default function CaseStudiesPage() {
         label="Case studies"
         title="Case"
         outline="studies"
-        description="The thinking behind the work: the problem we were handed, the decisions we made, and what shipped."
+        description="The thinking behind the work: the problem I was handed, the decisions I made, and what shipped."
       />
 
       <Chapter n={String(CASES.length).padStart(2, "0")} label="Featured">

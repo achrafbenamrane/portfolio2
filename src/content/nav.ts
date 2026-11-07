@@ -8,7 +8,7 @@
  * not an array by the time the server tries to map over it.
  */
 export const SECTIONS = [
-  { label: "About us", href: "/about" },
+  { label: "About me", href: "/about" },
   { label: "Expertise", href: "/expertise" },
   { label: "Projects", href: "/projects" },
   { label: "Case studies", href: "/case-studies", note: "New — ONEFRAME" },

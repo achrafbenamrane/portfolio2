@@ -3,8 +3,8 @@ import { ImageResponse } from "next/og";
 import { site } from "@/content/site";
 
 /**
- * The social card: Wolfexo's, not a person's. No face and no location, the
- * agency's name large on its red, with the four things it makes.
+ * The social card: Achraf's name large on the red, with the role and the
+ * three services. No face and no location.
  *
  * Typeset in Geist, which Next ships inside its OG compiler, so nothing is
  * fetched at build time. Only the regular weight is available, so the
@@ -49,14 +49,18 @@ export default function Image() {
             color: DIM,
           }}
         >
-          <span>/ AGENCY</span>
+          <span>/ FULL-STACK DEVELOPER</span>
           <span style={{ color: ROSE }}>{site.availability}</span>
         </div>
 
         <div style={{ display: "flex", flexDirection: "column" }}>
-          <div style={{ fontSize: 150, letterSpacing: 14, lineHeight: 1 }}>{site.brand.toUpperCase()}</div>
+          <div style={{ display: "flex", flexDirection: "column", fontSize: 124, letterSpacing: 10, lineHeight: 1.02 }}>
+            {site.brand.toUpperCase().split(" ").map((word) => (
+              <span key={word}>{word}</span>
+            ))}
+          </div>
           <div style={{ marginTop: 26, fontSize: 34, color: DIM }}>
-            Apps built end to end, software that can see, brands people recognise.
+            {site.brandLine}
           </div>
         </div>
 

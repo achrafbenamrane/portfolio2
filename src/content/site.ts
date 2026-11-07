@@ -10,9 +10,9 @@ export const site = {
   shortName: "Achraf Benamrane",
   initials: "BA",
 
-  /** The business the site speaks for. Copy says "we", never "I". */
-  brand: "Wolfexo",
-  brandLine: "Full-stack development, computer vision and brand identity.",
+  /** The name the site goes by. Copy speaks as Achraf: "I", never "we". */
+  brand: "Achraf Benamrane",
+  brandLine: "Certified auto-entrepreneur and full-stack developer.",
 
   /**
    * Canonical origin, used for metadataBase, the sitemap and OG image URLs.
@@ -21,7 +21,7 @@ export const site = {
    */
   url: process.env.VERCEL_PROJECT_PRODUCTION_URL
     ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
-    : "https://portfolio2-woad-tau.vercel.app",
+    : "https://achrafbenamrane.vercel.app",
 
   /**
    * The hero name is set as a two-tier lockup: given names light and tracked
@@ -41,7 +41,7 @@ export const site = {
   ],
 
   tagline:
-    "We build web and mobile apps end to end, and software that can see.",
+    "I build web and mobile apps end to end, and software that can see.",
 
   bio: "Full-Stack Engineer with an MSc in Network & Information Security, and experience in web and mobile application development, secure communication platforms, UI/UX design and technical project leadership. Currently working remotely at PROGIX, building full-stack applications with React, Next.js, Node.js and PostgreSQL.",
 
@@ -83,10 +83,10 @@ export interface Service {
  * interesting thing about Achraf is that they do not.
  */
 export const servicesIntro = {
-  label: "WHAT WE DO",
+  label: "WHAT I DO",
   headingTop: "From the wireframe",
   headingBottom: "to the firewall",
-  body: "Most projects lose something in the handover — design to development, development to whoever secures it. We work across all three, so nothing gets lost in between.",
+  body: "Most projects lose something in the handover — design to development, development to whoever secures it. I work across all three, so nothing gets lost in between.",
   cta: "See the work",
 } as const;
 
@@ -345,7 +345,7 @@ export const projects: readonly Project[] = [
     featured: true,
     title: "ONEFRAME",
     description:
-      "E-commerce storefront built for our own brand, from product pages through to checkout.",
+      "E-commerce storefront built for my own brand, from product pages through to checkout.",
     category: "Web Development",
     tags: ["E-commerce", "Next.js", "Stripe"],
     year: "2025",
@@ -498,7 +498,7 @@ export const projects: readonly Project[] = [
     slug: "oneframe-identity",
     title: "ONEFRAME Brand Identity",
     description:
-      "Logo and identity for ONEFRAME, our own brand of 3D car frames: a boxed black-and-white wordmark that carries from the website to every box and post.",
+      "Logo and identity for ONEFRAME, my own brand of 3D car frames: a boxed black-and-white wordmark that carries from the website to every box and post.",
     category: "Graphic Design",
     tags: ["Logo", "Brand identity"],
     year: "2025",

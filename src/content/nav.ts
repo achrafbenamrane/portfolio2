@@ -11,6 +11,7 @@ export const SECTIONS = [
   { label: "About me", href: "/about" },
   { label: "Expertise", href: "/expertise" },
   { label: "Projects", href: "/projects" },
+  { label: "3D websites", href: "/3d", note: "New — Alger la Nuit" },
   { label: "Case studies", href: "/case-studies", note: "New — ONEFRAME" },
   { label: "Industries", href: "/industries" },
   { label: "Contact", href: "/contact", note: "Reply within one working day" },
@@ -18,6 +19,10 @@ export const SECTIONS = [
 
 /** Pages outside the menu that still belong in the sitemap. */
 export const MORE_PAGES = [
+  "/3d/sports-store",
+  "/3d/oneframe-museum",
+  "/3d/pizza-kitchen",
+  "/3d/2090",
   "/case-studies/oneframe",
   "/experience",
   "/certifications",

@@ -1,0 +1,21 @@
+{
+  "cell": 320,
+  "variants": 6,
+  "toppings": [
+    "pepperoni",
+    "mushroom",
+    "olive",
+    "onion",
+    "pepper",
+    "basil"
+  ],
+  "cellMetres": 0.05937,
+  "reachMetres": {
+    "pepperoni": 0.0208,
+    "mushroom": 0.017,
+    "olive": 0.0098,
+    "onion": 0.0219,
+    "pepper": 0.0206,
+    "basil": 0.0179
+  }
+}

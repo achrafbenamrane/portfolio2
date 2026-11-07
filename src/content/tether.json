@@ -1,0 +1,16 @@
+{
+  "lines": [
+    { "id": "link", "say": "Link is up. You've got the machine." },
+    { "id": "walk", "say": "Walk it to the beacon." },
+    { "id": "jump", "say": "Good. Now jump. It's the Moon, so it'll take a while to come down." },
+    { "id": "lie", "say": "Now get it flat on the ground, then stand it back up." },
+    { "id": "warning", "say": "Contact overhead. Something's coming down on your position." },
+    { "id": "fight", "say": "It's hostile. Put it down." },
+    { "id": "reach", "say": "It's down. Get to the Heron." },
+    { "id": "boarding", "say": "Ramp's open. Take it in." },
+    { "id": "launch", "say": "Heron's yours. We're launching." },
+    { "id": "orbit", "say": "Raiders on your nose. Clear the orbit." },
+    { "id": "won", "say": "Orbit is clear. Good flying." },
+    { "id": "lost", "say": "We've lost the link." }
+  ]
+}

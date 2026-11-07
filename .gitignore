@@ -62,3 +62,27 @@ __pycache__/
 /assets-source/voice-take.*
 /assets-source/voice-raw/
 /assets-source/voice-preview/
+
+# The store's build intermediates. Scripts in scripts/blender rebuild all of them;
+# the bakes alone are 100 MB. What ships is in public/store.
+/assets-source/store/build/
+/assets-source/store/jersey/shots/
+/assets-source/store/jersey/*.blend
+/assets-source/store/jersey/*.blend1
+/assets-source/store/jersey/*preview*.png
+/assets-source/store/jersey/contact.png
+/assets-source/store/jersey/atlas_check.png
+
+# The museum's build intermediates, rebuilt by scripts/blender and scripts/museum_frames.py.
+/assets-source/museum/
+/assets-source/pizza/
+
+# The 2090 game: bought in from Poly Haven and Solar System Scope, fetched again by the build notes.
+/assets-source/tether/dl/
+/assets-source/tether/build/
+
+# The rejected first idea for /3d/2090, kept on this machine only.
+/assets-source/y2090/
+
+# The motorcycles' downloads and build intermediates, rebuilt by scripts/blender.
+/assets-source/moto/

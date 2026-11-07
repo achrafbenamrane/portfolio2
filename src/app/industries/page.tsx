@@ -53,7 +53,7 @@ export default function IndustriesPage() {
   return (
     <>
       <PageHeader
-        index="05"
+        index="06"
         label="Industries"
         title="Industries"
         outline="I know"

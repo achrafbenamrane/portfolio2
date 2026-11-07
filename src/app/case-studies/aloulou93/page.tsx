@@ -63,7 +63,7 @@ export default function AloulouCase() {
   return (
     <div className={`home home-light ${wide.variable}`}>
       <PageHeader
-        index="04.4"
+        index="05.4"
         label="Case studies — Aloulou 93"
         title="Aloulou 93"
         outline="streetwear, delivered"

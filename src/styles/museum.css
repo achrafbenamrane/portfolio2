@@ -1,0 +1,361 @@
+/* ── the ONEFRAME museum ──
+ * ONEFRAME's own black and white, not the site's red: this is its building. What sits
+ * over the hall stays small, so the only colour on screen comes from the frames. */
+
+.museum-stage {
+  position: relative;
+  isolation: isolate;
+  height: calc(100dvh - 4.5rem);
+  min-height: 460px;
+  margin-top: 4.5rem;
+  overflow: hidden;
+  background: #000;
+  color: #fff;
+  touch-action: pan-y;
+}
+
+.museum-label {
+  font: 500 11px/1.4 var(--font-mono);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.62);
+}
+
+.museum-title {
+  margin: 0;
+  font-family: var(--font-wide), var(--font-sans);
+  font-stretch: 125%;
+  font-weight: 700;
+  line-height: 1.06;
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
+}
+
+.museum-outline {
+  color: transparent;
+  -webkit-text-stroke: 1.2px #fff;
+}
+
+.museum-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 46px;
+  padding: 0 24px;
+  border: 1px solid #fff;
+  border-radius: 2px;
+  background: #fff;
+  color: #000;
+  font: 700 12px/1 var(--font-wide), var(--font-sans);
+  font-stretch: 112%;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.museum-button:hover {
+  background: #000;
+  color: #fff;
+}
+
+.museum-button-ghost {
+  background: transparent;
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.4);
+}
+
+.museum-button-ghost:hover {
+  background: #fff;
+  color: #000;
+  border-color: #fff;
+}
+
+.museum-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 38px;
+  padding: 0 14px;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 2px;
+  background: rgba(0, 0, 0, 0.62);
+  color: #fff;
+  font: 500 12px/1.2 var(--font-mono);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+}
+
+button.museum-chip {
+  cursor: pointer;
+  transition: border-color 0.2s ease;
+}
+
+button.museum-chip:hover {
+  border-color: #fff;
+}
+
+.museum-chip-quiet {
+  min-height: 30px;
+  padding: 0 10px;
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.78);
+}
+
+.museum-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  border: 1px solid #fff;
+}
+
+.museum-dot.is-on {
+  background: #fff;
+  box-shadow: 0 0 8px #fff;
+}
+
+.museum-round {
+  display: inline-grid;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 2px;
+  background: rgba(0, 0, 0, 0.62);
+  color: #fff;
+  font-size: 16px;
+  cursor: pointer;
+  transition: border-color 0.2s ease;
+}
+
+.museum-round:hover {
+  border-color: #fff;
+}
+
+.museum-round-small {
+  width: 44px;
+  height: 44px;
+}
+
+.museum-link {
+  font: 500 12px/1 var(--font-mono);
+  color: rgba(255, 255, 255, 0.72);
+  text-decoration: none;
+}
+
+.museum-link:hover {
+  color: #fff;
+}
+
+/* ── the door: over the opening view ── */
+.museum-stage[data-view="door"]::after {
+  content: "";
+  position: absolute;
+  inset: 45% 0 0;
+  z-index: 8;
+  pointer-events: none;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.78), transparent);
+}
+
+.museum-door {
+  position: absolute;
+  left: clamp(20px, 5vw, 72px);
+  bottom: clamp(64px, 10vh, 110px);
+  z-index: 10;
+  max-width: min(36rem, calc(100% - 40px));
+  animation: museum-rise 1.1s 2.4s ease both;
+}
+
+/* ── over the hall ── */
+.museum-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 16px 16px 44px;
+  pointer-events: none;
+  animation: museum-fade 0.4s ease both;
+}
+
+.museum-overlay button,
+.museum-overlay a,
+.museum-overlay aside {
+  pointer-events: auto;
+}
+
+.museum-panel {
+  position: absolute;
+  right: clamp(16px, 4vw, 56px);
+  top: 50%;
+  width: min(21rem, calc(100% - 32px));
+  max-height: calc(100% - 96px);
+  overflow-y: auto;
+  transform: translateY(-50%);
+  padding: 22px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: rgba(0, 0, 0, 0.72);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+}
+
+@media (max-width: 767px) {
+  .museum-panel {
+    top: auto;
+    right: 16px;
+    bottom: 40px;
+    width: calc(100% - 32px);
+    max-height: 46%;
+    padding: 14px 16px;
+    transform: none;
+  }
+}
+
+.museum-card {
+  width: min(24rem, 100%);
+  padding: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: rgba(0, 0, 0, 0.82);
+  color: #fff;
+  pointer-events: auto;
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+}
+
+.museum-fallback {
+  position: absolute;
+  inset: auto 0 0;
+  width: 100%;
+  max-height: 70%;
+  overflow: auto;
+}
+
+/* ── your wall ── */
+.museum-wall {
+  position: absolute;
+  inset: 0;
+  z-index: 20;
+  background: #111;
+  animation: museum-fade 0.5s ease both;
+}
+
+.museum-overlay-wall {
+  z-index: 2;
+}
+
+.museum-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  max-width: 100%;
+  padding: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(0, 0, 0, 0.72);
+  pointer-events: auto;
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+}
+
+.museum-tool {
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0 8px;
+  border: 0;
+  background: none;
+  color: #fff;
+  font: 500 15px/1 var(--font-mono);
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.museum-tool:hover {
+  background: rgba(255, 255, 255, 0.14);
+}
+
+.museum-tool[aria-pressed="true"] {
+  background: #fff;
+  color: #000;
+}
+
+.museum-tool-text {
+  padding: 0 14px;
+  font-size: 12px;
+}
+
+.museum-tool-label {
+  min-width: 9.5em;
+  padding: 0 6px;
+  text-align: center;
+  font: 500 12px/1 var(--font-mono);
+}
+
+.museum-rule {
+  width: 1px;
+  height: 22px;
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* ── the loader, the small print ── */
+.museum-loading {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  background: #000;
+}
+
+.museum-bar-track {
+  display: block;
+  width: min(15rem, 60%);
+  height: 1px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.museum-bar-track span {
+  display: block;
+  height: 100%;
+  background: #fff;
+  transform-origin: left;
+  transition: transform 0.3s ease;
+}
+
+.museum-note {
+  position: absolute;
+  inset: auto 0 0;
+  z-index: 30;
+  padding: 7px 14px;
+  background: rgba(0, 0, 0, 0.7);
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 11px;
+  line-height: 1.35;
+  text-align: center;
+}
+
+@keyframes museum-fade {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes museum-rise {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .museum-door {
+    animation-delay: 0s;
+    animation-duration: 0.01s;
+  }
+}

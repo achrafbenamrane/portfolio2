@@ -43,7 +43,7 @@ export default function OneFrameCase() {
   return (
     <div className={`home home-light ${wide.variable}`}>
       <PageHeader
-        index="04.1"
+        index="05.1"
         label="Case studies — ONEFRAME"
         title="ONEFRAME"
         outline="a story in 3D"

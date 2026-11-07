@@ -63,7 +63,7 @@ export default function CaseStudiesPage() {
   return (
     <>
       <PageHeader
-        index="04"
+        index="05"
         label="Case studies"
         title="Case"
         outline="studies"

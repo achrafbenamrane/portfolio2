@@ -12,8 +12,11 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
-    // Vendored MediaPipe WASM glue — emscripten output, not ours to lint.
+    // Vendored MediaPipe and Draco WASM glue — emscripten output, not ours to lint.
     "public/mediapipe/**",
+    "public/draco/**",
+    // Source material and retired work, kept out of the app.
+    "assets-source/**",
   ]),
 ]);
 

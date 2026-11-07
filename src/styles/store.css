@@ -1,0 +1,370 @@
+/* ── the 3D sports store ──
+ * The stage fills the screen under the bar. What sits over it stays small and
+ * mono, in the site's terminal voice, so the shop itself is the picture. */
+
+.store-stage {
+  position: relative;
+  isolation: isolate;
+  height: calc(100dvh - 4.5rem);
+  min-height: 460px;
+  margin-top: 4.5rem;
+  overflow: hidden;
+  background: #e7e3de;
+  color: #281b1c;
+  /* The shop is dragged sideways, and the page still scrolls past it. */
+  touch-action: pan-y;
+}
+
+.store-stage[data-view="shirt"] {
+  touch-action: none;
+}
+
+/* ── the corner camera's picture ── */
+.store-cctv {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  pointer-events: none;
+  animation: store-fade 0.6s ease both;
+}
+
+.store-cctv::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(120% 95% at 50% 45%, transparent 62%, rgba(40, 27, 28, 0.26) 100%),
+    repeating-linear-gradient(0deg, rgba(40, 27, 28, 0.028) 0 1px, transparent 1px 3px);
+}
+
+.store-cctv-bar {
+  position: absolute;
+  inset: 16px 20px auto;
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  font: 500 11px/1.4 var(--font-mono);
+  letter-spacing: 0.08em;
+  color: #fff;
+  text-shadow: 0 1px 3px rgba(40, 27, 28, 0.65);
+}
+
+.store-rec {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #e5233f;
+  animation: store-blink 1.6s steps(2, jump-none) infinite;
+}
+
+.store-caption {
+  position: absolute;
+  left: 20px;
+  bottom: 44px;
+  max-width: min(26rem, calc(100% - 40px));
+  padding: 14px 18px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.88);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+}
+
+.store-caption p {
+  margin-top: 6px;
+  font-size: 14px;
+  line-height: 1.45;
+  color: #665657;
+}
+
+/* Pinned to the scene: the scene writes the transform, on every frame it draws. */
+.store-pin {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 0;
+  height: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  pointer-events: auto;
+  cursor: pointer;
+}
+
+.store-pin span {
+  position: absolute;
+  left: 0;
+  top: 0;
+  display: block;
+  transform: translate(-50%, -50%);
+  padding: 8px 14px;
+  border-radius: 999px;
+  background: #8f1024;
+  color: #f8fafc;
+  font: 700 11px/1 var(--font-wide), var(--font-sans);
+  font-stretch: 112%;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  box-shadow: 0 0 0 0 rgba(143, 16, 36, 0.5);
+  animation: store-pulse 2.6s ease-out infinite;
+  transition: background-color 0.2s ease;
+}
+
+.store-pin:hover span,
+.store-pin:focus-visible span {
+  background: #b3122a;
+}
+
+/* ── panels over the scene ── */
+.store-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 16px 16px 44px;
+  background: transparent;
+  pointer-events: none;
+  animation: store-fade 0.4s ease both;
+}
+
+.store-overlay > *,
+.store-overlay button {
+  pointer-events: auto;
+}
+
+.store-overlay .flex {
+  pointer-events: none;
+}
+
+.store-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 40px;
+  padding: 0 16px;
+  border: 0;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.92);
+  color: #281b1c;
+  font: 500 12px/1 var(--font-mono);
+  letter-spacing: 0.02em;
+  box-shadow: 0 1px 2px rgba(40, 27, 28, 0.12);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+}
+
+button.store-chip {
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+button.store-chip:hover {
+  background: #fff;
+}
+
+.store-chip-quiet {
+  min-height: 32px;
+  padding: 0 12px;
+  font-size: 11px;
+}
+
+.store-round {
+  display: inline-grid;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.92);
+  color: #281b1c;
+  font-size: 16px;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.store-round:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+
+.store-panel {
+  position: absolute;
+  right: 20px;
+  top: 50%;
+  width: min(21rem, calc(100% - 32px));
+  max-height: calc(100% - 96px);
+  overflow-y: auto;
+  transform: translateY(-50%);
+  padding: 22px;
+  border-radius: 18px;
+  background: #fff;
+  box-shadow: 0 18px 50px -20px rgba(40, 27, 28, 0.35);
+}
+
+/* A phone keeps the top of the screen for the shirt. */
+@media (max-width: 767px) {
+  .store-panel {
+    top: auto;
+    right: 16px;
+    bottom: 40px;
+    width: calc(100% - 32px);
+    max-height: 47%;
+    padding: 14px 16px;
+    transform: none;
+  }
+
+  .store-panel > p:last-child {
+    display: none;
+  }
+}
+
+.store-tab {
+  min-height: 36px;
+  min-width: 44px;
+  padding: 0 12px;
+  border: 1px solid #d2c8c7;
+  border-radius: 999px;
+  background: #fff;
+  color: #281b1c;
+  font: 500 12px/1 var(--font-mono);
+  cursor: pointer;
+  transition: border-color 0.2s ease, background-color 0.2s ease, color 0.2s ease;
+}
+
+.store-tab:hover {
+  border-color: #281b1c;
+}
+
+.store-tab[aria-pressed="true"] {
+  border-color: #8f1024;
+  background: #8f1024;
+  color: #f8fafc;
+}
+
+/* ── the mirror ── */
+.store-mirror {
+  position: absolute;
+  inset: 0;
+  z-index: 20;
+  animation: store-fade 0.45s ease both;
+}
+
+/* The glass: a soft sheen, and a thin chrome edge where the frame would be. */
+.store-glass {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(115deg, rgba(255, 255, 255, 0.07) 0%, transparent 30%, transparent 70%, rgba(255, 255, 255, 0.05) 100%);
+  box-shadow:
+    inset 0 0 0 6px #d9dbdc,
+    inset 0 0 0 7px rgba(40, 27, 28, 0.35),
+    inset 0 0 60px rgba(40, 27, 28, 0.2);
+}
+
+.store-kits {
+  display: flex;
+  gap: 8px;
+  max-width: 100%;
+  padding: 8px 10px;
+  overflow-x: auto;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.92);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+}
+
+.store-swatch {
+  display: block;
+  width: 44px;
+  height: 44px;
+  flex: none;
+  border: 1px solid rgba(40, 27, 28, 0.2);
+  border-radius: 50%;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.store-swatch:hover {
+  transform: scale(1.06);
+}
+
+.store-swatch[aria-pressed="true"] {
+  box-shadow: 0 0 0 2px #fff, 0 0 0 4px #8f1024;
+}
+
+/* ── the loader, the small print ── */
+.store-loading {
+  position: absolute;
+  left: 50%;
+  bottom: 56px;
+  z-index: 5;
+  display: grid;
+  gap: 10px;
+  width: min(16rem, calc(100% - 48px));
+  transform: translateX(-50%);
+  padding: 14px 16px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.9);
+  text-align: center;
+}
+
+.store-bar {
+  display: block;
+  height: 2px;
+  overflow: hidden;
+  background: #d2c8c7;
+}
+
+.store-bar span {
+  display: block;
+  height: 100%;
+  background: #8f1024;
+  transform-origin: left;
+  transition: transform 0.3s ease;
+}
+
+.store-note {
+  position: absolute;
+  inset: auto 0 0;
+  z-index: 30;
+  padding: 7px 14px;
+  background: rgba(255, 255, 255, 0.86);
+  color: #665657;
+  font-size: 11px;
+  line-height: 1.35;
+  text-align: center;
+}
+
+@keyframes store-fade {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes store-blink {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0.2;
+  }
+}
+
+@keyframes store-pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(143, 16, 36, 0.5);
+  }
+  70%,
+  100% {
+    box-shadow: 0 0 0 14px rgba(143, 16, 36, 0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .store-pin span,
+  .store-rec {
+    animation: none;
+  }
+}

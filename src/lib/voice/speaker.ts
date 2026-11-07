@@ -27,7 +27,7 @@ const MANIFEST_URL = "/voice/manifest.json";
  *
  * One number, one place. Raise it toward 1 for the hard robot.
  */
-const ROBOT_AMOUNT = 0.18;
+export const ROBOT_AMOUNT = 0.18;
 
 let manifest: Set<string> | null = null;
 let manifestPromise: Promise<Set<string>> | null = null;

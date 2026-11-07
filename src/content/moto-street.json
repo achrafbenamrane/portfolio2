@@ -1,0 +1,559 @@
+{
+  "units": "metres",
+  "axes": "three.js: x across, y up, +z the object's front; origin on the ground at its base",
+  "objects": {
+    "Candelabra": {
+      "height": 7.5,
+      "triangles": 8973,
+      "materials": [
+        "GoldLace",
+        "LampGlass",
+        "LampHead",
+        "StreetGold",
+        "StreetIron"
+      ],
+      "size": [
+        2.52,
+        7.5,
+        2.43
+      ],
+      "attach": {
+        "lamps": [
+          [
+            0.0,
+            6.755,
+            0.0
+          ],
+          [
+            0.86,
+            6.385,
+            0.0
+          ],
+          [
+            0.0,
+            6.385,
+            -0.86
+          ],
+          [
+            -0.86,
+            6.385,
+            -0.0
+          ],
+          [
+            -0.0,
+            6.385,
+            0.86
+          ]
+        ],
+        "top": [
+          0.0,
+          7.5,
+          0.0
+        ]
+      }
+    },
+    "Lantern": {
+      "height": 4.952,
+      "triangles": 1734,
+      "materials": [
+        "LampGlass",
+        "LampHead",
+        "StreetGold",
+        "StreetIron"
+      ],
+      "size": [
+        0.47,
+        4.952,
+        0.982
+      ],
+      "attach": {
+        "lamp": [
+          0.0,
+          3.798,
+          0.5
+        ],
+        "top": [
+          0.0,
+          4.952,
+          0.0
+        ]
+      }
+    },
+    "RoadLamp": {
+      "height": 10.067,
+      "triangles": 298,
+      "materials": [
+        "LampHead",
+        "StreetSteel"
+      ],
+      "size": [
+        0.38,
+        10.067,
+        3.06
+      ],
+      "attach": {
+        "lamp": [
+          0.0,
+          9.94,
+          2.42
+        ],
+        "top": [
+          0.0,
+          10.067,
+          0.0
+        ]
+      }
+    },
+    "Flagpole": {
+      "height": 9.5,
+      "triangles": 288,
+      "materials": [
+        "StreetBronze",
+        "StreetWhite"
+      ],
+      "size": [
+        0.247,
+        9.5,
+        0.26
+      ],
+      "attach": {
+        "flag": [
+          0.0,
+          8.2,
+          0.0
+        ],
+        "top": [
+          0.0,
+          9.5,
+          0.0
+        ]
+      }
+    },
+    "Bollard": {
+      "height": 1.0,
+      "triangles": 247,
+      "materials": [
+        "StreetBronze",
+        "StreetIron"
+      ],
+      "size": [
+        0.215,
+        1.0,
+        0.202
+      ],
+      "attach": {
+        "eyeletHighRight": [
+          0.1,
+          0.74,
+          0.0
+        ],
+        "eyeletLowRight": [
+          0.1,
+          0.42,
+          0.0
+        ],
+        "eyeletHighLeft": [
+          -0.1,
+          0.74,
+          0.0
+        ],
+        "eyeletLowLeft": [
+          -0.1,
+          0.42,
+          0.0
+        ],
+        "top": [
+          0.0,
+          1.0,
+          0.0
+        ]
+      }
+    },
+    "Chain": {
+      "height": 0.76,
+      "triangles": 56,
+      "materials": [
+        "ChainLink"
+      ],
+      "size": [
+        2.217,
+        0.242,
+        0.044
+      ],
+      "attach": {
+        "endLeft": [
+          -1.1,
+          0.74,
+          0.0
+        ],
+        "endRight": [
+          1.1,
+          0.74,
+          0.0
+        ],
+        "top": [
+          0.0,
+          0.76,
+          0.0
+        ]
+      }
+    },
+    "Planter": {
+      "height": 2.115,
+      "triangles": 442,
+      "materials": [
+        "Bark",
+        "Leaf",
+        "Planter"
+      ],
+      "size": [
+        1.581,
+        2.115,
+        1.605
+      ],
+      "attach": {
+        "top": [
+          0.0,
+          2.115,
+          0.0
+        ]
+      }
+    },
+    "Signpost": {
+      "height": 4.006,
+      "triangles": 438,
+      "materials": [
+        "SignFace",
+        "StreetIron",
+        "StreetSteel"
+      ],
+      "size": [
+        1.333,
+        4.006,
+        0.481
+      ],
+      "attach": {
+        "top": [
+          0.0,
+          4.006,
+          0.0
+        ],
+        "plates": [
+          [
+            0.0,
+            3.536,
+            0.0
+          ],
+          [
+            0.0,
+            3.128,
+            0.0
+          ],
+          [
+            0.0,
+            2.719,
+            0.0
+          ]
+        ]
+      }
+    },
+    "Signpost2": {
+      "height": 4.006,
+      "triangles": 438,
+      "materials": [
+        "SignFace",
+        "StreetIron",
+        "StreetSteel"
+      ],
+      "size": [
+        1.333,
+        4.006,
+        0.481
+      ],
+      "attach": {
+        "top": [
+          0.0,
+          4.006,
+          0.0
+        ],
+        "plates": [
+          [
+            0.0,
+            3.536,
+            0.0
+          ],
+          [
+            0.0,
+            3.128,
+            0.0
+          ],
+          [
+            0.0,
+            2.719,
+            0.0
+          ]
+        ]
+      }
+    },
+    "Signpost3": {
+      "height": 4.414,
+      "triangles": 514,
+      "materials": [
+        "SignFace",
+        "StreetIron",
+        "StreetSteel"
+      ],
+      "size": [
+        1.533,
+        4.414,
+        0.481
+      ],
+      "attach": {
+        "top": [
+          0.0,
+          4.414,
+          0.0
+        ],
+        "plates": [
+          [
+            0.0,
+            3.945,
+            0.0
+          ],
+          [
+            0.0,
+            3.536,
+            0.0
+          ],
+          [
+            0.0,
+            3.128,
+            0.0
+          ],
+          [
+            0.0,
+            2.719,
+            0.0
+          ]
+        ]
+      }
+    },
+    "Gantry": {
+      "height": 9.743,
+      "triangles": 818,
+      "materials": [
+        "LampHead",
+        "SignFace",
+        "StreetSteel"
+      ],
+      "size": [
+        16.32,
+        9.743,
+        2.343
+      ],
+      "panelSize": [
+        9.6,
+        4.125
+      ],
+      "attach": {
+        "panel": [
+          0.0,
+          7.66,
+          0.66
+        ],
+        "floodlights": [
+          [
+            -3.2,
+            5.458,
+            1.71
+          ],
+          [
+            -1.067,
+            5.458,
+            1.71
+          ],
+          [
+            1.067,
+            5.458,
+            1.71
+          ],
+          [
+            3.2,
+            5.458,
+            1.71
+          ]
+        ],
+        "top": [
+          0.0,
+          9.743,
+          0.0
+        ]
+      }
+    },
+    "GantryGreen": {
+      "height": 8.805,
+      "triangles": 810,
+      "materials": [
+        "LampHead",
+        "SignFace",
+        "StreetSteel"
+      ],
+      "size": [
+        16.32,
+        8.805,
+        2.343
+      ],
+      "panelSize": [
+        9.6,
+        2.25
+      ],
+      "attach": {
+        "panel": [
+          0.0,
+          7.66,
+          0.66
+        ],
+        "floodlights": [
+          [
+            -3.2,
+            6.395,
+            1.71
+          ],
+          [
+            -1.067,
+            6.395,
+            1.71
+          ],
+          [
+            1.067,
+            6.395,
+            1.71
+          ],
+          [
+            3.2,
+            6.395,
+            1.71
+          ]
+        ],
+        "top": [
+          0.0,
+          8.805,
+          0.0
+        ]
+      }
+    },
+    "Totem": {
+      "height": 12.0,
+      "triangles": 424,
+      "materials": [
+        "Block0",
+        "Block1",
+        "Block2",
+        "Block3",
+        "Block4"
+      ],
+      "size": [
+        22.4,
+        12.0,
+        1.5
+      ],
+      "attach": {
+        "top": [
+          0.0,
+          12.0,
+          0.0
+        ]
+      }
+    },
+    "Ficus": {
+      "height": 6.314,
+      "triangles": 2150,
+      "materials": [
+        "Bark",
+        "Leaf",
+        "Whitewash"
+      ],
+      "size": [
+        6.378,
+        6.331,
+        6.372
+      ],
+      "attach": {
+        "top": [
+          0.0,
+          6.314,
+          0.0
+        ]
+      }
+    },
+    "Palm": {
+      "height": 9.039,
+      "triangles": 2954,
+      "materials": [
+        "Bark",
+        "Leaf"
+      ],
+      "size": [
+        7.425,
+        9.055,
+        7.5
+      ],
+      "attach": {
+        "top": [
+          0.0,
+          9.039,
+          0.0
+        ],
+        "crown": [
+          0.22,
+          6.25,
+          0.03
+        ]
+      }
+    },
+    "Washingtonia": {
+      "height": 14.21,
+      "triangles": 1520,
+      "materials": [
+        "Bark",
+        "Leaf"
+      ],
+      "size": [
+        5.191,
+        14.218,
+        5.697
+      ],
+      "attach": {
+        "top": [
+          0.0,
+          14.21,
+          0.0
+        ],
+        "crown": [
+          0.42,
+          11.95,
+          0.02
+        ]
+      }
+    },
+    "Letters": {
+      "height": 2.296,
+      "triangles": 2589,
+      "materials": [
+        "Letter"
+      ],
+      "size": [
+        26.0,
+        2.378,
+        0.902
+      ],
+      "attach": {
+        "top": [
+          0.0,
+          2.296,
+          0.0
+        ]
+      }
+    }
+  }
+}

@@ -55,7 +55,7 @@ export default function LinkyCase() {
   return (
     <div className={`home home-light ${wide.variable}`}>
       <PageHeader
-        index="04.3"
+        index="05.3"
         label="Case studies — Linky"
         title="Linky"
         outline="trust built in"

@@ -1,0 +1,1078 @@
+/* ── the pizza kitchen ──
+ * A dark kitchen, one pizza, and the only paper in the room: the order ticket. It hangs
+ * off a steel rail and prints a line for everything that goes on. All the type on it is
+ * the site's mono, which is what a kitchen printer would use anyway. */
+
+.pizza-stage {
+  --pizza-paper: #f5eee0;
+  --pizza-ink: #1d1613;
+  --pizza-coal: #120d0a;
+  --pizza-cream: #f4ecdc;
+  --pizza-red: #b3122a;
+  --pizza-line: rgba(244, 236, 220, 0.16);
+
+  position: relative;
+  isolation: isolate;
+  height: calc(100dvh - 4.5rem);
+  min-height: 560px;
+  margin-top: 4.5rem;
+  overflow: hidden;
+  background: var(--pizza-coal);
+  color: var(--pizza-cream);
+}
+
+.pizza-canvas {
+  position: absolute;
+  inset: 0;
+}
+
+.pizza-curtain {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  background: #070504;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.42s ease;
+}
+
+.pizza-curtain[data-on="true"] {
+  opacity: 1;
+}
+
+/* ── what step we're on ── */
+.pizza-head {
+  position: absolute;
+  z-index: 10;
+  top: 22px;
+  left: 28px;
+  max-width: min(46vw, 560px);
+  pointer-events: none;
+}
+
+.pizza-head::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: -40px -90px -50px -60px;
+  background: radial-gradient(closest-side, rgba(10, 7, 5, 0.6), rgba(10, 7, 5, 0.34) 62%, transparent);
+  pointer-events: none;
+}
+
+/* Some steps have nothing to say here, and a shade with nothing on it is a smudge. */
+.pizza-head:empty::before {
+  display: none;
+}
+
+.pizza-steps {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 14px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font: 500 11px/1.5 var(--font-mono);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(244, 236, 220, 0.42);
+}
+
+.pizza-steps li[data-state="now"] {
+  color: var(--pizza-cream);
+}
+
+.pizza-steps li[data-state="done"] {
+  color: rgba(244, 236, 220, 0.68);
+}
+
+.pizza-steps li[data-state="now"]::before {
+  content: "";
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  margin-right: 6px;
+  border-radius: 50%;
+  background: #e5233f;
+  vertical-align: 1px;
+}
+
+.pizza-title {
+  margin: 14px 0 0;
+  font-family: var(--font-brand);
+  font-size: clamp(2.1rem, 3.6vw, 3.4rem);
+  font-weight: 400;
+  line-height: 1.02;
+  letter-spacing: -0.01em;
+  text-shadow: 0 2px 22px rgba(0, 0, 0, 0.55);
+  animation: pizza-rise 0.5s ease both;
+}
+
+.pizza-hint {
+  margin: 10px 0 0;
+  max-width: 36ch;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: rgba(244, 236, 220, 0.8);
+  text-shadow: 0 1px 12px rgba(0, 0, 0, 0.7);
+  animation: pizza-rise 0.5s 0.08s ease both;
+}
+
+/* ── the ticket ── */
+.pizza-rail {
+  position: absolute;
+  z-index: 10;
+  top: 0;
+  right: 44px;
+  width: 348px;
+  height: 11px;
+  background: linear-gradient(180deg, #a9a6a2 0%, #5f5c59 42%, #2b2927 100%);
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.5);
+}
+
+.pizza-ticket-hang {
+  position: absolute;
+  z-index: 11;
+  top: 5px;
+  right: 72px;
+  width: 292px;
+  filter: drop-shadow(0 16px 22px rgba(0, 0, 0, 0.55));
+  transform: rotate(0.7deg);
+  transform-origin: 50% 0;
+}
+
+.pizza-ticket {
+  --tooth: 7px;
+  padding: 22px 18px calc(16px + var(--tooth));
+  background: var(--pizza-paper);
+  color: var(--pizza-ink);
+  font: 500 12px/1.5 var(--font-mono);
+  -webkit-mask:
+    conic-gradient(from -45deg at bottom, #0000, #000 1deg 89deg, #0000 90deg) bottom / 12px var(--tooth) repeat-x,
+    linear-gradient(#000 0 0) top / 100% calc(100% - var(--tooth)) no-repeat;
+  mask:
+    conic-gradient(from -45deg at bottom, #0000, #000 1deg 89deg, #0000 90deg) bottom / 12px var(--tooth) repeat-x,
+    linear-gradient(#000 0 0) top / 100% calc(100% - var(--tooth)) no-repeat;
+}
+
+.pizza-brand {
+  margin: 0;
+  font-family: var(--font-brand);
+  font-size: 2.15rem;
+  font-weight: 400;
+  line-height: 1;
+  text-align: center;
+}
+
+.pizza-brand-line {
+  margin: 5px 0 0;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-align: center;
+  text-transform: uppercase;
+  color: rgba(29, 22, 19, 0.62);
+}
+
+.pizza-ticket-meta {
+  display: flex;
+  justify-content: space-between;
+  margin: 12px 0 0;
+  padding: 8px 0;
+  border-block: 1px dashed rgba(29, 22, 19, 0.38);
+  font-size: 10.5px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.pizza-sizes {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+  margin: 12px 0 2px;
+  border: 0;
+  padding: 0;
+}
+
+.pizza-sizes legend {
+  padding: 0;
+  margin-bottom: 6px;
+  font-size: 10.5px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.pizza-size {
+  display: grid;
+  gap: 1px;
+  padding: 7px 2px;
+  border: 1px solid rgba(29, 22, 19, 0.4);
+  background: none;
+  color: inherit;
+  font: inherit;
+  font-size: 11px;
+  text-align: center;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.pizza-size small {
+  font-size: 10px;
+  opacity: 0.72;
+}
+
+.pizza-size[aria-pressed="true"] {
+  background: var(--pizza-ink);
+  color: var(--pizza-paper);
+}
+
+.pizza-size:disabled {
+  cursor: default;
+}
+
+.pizza-lines {
+  margin: 10px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.pizza-line {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  overflow: hidden;
+  text-transform: uppercase;
+  animation: pizza-print 0.32s steps(5, end) both;
+}
+
+.pizza-total {
+  display: flex;
+  justify-content: space-between;
+  margin: 8px 0 0;
+  padding-top: 8px;
+  border-top: 1px dashed rgba(29, 22, 19, 0.38);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.pizza-action {
+  display: block;
+  width: 100%;
+  margin-top: 13px;
+  padding: 13px 10px;
+  border: 0;
+  background: var(--pizza-red);
+  color: #fff;
+  font: 600 12px/1.2 var(--font-mono);
+  letter-spacing: 0.08em;
+  text-align: center;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 0.15s ease, transform 0.1s ease;
+}
+
+.pizza-action:hover {
+  background: #8f1024;
+}
+
+.pizza-action:active {
+  transform: translateY(1px);
+}
+
+.pizza-action:disabled {
+  background: rgba(29, 22, 19, 0.26);
+  cursor: default;
+}
+
+.pizza-note {
+  margin: 10px 0 0;
+  font-size: 11px;
+  line-height: 1.45;
+  color: rgba(29, 22, 19, 0.74);
+}
+
+.pizza-note a {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.pizza-stamp {
+  display: block;
+  width: max-content;
+  margin: 12px auto 0;
+  padding: 3px 10px;
+  border: 2px solid var(--pizza-red);
+  color: var(--pizza-red);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  transform: rotate(-5deg);
+  animation: pizza-stamp 0.22s ease-out both;
+}
+
+.pizza-line-empty {
+  color: rgba(29, 22, 19, 0.6);
+  text-transform: none;
+}
+
+/* ── the room ── */
+.pizza-cam {
+  position: absolute;
+  z-index: 10;
+  top: 18px;
+  right: 24px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  font: 500 11px/1.4 var(--font-mono);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #fff;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.7);
+}
+
+.pizza-cam-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #e5233f;
+  animation: pizza-blink 1.6s steps(2, jump-none) infinite;
+}
+
+.pizza-enter {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 16px;
+  pointer-events: auto;
+}
+
+.pizza-enter-main,
+.pizza-enter-other,
+.pizza-open {
+  padding: 13px 20px;
+  border: 0;
+  font: 600 12px/1.2 var(--font-mono);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.pizza-enter-main,
+.pizza-open {
+  background: var(--pizza-red);
+  color: #fff;
+}
+
+.pizza-enter-main:hover,
+.pizza-open:hover {
+  background: #8f1024;
+}
+
+.pizza-enter-other {
+  background: var(--pizza-paper);
+  color: var(--pizza-ink);
+}
+
+.pizza-enter-other:hover {
+  background: #fff;
+}
+
+.pizza-pin {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 7px 12px;
+  border: 0;
+  background: rgba(18, 13, 10, 0.86);
+  color: var(--pizza-cream);
+  font: 500 11px/1 var(--font-mono);
+  letter-spacing: 0.06em;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.pizza-pin:hover {
+  background: var(--pizza-red);
+}
+
+.pizza-pin-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #ff6a7f;
+}
+
+.pizza-back {
+  position: absolute;
+  z-index: 11;
+  bottom: 44px;
+  left: 28px;
+  padding: 9px 13px;
+  border: 1px solid rgba(244, 236, 220, 0.5);
+  background: rgba(18, 13, 10, 0.78);
+  color: var(--pizza-cream);
+  font: 500 12px/1 var(--font-mono);
+  cursor: pointer;
+}
+
+.pizza-open {
+  position: absolute;
+  z-index: 11;
+  bottom: 44px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.pizza-stage[data-step="meet"] .pizza-back {
+  top: 18px;
+  right: 24px;
+  bottom: auto;
+  left: auto;
+}
+
+/* ── the book ── */
+.pizza-pages {
+  position: absolute;
+  z-index: 11;
+  bottom: 44px;
+  left: 50%;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  transform: translateX(-50%);
+  font: 500 12px/1 var(--font-mono);
+  color: var(--pizza-cream);
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.8);
+}
+
+.pizza-pages button {
+  padding: 9px 13px;
+  border: 0;
+  background: var(--pizza-paper);
+  color: var(--pizza-ink);
+  font: inherit;
+  text-shadow: none;
+  cursor: pointer;
+}
+
+.pizza-pages button:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.pizza-sheet {
+  position: absolute;
+  z-index: 30;
+  top: 50%;
+  left: 50%;
+  width: min(340px, calc(100vw - 32px));
+  padding: 22px 20px;
+  background: var(--pizza-paper);
+  color: var(--pizza-ink);
+  transform: translate(-50%, -50%);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.55);
+  font: 500 12px/1.5 var(--font-mono);
+  animation: pizza-rise 0.22s ease both;
+}
+
+.pizza-sheet-name {
+  margin: 0;
+  font-family: var(--font-brand);
+  font-size: 2.2rem;
+  line-height: 1.05;
+}
+
+.pizza-sheet-note {
+  margin: 6px 0 0;
+  color: rgba(29, 22, 19, 0.74);
+}
+
+.pizza-sheet-label {
+  margin: 14px 0 6px;
+  font-size: 10.5px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.pizza-sheet-choices {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.pizza-sheet-choices button {
+  padding: 8px 11px;
+  border: 1px solid rgba(29, 22, 19, 0.4);
+  background: none;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+
+.pizza-sheet-choices button[aria-pressed="true"] {
+  background: var(--pizza-ink);
+  color: var(--pizza-paper);
+}
+
+.pizza-sheet-count {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-top: 14px;
+  font-size: 16px;
+}
+
+.pizza-sheet-count button {
+  width: 36px;
+  height: 36px;
+  border: 1px solid rgba(29, 22, 19, 0.4);
+  background: none;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+
+.pizza-sheet-close {
+  display: block;
+  margin: 10px auto 0;
+  border: 0;
+  background: none;
+  color: rgba(29, 22, 19, 0.7);
+  font: inherit;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.pizza-plain {
+  position: absolute;
+  z-index: 12;
+  top: 96px;
+  bottom: 44px;
+  left: 28px;
+  width: min(520px, calc(100% - 56px));
+  overflow-y: auto;
+  padding: 20px;
+  background: var(--pizza-paper);
+  color: var(--pizza-ink);
+}
+
+.pizza-plain h2 {
+  margin: 14px 0 6px;
+  font-family: var(--font-brand);
+  font-size: 1.8rem;
+  font-weight: 400;
+}
+
+.pizza-plain ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.pizza-plain button {
+  width: 100%;
+  padding: 8px 0;
+  border: 0;
+  border-bottom: 1px dashed rgba(29, 22, 19, 0.3);
+  background: none;
+  color: inherit;
+  font: 500 13px/1.4 var(--font-mono);
+  text-align: left;
+  cursor: pointer;
+}
+
+/* ── the chef's name ── */
+.pizza-name {
+  position: absolute;
+  z-index: 10;
+  bottom: 56px;
+  left: 28px;
+  display: grid;
+  justify-items: start;
+  gap: 6px;
+  pointer-events: none;
+  color: #fff;
+  text-shadow: 0 2px 16px rgba(0, 0, 0, 0.8);
+}
+
+.pizza-name-title {
+  font: 500 12px/1 var(--font-mono);
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  animation: pizza-rise 0.5s 0.1s ease both;
+}
+
+.pizza-name-letters {
+  display: flex;
+  flex-wrap: wrap;
+  font-family: var(--font-brand);
+  font-size: clamp(2.6rem, 6vw, 5rem);
+  font-style: italic;
+  line-height: 1.05;
+}
+
+.pizza-name-letters span {
+  display: inline-block;
+  animation: pizza-letter 0.62s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+.pizza-name-rule {
+  width: 100%;
+  height: 3px;
+  background: linear-gradient(90deg, #1d5a3a 0 33%, #f4ecdc 33% 66%, #b3122a 66%);
+  transform-origin: left;
+  animation: pizza-rule 1.1s 1.1s ease both;
+}
+
+/* ── the toppings, in their steel pans ── */
+.pizza-tray {
+  position: absolute;
+  z-index: 10;
+  right: 400px;
+  bottom: 42px;
+  left: 28px;
+  display: flex;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  overflow-x: auto;
+  list-style: none;
+  scrollbar-width: none;
+  animation: pizza-rise 0.5s ease both;
+}
+
+.pizza-tray::-webkit-scrollbar {
+  display: none;
+}
+
+.pizza-pan {
+  position: relative;
+  display: grid;
+  flex: 0 0 auto;
+  justify-items: center;
+  width: 112px;
+  padding: 7px 6px 8px;
+  border: 1px solid rgba(214, 210, 204, 0.3);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0) 28%),
+    #1c1714;
+  box-shadow: inset 0 0 0 3px rgba(0, 0, 0, 0.5), 0 8px 18px rgba(0, 0, 0, 0.4);
+  color: var(--pizza-cream);
+  font: 500 11px/1.3 var(--font-mono);
+  cursor: grab;
+  touch-action: pan-x;
+  user-select: none;
+  -webkit-user-select: none;
+  transition: transform 0.14s ease, border-color 0.14s ease;
+}
+
+.pizza-pan:hover {
+  transform: translateY(-3px);
+  border-color: rgba(244, 236, 220, 0.6);
+}
+
+.pizza-pan:active {
+  cursor: grabbing;
+}
+
+.pizza-pan[aria-pressed="true"] {
+  border-color: #e5233f;
+}
+
+.pizza-pan-picture {
+  display: block;
+  width: 84px;
+  height: 66px;
+  object-fit: contain;
+  pointer-events: none;
+}
+
+.pizza-pan-name {
+  margin-top: 3px;
+}
+
+.pizza-pan-price {
+  color: rgba(244, 236, 220, 0.62);
+}
+
+.pizza-pan-on {
+  position: absolute;
+  top: 5px;
+  right: 6px;
+  font-size: 12px;
+  line-height: 1;
+  color: #ff6a7f;
+}
+
+.pizza-ghost {
+  position: fixed;
+  z-index: 60;
+  top: 0;
+  left: 0;
+  width: 92px;
+  height: 72px;
+  margin: -36px 0 0 -46px;
+  object-fit: contain;
+  pointer-events: none;
+  filter: drop-shadow(0 12px 12px rgba(0, 0, 0, 0.5));
+}
+
+/* ── hands, through the camera ── */
+.pizza-camera {
+  position: absolute;
+  z-index: 10;
+  bottom: 190px;
+  left: 28px;
+  display: grid;
+  justify-items: start;
+  gap: 6px;
+  max-width: 250px;
+  font: 500 11px/1.4 var(--font-mono);
+}
+
+.pizza-camera[hidden] {
+  display: none;
+}
+
+.pizza-camera-view {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.pizza-camera[data-on="true"] .pizza-camera-view {
+  position: static;
+  width: 176px;
+  height: 132px;
+  object-fit: cover;
+  opacity: 1;
+  border: 1px solid rgba(244, 236, 220, 0.4);
+  transform: scaleX(-1);
+}
+
+.pizza-camera-line,
+.pizza-camera-privacy {
+  margin: 0;
+  padding: 3px 7px;
+  background: rgba(18, 13, 10, 0.72);
+}
+
+.pizza-camera-privacy {
+  font-size: 9.5px;
+  letter-spacing: 0.06em;
+  color: rgba(244, 236, 220, 0.76);
+}
+
+.pizza-camera-button {
+  padding: 8px 12px;
+  border: 1px solid rgba(244, 236, 220, 0.5);
+  background: rgba(18, 13, 10, 0.72);
+  color: var(--pizza-cream);
+  font: inherit;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.pizza-camera-button:hover {
+  background: rgba(244, 236, 220, 0.16);
+}
+
+.pizza-hand {
+  position: fixed;
+  z-index: 60;
+  top: 0;
+  left: 0;
+  width: 30px;
+  height: 30px;
+  margin: -15px 0 0 -15px;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.5), 0 2px 10px rgba(0, 0, 0, 0.5);
+  pointer-events: none;
+  transition: opacity 0.15s ease;
+}
+
+.pizza-hand[data-seen="false"] {
+  opacity: 0.2;
+}
+
+.pizza-hand[data-pinching="true"] {
+  background: rgba(229, 35, 63, 0.7);
+  border-color: #ff6a7f;
+}
+
+/* ── the oven ── */
+.pizza-clock {
+  position: absolute;
+  z-index: 10;
+  bottom: 52px;
+  left: 28px;
+  display: grid;
+  justify-items: start;
+  pointer-events: none;
+  text-shadow: 0 2px 16px rgba(0, 0, 0, 0.8);
+}
+
+.pizza-clock-seconds {
+  font-family: var(--font-brand);
+  font-size: clamp(3rem, 7vw, 5.4rem);
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.pizza-clock-label {
+  margin-top: 6px;
+  font: 500 11px/1.4 var(--font-mono);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+/* ── loading, and the line at the foot ── */
+.pizza-loading {
+  position: absolute;
+  z-index: 12;
+  inset: 0;
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: 12px;
+  background: var(--pizza-coal);
+  font: 500 11px/1.4 var(--font-mono);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  transition: opacity 0.6s ease;
+}
+
+.pizza-loading-bar {
+  width: 180px;
+  height: 2px;
+  background: var(--pizza-line);
+}
+
+.pizza-loading-bar span {
+  display: block;
+  height: 100%;
+  background: var(--pizza-cream);
+  transition: width 0.2s ease;
+}
+
+.pizza-credit {
+  position: absolute;
+  z-index: 10;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  margin: 0;
+  padding: 7px 14px;
+  background: rgba(18, 13, 10, 0.72);
+  font-size: 12px;
+  line-height: 1.35;
+  text-align: center;
+  color: rgba(244, 236, 220, 0.72);
+}
+
+.pizza-credit a {
+  color: var(--pizza-cream);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.pizza-stage :focus-visible {
+  outline: 2px solid #ff6a7f;
+  outline-offset: 2px;
+}
+
+@keyframes pizza-blink {
+  to {
+    opacity: 0.2;
+  }
+}
+
+@keyframes pizza-letter {
+  from {
+    opacity: 0;
+    transform: translateY(0.5em) rotate(6deg);
+  }
+}
+
+@keyframes pizza-rule {
+  from {
+    transform: scaleX(0);
+  }
+}
+
+@keyframes pizza-rise {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+}
+
+@keyframes pizza-print {
+  from {
+    max-height: 0;
+    opacity: 0.3;
+  }
+
+  to {
+    max-height: 3em;
+  }
+}
+
+@keyframes pizza-stamp {
+  from {
+    opacity: 0;
+    transform: rotate(-5deg) scale(1.7);
+  }
+}
+
+/* A phone: the pizza up top, and the ticket shrinks to a strip along the foot. */
+@media (max-width: 860px) {
+  .pizza-head {
+    top: 12px;
+    right: 16px;
+    left: 16px;
+    max-width: none;
+  }
+
+  .pizza-steps {
+    font-size: 10px;
+    gap: 2px 10px;
+  }
+
+  .pizza-title {
+    margin-top: 8px;
+    font-size: 1.75rem;
+  }
+
+  .pizza-hint {
+    margin-top: 4px;
+    font-size: 0.85rem;
+  }
+
+  .pizza-rail {
+    display: none;
+  }
+
+  .pizza-ticket-hang {
+    top: auto;
+    right: 0;
+    bottom: 42px;
+    left: 0;
+    width: auto;
+    transform: none;
+  }
+
+  .pizza-ticket {
+    padding: 10px 14px calc(10px + var(--tooth));
+    -webkit-mask: none;
+    mask: none;
+  }
+
+  .pizza-brand,
+  .pizza-brand-line,
+  .pizza-ticket-meta,
+  .pizza-lines {
+    display: none;
+  }
+
+  .pizza-sizes {
+    margin-top: 0;
+  }
+
+  .pizza-sizes legend {
+    display: none;
+  }
+
+  .pizza-total {
+    margin-top: 6px;
+    padding-top: 0;
+    border-top: 0;
+  }
+
+  .pizza-action {
+    margin-top: 7px;
+    padding: 12px 10px;
+  }
+
+  /* The size is settled by now, and the pans need the room. */
+  .pizza-stage[data-step="toppings"] .pizza-sizes {
+    display: none;
+  }
+
+  .pizza-tray {
+    right: 0;
+    bottom: 158px;
+    left: 0;
+    padding: 0 14px;
+  }
+
+  .pizza-pan {
+    width: 92px;
+  }
+
+  .pizza-pan-picture {
+    width: 66px;
+    height: 48px;
+  }
+
+  .pizza-clock {
+    bottom: 56px;
+    left: 16px;
+  }
+
+  .pizza-cam {
+    display: none;
+  }
+
+  .pizza-back {
+    bottom: auto;
+    top: 96px;
+    left: 16px;
+  }
+
+  .pizza-pages {
+    bottom: 54px;
+  }
+
+  .pizza-stage[data-step="menu"] .pizza-ticket-hang {
+    display: none;
+  }
+
+  .pizza-name {
+    bottom: 56px;
+    left: 16px;
+  }
+
+  .pizza-credit {
+    padding: 5px 10px;
+    font-size: 11px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pizza-cam-dot,
+  .pizza-name-title,
+  .pizza-name-letters span,
+  .pizza-name-rule,
+  .pizza-sheet,
+  .pizza-title,
+  .pizza-hint,
+  .pizza-tray,
+  .pizza-line,
+  .pizza-stamp {
+    animation: none;
+  }
+
+  .pizza-curtain,
+  .pizza-pan,
+  .pizza-size,
+  .pizza-action {
+    transition: none;
+  }
+}

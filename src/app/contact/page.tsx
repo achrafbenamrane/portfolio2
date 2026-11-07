@@ -13,7 +13,7 @@ export default function ContactPage() {
   return (
     <>
       <PageHeader
-        index="06"
+        index="07"
         label="Contact"
         title="Let's build"
         outline="something real"

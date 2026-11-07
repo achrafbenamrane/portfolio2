@@ -1,0 +1,553 @@
+/*
+ * /3d/alger-la-nuit. The picture is the design, so the interface is type straight on the night
+ * with a shadow to carry it, and the speed is the only thing allowed to be big.
+ */
+
+.moto {
+  --ink: #f4f1ea;
+  --dim: rgba(244, 241, 234, 0.68);
+  --pale: #ffb4ae;
+  --brand: #b3122a;
+  position: fixed;
+  z-index: 200;
+  inset: 0;
+  overflow: hidden;
+  background: #05070d;
+  color: var(--ink);
+  font: 400 15px/1.45 var(--font-sans);
+}
+
+.moto-world {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.moto-rider {
+  position: absolute;
+  z-index: 3;
+  right: 18px;
+  top: 18px;
+  width: min(200px, 34vw);
+  margin: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.moto-rider[data-on="true"] {
+  opacity: 1;
+}
+
+.moto-rider video {
+  display: block;
+  width: 100%;
+  border: 1px solid rgba(255, 180, 174, 0.5);
+  transform: scaleX(-1);
+}
+
+.moto-rider figcaption {
+  min-height: 1.4em;
+  margin-top: 6px;
+  color: var(--pale);
+  font: 500 12px/1.3 var(--font-mono);
+  text-align: right;
+  text-shadow: 0 1px 6px #000;
+}
+
+.moto-rider .moto-private {
+  margin: 2px 0 0;
+  font-size: 9px;
+  text-align: right;
+}
+
+.moto-title {
+  position: absolute;
+  z-index: 4;
+  bottom: clamp(24px, 6vh, 64px);
+  left: clamp(20px, 5vw, 72px);
+  max-width: 36rem;
+  text-shadow: 0 1px 14px rgba(0, 0, 0, 0.85);
+}
+
+.moto-title h1,
+.moto-card h1 {
+  margin: 0 0 10px;
+  font: 800 clamp(3rem, 9vw, 7rem) / 0.94 var(--font-sans);
+  letter-spacing: -0.04em;
+}
+
+.moto-lead {
+  margin: 0 0 6px;
+  font-size: clamp(1.05rem, 2vw, 1.35rem);
+  line-height: 1.3;
+}
+
+.moto-arabic {
+  margin: 4px 0 0;
+  color: var(--dim);
+  font-size: 1.15rem;
+  text-align: right;
+}
+
+.moto-choices {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 22px 0 14px;
+}
+
+.moto-button {
+  display: inline-block;
+  padding: 13px 20px;
+  border: 1px solid rgba(244, 241, 234, 0.42);
+  background: rgba(0, 0, 0, 0.42);
+  color: var(--ink);
+  font: 600 15px/1 var(--font-sans);
+  cursor: pointer;
+  text-shadow: none;
+}
+
+.moto-button:hover {
+  border-color: var(--pale);
+}
+
+.moto-button[data-main] {
+  border-color: var(--brand);
+  background: var(--brand);
+  color: #fff;
+}
+
+.moto-button[data-main]:hover {
+  border-color: var(--pale);
+}
+
+.moto-loading {
+  margin: 22px 0 14px;
+  color: var(--pale);
+  font: 500 13px/1 var(--font-mono);
+}
+
+.moto-problem {
+  max-width: 30rem;
+  color: var(--pale);
+}
+
+.moto-private {
+  margin: 0;
+  color: var(--dim);
+  font: 500 11px/1.4 var(--font-mono);
+  letter-spacing: 0.03em;
+}
+
+.moto-credit {
+  margin: 8px 0 0;
+  color: var(--dim);
+  font-size: 12px;
+}
+
+.moto-link {
+  position: absolute;
+  z-index: 4;
+  left: 50%;
+  bottom: 18vh;
+  width: min(30rem, 88vw);
+  text-align: center;
+  transform: translateX(-50%);
+  text-shadow: 0 1px 14px #000;
+}
+
+.moto-meter {
+  height: 3px;
+  margin: 14px 0;
+  background: rgba(244, 241, 234, 0.2);
+}
+
+.moto-meter i {
+  display: block;
+  height: 100%;
+  background: var(--pale);
+  transform-origin: left;
+}
+
+.moto-quiet {
+  border: 0;
+  background: none;
+  color: var(--dim);
+  font: inherit;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.moto-hud {
+  position: absolute;
+  z-index: 3;
+  inset: 0;
+  pointer-events: none;
+  text-shadow: 0 1px 8px #000;
+}
+
+.moto-help {
+  position: absolute;
+  top: 18px;
+  left: 20px;
+  margin: 0;
+  max-width: calc(100vw - 260px);
+  font-weight: 600;
+}
+
+.moto-map {
+  position: absolute;
+  left: 20px;
+  bottom: 18px;
+  display: flex;
+  align-items: flex-end;
+  gap: 12px;
+  pointer-events: auto;
+}
+
+.moto-dial {
+  width: 216px;
+  height: 216px;
+  padding: 0;
+  overflow: hidden;
+  border: 2px solid rgba(244, 241, 234, 0.5);
+  border-radius: 50%;
+  background: #0e1a26;
+  cursor: pointer;
+}
+
+.moto-dial canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.moto-map p {
+  display: grid;
+  gap: 2px;
+  margin: 0 0 6px;
+  font: 500 13px/1.3 var(--font-mono);
+}
+
+.moto-map strong {
+  font: 700 16px/1.2 var(--font-sans);
+}
+
+.moto-speed {
+  position: absolute;
+  right: 20px;
+  bottom: 18px;
+  display: grid;
+  justify-items: end;
+  width: 210px;
+}
+
+.moto-speed strong {
+  font: 800 clamp(3.2rem, 7vw, 5.2rem) / 0.9 var(--font-sans);
+  letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums;
+}
+
+.moto-speed span {
+  margin: 4px 0 8px;
+  color: var(--dim);
+  font: 500 12px/1 var(--font-mono);
+}
+
+.moto-rev {
+  width: 100%;
+  height: 4px;
+  background: rgba(244, 241, 234, 0.2);
+}
+
+.moto-rev i {
+  display: block;
+  height: 100%;
+  background: var(--ink);
+  transform-origin: left;
+}
+
+.moto-rev i[data-hot="true"] {
+  background: #ff5a4a;
+}
+
+.moto-tools {
+  position: absolute;
+  top: 18px;
+  right: 20px;
+  display: flex;
+  gap: 16px;
+  font-weight: 600;
+  pointer-events: auto;
+}
+
+.moto-tools button {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+
+.moto-rider[data-on="true"] ~ .moto-hud .moto-tools {
+  right: auto;
+  left: 20px;
+  top: 46px;
+}
+
+.moto-thumbs {
+  position: absolute;
+  z-index: 4;
+  right: 16px;
+  bottom: 136px;
+  left: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  touch-action: none;
+  user-select: none;
+}
+
+.moto-thumbs div {
+  display: flex;
+  gap: 10px;
+}
+
+.moto-thumbs div:last-child {
+  display: grid;
+  grid-template-columns: repeat(2, 76px);
+}
+
+.moto-thumbs button {
+  width: 76px;
+  height: 76px;
+  border: 1px solid rgba(244, 241, 234, 0.42);
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.42);
+  color: var(--ink);
+  font: 600 15px/1 var(--font-sans);
+  touch-action: none;
+}
+
+.moto-card {
+  position: absolute;
+  z-index: 5;
+  top: 50%;
+  left: 50%;
+  width: min(34rem, 88vw);
+  text-align: center;
+  transform: translate(-50%, -50%);
+  text-shadow: 0 1px 14px #000;
+}
+
+.moto-card::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: -34vh -42vw;
+  background: radial-gradient(closest-side, rgba(0, 0, 0, 0.82) 30%, transparent);
+  pointer-events: none;
+}
+
+.moto-card h2 {
+  margin: 0 0 12px;
+  font: 800 clamp(2rem, 6vw, 3.6rem) / 1 var(--font-sans);
+  letter-spacing: -0.03em;
+}
+
+.moto-card .moto-choices {
+  justify-content: center;
+}
+
+@media (max-width: 760px) {
+  .moto-title {
+    right: 0;
+    bottom: 0;
+    left: 0;
+    max-width: none;
+    padding: 16vh 20px 40px;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.88) 60%, transparent);
+  }
+}
+
+.moto-way {
+  position: absolute;
+  top: 3.6rem;
+  left: 50%;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.4rem 0.8rem 0.4rem 0.5rem;
+  transform: translateX(-50%);
+  background: rgb(10 10 12 / 0.55);
+  border-radius: 999px;
+  color: #f4f1ea;
+  font-size: 0.85rem;
+  white-space: nowrap;
+}
+
+.moto-way i {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  background: #b3122a;
+  border-radius: 50%;
+  font-style: normal;
+  font-weight: 700;
+}
+
+@media (max-width: 640px) {
+  .moto-way {
+    top: 7.2rem;
+    left: 1rem;
+    max-width: calc(100vw - 2rem);
+    transform: none;
+    font-size: 0.72rem;
+    white-space: normal;
+  }
+}
+
+.moto-nitro {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  margin-top: 0.45rem;
+}
+
+.moto-nitro span {
+  font-size: 0.7rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.moto-nitro div {
+  width: 150px;
+  height: 5px;
+  overflow: hidden;
+  background: rgb(255 255 255 / 0.18);
+  border-radius: 3px;
+}
+
+.moto-nitro i {
+  display: block;
+  height: 100%;
+  background: #ffb4ae;
+  transform-origin: left;
+}
+
+.moto-nitro[data-on="true"] i {
+  background: #ffffff;
+}
+
+.moto-cabrage {
+  position: absolute;
+  top: 22%;
+  left: 50%;
+  margin: 0;
+  transform: translateX(-50%);
+  font-size: 1.5rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+}
+
+.moto-arrived {
+  position: absolute;
+  top: 16%;
+  left: 50%;
+  margin: 0;
+  padding: 0.45rem 1rem;
+  transform: translateX(-50%);
+  background: rgb(10 10 12 / 0.6);
+  border-radius: 999px;
+  font-size: 1rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.moto-places {
+  position: absolute;
+  z-index: 6;
+  top: 50%;
+  left: 50%;
+  width: min(30rem, 92vw);
+  max-height: 80vh;
+  overflow: auto;
+  padding: 1.2rem;
+  transform: translate(-50%, -50%);
+  background: rgb(10 10 12 / 0.88);
+  border-radius: 14px;
+  color: var(--ink);
+}
+
+.moto-places h2 {
+  margin: 0 0 0.7rem;
+  font-size: 1.3rem;
+}
+
+.moto-places ul {
+  display: grid;
+  gap: 4px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.moto-places button {
+  display: grid;
+  grid-template-columns: 1fr auto 5.2rem;
+  gap: 0.8rem;
+  width: 100%;
+  padding: 0.6rem 0.7rem;
+  border: 0;
+  border-radius: 8px;
+  background: rgb(255 255 255 / 0.06);
+  color: inherit;
+  font: 500 0.95rem/1.2 var(--font-sans);
+  text-align: left;
+  cursor: pointer;
+}
+
+.moto-places button span:last-child {
+  text-align: right;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+}
+
+.moto-places button[data-chosen="true"] {
+  background: #b3122a;
+}
+
+.moto-places button[data-seen="true"] {
+  opacity: 0.55;
+}
+
+@media (max-width: 640px) {
+  .moto-map {
+    top: 10.4rem;
+    bottom: auto;
+    left: auto;
+    right: 12px;
+    flex-direction: column;
+    align-items: flex-end;
+  }
+
+  .moto-dial {
+    width: 118px;
+    height: 118px;
+  }
+
+  .moto-map p {
+    text-align: right;
+    font-size: 11px;
+  }
+
+  .moto-map strong {
+    font-size: 13px;
+  }
+}

@@ -6,7 +6,7 @@
  * write. Mutating uniforms per frame is exactly how R3F is meant to be driven,
  * and routing them through React instead would put a 60 Hz signal back into the
  * render path, which is the one thing this portrait must not do. Scoped to this
- * file; nothing else in the codebase gets the exemption.
+ * file. Only render-loop code gets the exemption: the store's scene has it too.
  */
 /* eslint-disable react-hooks/immutability */
 

@@ -6,6 +6,7 @@ import type * as MP from "@mediapipe/tasks-vision";
 import type { Vec3 } from "./landmarks";
 import { OneEuroFilter } from "./one-euro";
 import { PointerTracker } from "./pointer";
+import { filterRoutineMediaPipeNotes } from "./mediapipe-log";
 import {
   AdaptiveRange,
   applyDeadzone,
@@ -180,6 +181,7 @@ export class HandSensor {
       if (token !== this.startToken) return this.releaseStream();
 
       this.setStatus("loading");
+      filterRoutineMediaPipeNotes();
       const mp = await import("@mediapipe/tasks-vision");
       const fileset = await mp.FilesetResolver.forVisionTasks(WASM_PATH);
       if (token !== this.startToken) return this.releaseStream();

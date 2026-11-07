@@ -1,0 +1,437 @@
+/*
+ * /3d/2090. A remote operator's console over a live picture from the Moon. The picture is the
+ * design, so the interface stays thin and out of the way of it: type straight on the image with
+ * a shadow to carry it, no panels, and the brand's pale red for the strings.
+ */
+
+.tether {
+  --ink: #f4f1ea;
+  --dim: rgba(244, 241, 234, 0.66);
+  --string: #ffb4ae;
+  --brand: #b3122a;
+  position: fixed;
+  z-index: 200;
+  inset: 0;
+  overflow: hidden;
+  background: #000;
+  color: var(--ink);
+  font: 400 15px/1.45 var(--font-sans);
+}
+
+.tether-world,
+.tether-strings {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.tether-world {
+  touch-action: none;
+}
+
+.tether-strings {
+  pointer-events: none;
+}
+
+.tether-flash {
+  position: absolute;
+  inset: 0;
+  background: #fff;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.85s ease-out;
+}
+
+.tether-flash[data-on="true"] {
+  opacity: 1;
+  transition: none;
+}
+
+/* What the camera sees: it only ever goes to this screen. */
+.tether-operator {
+  position: absolute;
+  z-index: 3;
+  right: 18px;
+  bottom: 18px;
+  width: min(210px, 34vw);
+  margin: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.tether-operator[data-on="true"] {
+  opacity: 1;
+}
+
+.tether-operator video {
+  display: block;
+  width: 100%;
+  border: 1px solid rgba(255, 180, 174, 0.5);
+  transform: scaleX(-1);
+}
+
+.tether-operator figcaption {
+  min-height: 1.4em;
+  margin-top: 6px;
+  color: var(--string);
+  font: 500 12px/1.3 var(--font-mono);
+  text-align: right;
+  text-shadow: 0 1px 6px #000;
+}
+
+.tether-operator .tether-private {
+  margin: 2px 0 0;
+  font-size: 9px;
+  text-align: right;
+  text-shadow: 0 1px 6px #000;
+}
+
+/* ── the title ── */
+.tether-title {
+  position: absolute;
+  z-index: 4;
+  bottom: clamp(24px, 6vh, 64px);
+  left: clamp(20px, 5vw, 72px);
+  max-width: 34rem;
+  text-shadow: 0 1px 14px rgba(0, 0, 0, 0.85);
+}
+
+.tether-title h1,
+.tether-card h1 {
+  margin: 0 0 10px;
+  font: 800 clamp(3.6rem, 11vw, 8.5rem) / 0.92 var(--font-sans);
+  letter-spacing: -0.045em;
+}
+
+.tether-title p {
+  margin: 0 0 6px;
+  color: var(--dim);
+}
+
+.tether-title .tether-lead {
+  color: var(--ink);
+  font-size: clamp(1.15rem, 2.2vw, 1.5rem);
+  line-height: 1.25;
+}
+
+.tether-choices {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 22px 0 14px;
+}
+
+.tether-button {
+  display: inline-block;
+  padding: 13px 20px;
+  border: 1px solid rgba(244, 241, 234, 0.42);
+  background: rgba(0, 0, 0, 0.42);
+  color: var(--ink);
+  font: 600 15px/1 var(--font-sans);
+  cursor: pointer;
+  text-shadow: none;
+}
+
+.tether-button:hover {
+  border-color: var(--string);
+}
+
+.tether-button[data-main] {
+  border-color: var(--brand);
+  background: var(--brand);
+  color: #fff;
+}
+
+.tether-button[data-main]:hover {
+  border-color: var(--string);
+}
+
+.tether-private {
+  color: var(--dim);
+  font: 500 11px/1.4 var(--font-mono);
+  letter-spacing: 0.03em;
+}
+
+.tether-title .tether-credit {
+  margin-top: 8px;
+  font-size: 12px;
+}
+
+.tether-loading {
+  margin: 22px 0 14px !important;
+  color: var(--string) !important;
+  font: 500 13px/1 var(--font-mono);
+}
+
+.tether-problem {
+  max-width: 28rem;
+  color: #ffc2b4 !important;
+}
+
+/* ── linking up ── */
+.tether-link {
+  position: absolute;
+  z-index: 4;
+  top: 50%;
+  left: 50%;
+  width: min(30rem, 88vw);
+  text-align: center;
+  transform: translate(-50%, -50%);
+  text-shadow: 0 1px 14px #000;
+}
+
+.tether-link h2 {
+  margin: 0 0 16px;
+  font: 700 clamp(1.3rem, 3vw, 1.9rem) / 1.2 var(--font-sans);
+}
+
+.tether-meter {
+  height: 3px;
+  margin-bottom: 14px;
+  background: rgba(244, 241, 234, 0.2);
+}
+
+.tether-meter span {
+  display: block;
+  height: 100%;
+  background: var(--string);
+  transform-origin: left;
+}
+
+/* ── in the game ── */
+.tether-hud {
+  position: absolute;
+  z-index: 3;
+  inset: 0;
+  pointer-events: none;
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.9);
+}
+
+.tether-objective {
+  position: absolute;
+  top: 18px;
+  left: 20px;
+  max-width: min(36rem, 62vw);
+  margin: 0;
+  font: 600 clamp(1rem, 1.9vw, 1.3rem) / 1.25 var(--font-sans);
+}
+
+.tether-gauges {
+  position: absolute;
+  bottom: 18px;
+  left: 20px;
+  display: grid;
+  gap: 8px;
+  width: min(250px, 46vw);
+}
+
+.tether-enemy {
+  position: absolute;
+  top: 18px;
+  left: 50%;
+  width: min(320px, 40vw);
+  transform: translateX(-50%);
+}
+
+.tether-gauge {
+  font: 500 11px/1.2 var(--font-mono);
+}
+
+.tether-gauge > div {
+  height: 5px;
+  margin-top: 4px;
+  background: rgba(244, 241, 234, 0.18);
+}
+
+.tether-gauge i {
+  display: block;
+  height: 100%;
+  background: var(--ink);
+  transform-origin: left;
+  transition: transform 0.18s linear;
+}
+
+.tether-gauge[data-red="true"] i {
+  background: #ff5a4a;
+}
+
+.tether-gauge[data-quiet="true"] i {
+  background: var(--string);
+}
+
+.tether-count {
+  margin: 0;
+  font: 500 12px/1.2 var(--font-mono);
+}
+
+.tether-tools {
+  position: absolute;
+  top: 18px;
+  right: 20px;
+  display: flex;
+  gap: 16px;
+  font: 500 13px/1 var(--font-sans);
+  pointer-events: auto;
+}
+
+.tether-tools a,
+.tether-tools button {
+  padding: 6px 0;
+  color: var(--ink);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+
+.tether-help {
+  position: absolute;
+  top: 60px;
+  right: 20px;
+  width: min(20rem, 60vw);
+  margin: 0;
+  font-size: 13px;
+}
+
+.tether-help > div {
+  display: flex;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 3px 0;
+}
+
+.tether-help dt {
+  color: var(--dim);
+}
+
+.tether-help dd {
+  margin: 0;
+  color: var(--string);
+  font-weight: 600;
+  text-align: right;
+}
+
+.tether-card {
+  position: absolute;
+  z-index: 5;
+  top: 50%;
+  left: 50%;
+  width: min(32rem, 88vw);
+  text-align: center;
+  transform: translate(-50%, -50%);
+  text-shadow: 0 1px 14px #000;
+}
+
+/* The game carries on behind the words, so they need something to stand on. */
+.tether-card::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: -34vh -42vw;
+  background: radial-gradient(closest-side, rgba(0, 0, 0, 0.82) 30%, transparent);
+  pointer-events: none;
+}
+
+.tether-card h2 {
+  margin: 0 0 12px;
+  font: 800 clamp(2rem, 6vw, 3.6rem) / 1 var(--font-sans);
+  letter-spacing: -0.03em;
+}
+
+.tether-card p {
+  margin: 0 auto 8px;
+  max-width: 28rem;
+}
+
+.tether-card .tether-choices {
+  justify-content: center;
+}
+
+/* ── phones ── */
+@media (max-width: 760px) {
+  .tether-title {
+    right: 0;
+    bottom: 0;
+    left: 0;
+    max-width: none;
+    padding: 20vh 20px 76px;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.9) 62%, transparent);
+  }
+
+  .tether-objective {
+    max-width: calc(100vw - 210px);
+  }
+}
+
+/* ── touch ── */
+.tether-touch {
+  position: absolute;
+  z-index: 4;
+  right: 16px;
+  bottom: 56px;
+  left: 16px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 12px;
+  pointer-events: none;
+}
+
+.tether-stick {
+  position: relative;
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 128px;
+  height: 128px;
+  border: 1px solid rgba(244, 241, 234, 0.42);
+  border-radius: 50%;
+  touch-action: none;
+  pointer-events: auto;
+}
+
+.tether-stick span {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: rgba(244, 241, 234, 0.72);
+}
+
+.tether-pads {
+  display: grid;
+  grid-template-columns: repeat(2, 76px);
+  gap: 8px;
+  pointer-events: auto;
+}
+
+.tether-pads button {
+  min-height: 46px;
+  border: 1px solid rgba(244, 241, 234, 0.42);
+  background: rgba(0, 0, 0, 0.46);
+  color: var(--ink);
+  font: 600 13px/1 var(--font-sans);
+  touch-action: manipulation;
+}
+
+.tether :focus-visible {
+  outline: 2px solid var(--string);
+  outline-offset: 2px;
+}
+
+@media (max-width: 759px) {
+  .tether-help {
+    display: none;
+  }
+
+  .tether-gauges {
+    bottom: auto;
+    top: 62px;
+  }
+
+  .tether-operator {
+    bottom: auto;
+    top: 62px;
+    right: 12px;
+  }
+}

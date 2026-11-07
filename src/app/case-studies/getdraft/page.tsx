@@ -55,7 +55,7 @@ export default function GetdraftCase() {
   return (
     <div className={`home home-light ${wide.variable}`}>
       <PageHeader
-        index="04.2"
+        index="05.2"
         label="Case studies — Getdraft"
         title="Getdraft"
         outline="It's a Draft!"

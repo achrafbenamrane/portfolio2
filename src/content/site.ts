@@ -16,12 +16,11 @@ export const site = {
 
   /**
    * Canonical origin, used for metadataBase, the sitemap and OG image URLs.
-   * Vercel injects the production domain at build time, so a custom domain
-   * added later is picked up without editing anything here.
+   * Written out, not read from VERCEL_PROJECT_PRODUCTION_URL: Vercel fills
+   * that with the project's shortest domain, which can be an old link. Change
+   * it here if a custom domain is added.
    */
-  url: process.env.VERCEL_PROJECT_PRODUCTION_URL
-    ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
-    : "https://achrafbenamrane.vercel.app",
+  url: "https://achrafbenamrane.vercel.app",
 
   /**
    * The hero name is set as a two-tier lockup: given names light and tracked

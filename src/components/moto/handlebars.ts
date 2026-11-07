@@ -85,7 +85,8 @@ export class Handlebars {
       tilt = Math.atan2((right.y - left.y) / aspect, Math.abs(right.x - left.x) + 0.001);
       height = (left.y + right.y) / 2;
       palm = (sizeOf(a, aspect) + sizeOf(b, aspect)) / 2;
-      this.spread += (Math.abs(right.x - left.x) / Math.max(palm, 0.02) - this.spread) * 0.5;
+      const wide = Math.abs(right.x - left.x) / Math.max(palm, 0.02);
+      this.spread = this.spread === 0 ? wide : this.spread + (wide - this.spread) * 0.5;
     } else {
       const hand = hands[0];
       const middle = palmOf(hand);
@@ -107,6 +108,10 @@ export class Handlebars {
       if (this.linkShare >= 1) this.linked = true;
       return;
     }
+
+    // Hands come up one after the other, so the second may only arrive once the ride has begun. Its
+    // first sight sets how far apart they rest, or a cabrage could never be asked for.
+    if (this.restSpread === 0) this.restSpread = this.spread;
 
     input.steer = deadZone(clampUnit(this.tilt / FULL_TILT), STILL_ZONE);
     const push = (this.restY - this.lift) / Math.max(palm * FULL_REACH, 0.04);
